@@ -2,10 +2,10 @@
 
 ## 1. Color Palette (Updated)
 
-- **Primary**: Pure Black (`#000000`) & White (`#FFFFFF`)
+- **Primary**: Pure Black (`#000000`) & White (`#FFFFFF`) using Tailwind `black` / `white`.
 - **Skeleton Background**: `bg-zinc-200` (부드럽고 덜 자극적인 로딩 시각화 표준)
-- **Accent**: Red (`#FF3040`) for Like, Blue (`#0095F6`) for Links.
-- **Border**: `Zinc-200` (#D9D9D9) - 표준 구분선 및 툴팁 테두리.
+- **Accent**: Red (`#FF3040` / `text-red-500`) for errors/required, Blue (`#0095F6`) for links.
+- **Border**: `Zinc-200` - 표준 구분선 및 툴팁 테두리.
 
 ---
 

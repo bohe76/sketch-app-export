@@ -89,8 +89,8 @@
 
 ## 6. 기술 스택 (Tech Stack Optimization)
 
-- **Frontend**: Next.js / Vite (React), Zustand (State), Framer Motion (Animation)
-- **Backend API**: Node.js Express (Unified Server with Vite Middleware)
+- **Frontend**: Next.js / Vite (React), Zustand (State Management), Framer Motion (Animation)
+- **Backend API**: Node.js Express (Unified Server with Vite Middleware - `api/server.js`)
 - **Database**: Sanity.io (Headless CMS & Image Assets)
 - **Auth**: Firebase Authentication (Google / Kakao OAuth)
 - **Hosting**: Vercel

@@ -23,6 +23,9 @@
 ### 2-2. 튜닝 및 미리보기
 
 - 옵션 변경 시 캔버스 즉시 재시작(Live Re-draw).
+- **Rendering Strategies**:
+    - **Live Animation**: `requestAnimationFrame`을 사용하여 과정을 보여줌 (UX용).
+    - **Instant Completion**: 동기 루프를 통해 결과물을 즉시 생성 (썸네일/다운로드용).
 - 모바일에서는 엄지손가락 영역 내 **Bottom Sheet** 형태의 컨트롤 패널 제공.
 
 ### 2-3. 수정 및 리믹스 (Edit/Remix)
