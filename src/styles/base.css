@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+    .shadow-soft {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    }
+}
+
+@layer base {
+    :root {
+        --foreground-rgb: 0, 0, 0;
+        --background-start-rgb: 255, 255, 255;
+        --background-end-rgb: 255, 255, 255;
+        --motion-y: 10px;
+    }
+
+    body {
+        @apply text-zinc-900 bg-white antialiased font-sans;
+        color: rgb(var(--foreground-rgb));
+    }
+}

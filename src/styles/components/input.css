@@ -1,0 +1,29 @@
+@layer components {
+    .input-range {
+        @apply w-full accent-primary cursor-pointer;
+    }
+
+    .input-range-premium {
+        @apply w-full cursor-pointer appearance-none bg-transparent;
+    }
+
+    .input-range-premium::-webkit-slider-runnable-track {
+        @apply w-full h-1 bg-zinc-100 rounded-full border-none;
+    }
+
+    .input-range-premium::-webkit-slider-thumb {
+        @apply appearance-none h-4 w-4 rounded-full bg-zinc-900 border-2 border-white shadow-md -mt-1.5 transition-transform active:scale-125;
+    }
+
+    .input-range-premium::-moz-range-track {
+        @apply w-full h-1 bg-zinc-100 rounded-full border-none;
+    }
+
+    .input-range-premium::-moz-range-thumb {
+        @apply h-4 w-4 rounded-full bg-zinc-900 border-2 border-white shadow-md transition-transform active:scale-125;
+    }
+
+    .input-file-hidden {
+        @apply hidden;
+    }
+}

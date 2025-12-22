@@ -1,0 +1,211 @@
+import React, { useEffect, useState, useRef } from 'react';
+import { LayoutGroup } from 'framer-motion';
+import { fetchFeed, toggleLike, trackMetric } from '../api/feed';
+import type { Artwork } from '../api/feed';
+import { useAuthStore } from '@/features/auth/model/store';
+import { useFeedStore } from '../model/feedStore';
+import { useToastStore } from '@/shared/model/toastStore';
+import { ArtworkCard } from './ArtworkCard';
+
+interface FeedListProps {
+    filterAuthorId?: string;
+    sort?: 'latest' | 'trending';
+    onArtworkClick?: (artwork: Artwork) => void;
+    refreshKey?: number;
+}
+
+export const FeedList: React.FC<FeedListProps> = ({ filterAuthorId, sort = 'latest', onArtworkClick, refreshKey }) => {
+    const { user } = useAuthStore();
+    const { artworks, setArtworks, updateArtwork } = useFeedStore();
+    const [loading, setLoading] = useState(true);
+    const [prevProps, setPrevProps] = useState({ filterAuthorId, sort, userId: user?.uid, refreshKey });
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [columnCount, setColumnCount] = useState(2);
+    const showToast = useToastStore(state => state.showToast);
+
+    // Request Tracking
+    const pendingLikes = useRef<Set<string>>(new Set());
+    const pendingDownloads = useRef<Set<string>>(new Set());
+    const pendingShares = useRef<Set<string>>(new Set());
+
+    const updateColumnCount = () => {
+        if (!containerRef.current) return;
+        const width = containerRef.current.offsetWidth;
+        const isMobileWidth = width < 640;
+
+        if (isMobileWidth) {
+            setColumnCount(2);
+        } else {
+            const gap = 16;
+            const cardWidth = 232;
+            const padding = 48;
+            const safetyMargin = 16;
+            const count = Math.max(2, Math.floor((width - padding - safetyMargin + gap) / (cardWidth + gap)));
+            setColumnCount(count);
+        }
+    };
+
+    useEffect(() => {
+        const observer = new ResizeObserver(() => {
+            updateColumnCount();
+        });
+        if (containerRef.current) {
+            observer.observe(containerRef.current);
+            setTimeout(updateColumnCount, 0);
+        }
+        return () => observer.disconnect();
+    }, []);
+
+    if (prevProps.filterAuthorId !== filterAuthorId || prevProps.sort !== sort || prevProps.userId !== user?.uid || prevProps.refreshKey !== refreshKey) {
+        setPrevProps({ filterAuthorId, sort, userId: user?.uid, refreshKey });
+        setLoading(true);
+    }
+
+    useEffect(() => {
+        fetchFeed(filterAuthorId, sort, user?.uid)
+            .then(setArtworks)
+            .finally(() => setLoading(false));
+    }, [filterAuthorId, sort, user?.uid, refreshKey, setArtworks]);
+
+    const handleLike = async (e: React.MouseEvent, art: Artwork) => {
+        e.stopPropagation();
+        if (!user) {
+            showToast("Please login to like artworks.", "info");
+            return;
+        }
+        if (pendingLikes.current.has(art._id)) return;
+        pendingLikes.current.add(art._id);
+
+        const newLikedState = !art.isLiked;
+        const newLikes = newLikedState ? (art.likeCount || 0) + 1 : (art.likeCount || 0) - 1;
+
+        updateArtwork(art._id, { likeCount: newLikes, isLiked: newLikedState });
+
+        try {
+            const result = await toggleLike(art._id, user.uid, newLikedState);
+            updateArtwork(art._id, { likeCount: result.likeCount, isLiked: newLikedState });
+        } catch {
+            updateArtwork(art._id, { likeCount: art.likeCount, isLiked: art.isLiked });
+            showToast("Failed to update like status.", "error");
+        } finally {
+            pendingLikes.current.delete(art._id);
+        }
+    };
+
+    const handleDownload = async (e: React.MouseEvent, art: Artwork) => {
+        e.stopPropagation();
+        if (pendingDownloads.current.has(art._id)) return;
+        pendingDownloads.current.add(art._id);
+
+        const nextCount = (art.downloadCount || 0) + 1;
+        updateArtwork(art._id, { downloadCount: nextCount });
+
+        try {
+            const response = await fetch(art.imageUrl, { mode: 'cors' });
+            const blob = await response.blob();
+            const blobUrl = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = blobUrl;
+            link.download = `${art.title.replace(/\s+/g, '_')}.png`;
+            link.click();
+            URL.revokeObjectURL(blobUrl);
+            const result = await trackMetric(art._id, 'download');
+            if (result.success) updateArtwork(art._id, { downloadCount: result.count });
+        } catch {
+            const downloadUrl = art.imageUrl + (art.imageUrl.includes('?') ? '&' : '?') + `dl=${encodeURIComponent(art.title)}.png`;
+            window.open(downloadUrl, '_blank');
+            try { trackMetric(art._id, 'download'); } catch { /* ignore */ }
+        } finally {
+            pendingDownloads.current.delete(art._id);
+        }
+    };
+
+    const handleShare = async (e: React.MouseEvent, art: Artwork) => {
+        e.stopPropagation();
+        if (pendingShares.current.has(art._id)) return;
+        pendingShares.current.add(art._id);
+
+        const shareUrl = `${window.location.origin}/?artwork=${art._id}`;
+        const nextCount = (art.shareCount || 0) + 1;
+        updateArtwork(art._id, { shareCount: nextCount });
+
+        if (navigator.share) {
+            try {
+                await navigator.share({ title: art.title, text: `Check out this artwork by @${art.authorName} on Sketchrang!`, url: shareUrl });
+                const result = await trackMetric(art._id, 'share');
+                if (result.success) updateArtwork(art._id, { shareCount: result.count });
+            } catch { /* aborted */ }
+        } else {
+            try {
+                await navigator.clipboard.writeText(shareUrl);
+                showToast("Link copied to clipboard!", "success");
+                const result = await trackMetric(art._id, 'share');
+                if (result.success) updateArtwork(art._id, { shareCount: result.count });
+            } catch {
+                showToast("Failed to copy link.", "error");
+            } finally {
+                pendingShares.current.delete(art._id);
+            }
+        }
+    };
+
+    const validArtworks = artworks.filter(art => art && art._id);
+    const displayColumnCount = validArtworks.length > 0 ? Math.min(columnCount, validArtworks.length) : columnCount;
+
+    if (loading) {
+        return (
+            <div ref={containerRef} className="relative w-full overflow-hidden p-4 lg:p-6 pb-20 flex gap-4 justify-center items-start">
+                {Array.from({ length: columnCount }).map((_, colIndex) => (
+                    <div key={`loading-col-${colIndex}`} className="flex-1 lg:w-[232px] lg:flex-none flex flex-col gap-4">
+                        {Array.from({ length: 3 }).map((__, i) => (
+                            <div key={i} className="bg-zinc-200 rounded-[32px] animate-pulse w-full" style={{ height: `${280 + (Math.random() * 150)}px` }} />
+                        ))}
+                    </div>
+                ))}
+            </div>
+        );
+    }
+
+    if (artworks.length === 0) {
+        return (
+            <div ref={containerRef} className="text-center p-20 text-gray-500 w-full">
+                <p className="text-lg font-medium mb-2">{filterAuthorId ? "No artworks found" : "No artworks yet"}</p>
+                <p className="text-sm">{filterAuthorId ? "This user hasn't published anything yet." : "Be the first to publish a sketch!"}</p>
+            </div>
+        );
+    }
+
+    return (
+        <div ref={containerRef} className="relative w-full overflow-hidden p-4 lg:p-6 pb-20 min-h-screen">
+            <LayoutGroup>
+                <div className="flex gap-4 justify-center items-start">
+                    {Array.from({ length: 15 }).map((_, colIndex) => {
+                        const isVisible = colIndex < displayColumnCount;
+                        return (
+                            <div
+                                key={`col-${colIndex}`}
+                                style={{ display: isVisible ? 'flex' : 'none' }}
+                                className="flex-1 lg:w-[232px] lg:flex-none flex flex-col gap-4"
+                            >
+                                {validArtworks
+                                    .filter((_, idx) => idx % displayColumnCount === colIndex)
+                                    .map((art) => (
+                                        <ArtworkCard
+                                            key={art._id}
+                                            art={art}
+                                            isLiked={art.isLiked || false}
+                                            likeCount={art.likeCount || 0}
+                                            onLike={handleLike}
+                                            onDownload={handleDownload}
+                                            onShare={handleShare}
+                                            onClick={() => onArtworkClick?.(art)}
+                                        />
+                                    ))}
+                            </div>
+                        );
+                    })}
+                </div>
+            </LayoutGroup>
+        </div>
+    );
+};

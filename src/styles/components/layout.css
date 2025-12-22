@@ -1,0 +1,174 @@
+@layer components {
+
+    /* Global App Container */
+    .app-container {
+        --motion-y: 10px;
+        @apply flex flex-col lg:flex-row h-screen bg-neutral-100 overflow-hidden text-neutral-900 font-sans;
+    }
+
+    .header-overlay {
+        @apply flex fixed top-0 left-0 w-full p-4 justify-center lg:justify-between items-center z-[100] pointer-events-none bg-neutral-100 shadow-soft;
+    }
+
+    /* Mobile Bottom Navigation */
+    .mobile-nav-bar {
+        @apply lg:hidden fixed bottom-0 left-0 w-full bg-white border-t border-[#d9d9d9] flex justify-around items-center h-16 z-50 px-6;
+    }
+
+    .mobile-nav-item {
+        @apply flex flex-col items-center justify-center gap-1 text-xs font-medium text-gray-500 hover:text-primary transition-colors;
+    }
+
+    .mobile-nav-item-active {
+        @apply text-primary;
+    }
+
+    .header-content {
+        @apply pointer-events-auto flex items-center gap-2;
+    }
+
+    .logo-text {
+        @apply text-2xl font-black tracking-tighter mix-blend-multiply opacity-80 cursor-pointer;
+    }
+
+    /* Nav Container */
+    .nav-container {
+        @apply flex items-center gap-6 pointer-events-auto;
+    }
+
+    .nav-pill-group {
+        @apply flex bg-white rounded-full px-2 py-1 shadow-soft border border-[#d9d9d9];
+    }
+
+    /* Main Viewport Areas */
+    .viewport-studio {
+        @apply flex-1 relative flex items-center justify-center bg-[#f0f0f0];
+    }
+
+    .viewport-feed {
+        @apply flex-1 overflow-y-auto overflow-x-hidden pt-24 bg-gray-50;
+    }
+
+    .canvas-container {
+        @apply relative w-full h-full;
+        box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Control Panel Drawer (Mobile) & Sidebar (Desktop) */
+    .control-panel-sidebar {
+        @apply hidden lg:block w-80 h-screen pt-24 border-l bg-white p-4 shadow-none overflow-y-auto relative z-10;
+    }
+
+    /* Compact Toolbar (Mobile Only) */
+    .toolbar-wrapper {
+        @apply lg:hidden fixed bottom-28 left-0 w-full flex justify-center items-center gap-2 z-40 pointer-events-none;
+    }
+
+    .toolbar-pill {
+        @apply pointer-events-auto bg-white border border-[#d9d9d9] rounded-full px-3 py-2 flex items-center gap-2 shadow-soft;
+    }
+
+    .btn-mobile-publish {
+        @apply pointer-events-auto bg-primary text-white p-3 rounded-full hover:bg-primary/90 active:scale-95 transition-all disabled:opacity-50 shadow-soft;
+    }
+
+    .toolbar-icon {
+        @apply p-2 rounded-full bg-white/80 text-gray-500 shadow-sm border border-[#d9d9d9] hover:text-primary transition-all active:scale-95 flex items-center justify-center;
+    }
+
+    .toolbar-icon-active {
+        @apply text-primary ring-primary/50 ring-2 scale-110 bg-white;
+    }
+
+    /* Slider Popup (Above Toolbar) */
+    .slider-popup {
+        @apply fixed bottom-44 left-0 w-full mb-2 px-6 pb-2 z-40 lg:hidden;
+        animation: slideUpFade 0.2s ease-out forwards;
+    }
+
+    .slider-popup-content {
+        @apply bg-white rounded-2xl border border-[#d9d9d9] p-4 flex items-center gap-3 shadow-soft;
+    }
+
+    @keyframes toastIn {
+        from {
+            opacity: 0;
+            transform: translateY(var(--motion-y)) scale(0.95);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    @keyframes tooltipIn {
+        from {
+            opacity: 0;
+            transform: translateX(-50%) translateY(10px) scale(0.95);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0) scale(1);
+        }
+    }
+
+    .tooltip-box {
+        @apply absolute bottom-full left-1/2 mb-3 w-max bg-white px-3 py-1.5 rounded-lg shadow-soft border border-zinc-600 pointer-events-none z-[220] flex items-center justify-center text-center text-[10px] font-bold text-zinc-800 uppercase tracking-tight;
+        transform: translateX(-50%);
+    }
+
+    .animate-toast-in {
+        animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .animate-tooltip-in {
+        animation: tooltipIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes slideUpFade {
+        from {
+            opacity: 0;
+            transform: translateY(var(--motion-y));
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .empty-state-box {
+        @apply text-center p-10 border-2 border-dashed border-gray-300 rounded-xl;
+    }
+
+    .feed-card {
+        @apply relative bg-white rounded-2xl overflow-hidden shadow-sm transition-all w-full;
+    }
+
+    .feed-card-overlay {
+        @apply absolute inset-0 flex flex-col justify-end p-2 opacity-0 pointer-events-none;
+    }
+
+    .feed-card-overlay>* {
+        @apply pointer-events-auto;
+    }
+
+    @media (hover: hover) {
+        .feed-card:hover {
+            @apply shadow-md;
+        }
+
+        .feed-card:hover .feed-card-overlay {
+            @apply opacity-100;
+        }
+    }
+
+    /* Show overlay by default on mobile for better usability */
+    @media (hover: none) {
+        .feed-card-overlay {
+            @apply opacity-100;
+        }
+    }
+}

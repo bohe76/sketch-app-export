@@ -1,0 +1,5 @@
+feat(seo): SEO 메타 태그 및 오픈 그래프(OG) 이미지 설정
+
+- index.html: Title, Description, OG 태그, Twitter Card 메타데이터 추가
+- 사이트 제목: 'Sketchrang | Turn Your Moments into Living Art'
+- og:image 경로: /og-image.png 로 설정 (파일은 public 디렉토리에 위치해야 함)
