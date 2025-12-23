@@ -14,6 +14,8 @@
         --background-start-rgb: 255, 255, 255;
         --background-end-rgb: 255, 255, 255;
         --motion-y: 10px;
+        --color-surface-selected: #27272a;
+        /* zinc-800 - softened for pencil tone */
     }
 
     body {

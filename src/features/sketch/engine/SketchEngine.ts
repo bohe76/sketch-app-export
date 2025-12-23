@@ -21,6 +21,8 @@ export class SketchEngine {
     private isActive: boolean;
     private animationId: number | null;
 
+    private drawingSession: number = 0;
+
     // Image properties
     private imageWidth: number = 0;
     private imageHeight: number = 0;
@@ -126,7 +128,16 @@ export class SketchEngine {
                 if (this.options.mode === 'invert') {
                     strokeStyle = `rgba(255,255,255,${calculatedAlpha})`;
                 } else if (this.options.mode === 'sepia') {
-                    strokeStyle = `rgba(93,64,55,${calculatedAlpha})`;
+                    if (this.options.tintColor) {
+                        const hex = this.options.tintColor.replace('#', '');
+                        const r = parseInt(hex.substring(0, 2), 16);
+                        const g = parseInt(hex.substring(2, 4), 16);
+                        const b = parseInt(hex.substring(4, 6), 16);
+                        strokeStyle = `rgba(${r},${g},${b},${calculatedAlpha})`;
+                    } else {
+                        strokeStyle = `rgba(93,64,55,${calculatedAlpha})`;
+                    }
+
                 } else if (this.options.mode === 'color' && next.pixel.color) {
                     const { r, g, b } = next.pixel.color;
                     strokeStyle = `rgba(${r},${g},${b},${calculatedAlpha})`;
@@ -156,18 +167,27 @@ export class SketchEngine {
     renderLive(imageUrl: string, maxDimension?: number) {
         this.stop();
         this.isActive = true;
-        this.loadImage(imageUrl, () => {
-            this.prepareCanvas(maxDimension);
+        this.drawingSession++;
+        const currentSession = this.drawingSession;
 
-            const loop = () => {
-                if (!this.isActive) return;
-                // Run multiple steps per frame for speed control
-                for (let i = 0; i < this.options.drawSpeed; i++) {
-                    if (!this.step()) break;
-                }
+        this.loadImage(imageUrl, () => {
+            if (currentSession !== this.drawingSession) return;
+
+            // Ensure layout is stable (sidebar transition etc.) before preparing canvas
+            requestAnimationFrame(() => {
+                if (currentSession !== this.drawingSession) return;
+                this.prepareCanvas(maxDimension);
+
+                const loop = () => {
+                    if (!this.isActive || currentSession !== this.drawingSession) return;
+                    // Run multiple steps per frame for speed control
+                    for (let i = 0; i < this.options.drawSpeed; i++) {
+                        if (!this.step()) break;
+                    }
+                    this.animationId = requestAnimationFrame(loop);
+                };
                 this.animationId = requestAnimationFrame(loop);
-            };
-            this.animationId = requestAnimationFrame(loop);
+            });
         });
     }
 

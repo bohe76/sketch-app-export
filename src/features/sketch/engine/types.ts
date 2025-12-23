@@ -1,3 +1,13 @@
+export interface CachedPath {
+    x1: number;
+    y1: number;
+    x2: number;
+    y2: number;
+    visitCount: number;
+    intensity: number;
+    color?: { r: number; g: number; b: number };
+}
+
 export interface SketchOptions {
     drawSpeed: number;
     branchProbability: number;
@@ -11,6 +21,7 @@ export interface SketchOptions {
     lineWidth: number;
     alpha: number;
     mode: 'bw' | 'sepia' | 'color' | 'invert';
+    tintColor?: string;
 }
 
 export interface PixelData {

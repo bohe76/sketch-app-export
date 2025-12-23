@@ -106,6 +106,7 @@ export const useSketchFlow = () => {
      */
     const handleRemix = useCallback((artwork: Artwork) => {
         setSourceImage(artwork.imageUrl);
+        // Apply only the original options to ensure it looks exactly the same
         setOptions(artwork.options);
         setViewMode('studio');
     }, [setSourceImage, setOptions, setViewMode]);

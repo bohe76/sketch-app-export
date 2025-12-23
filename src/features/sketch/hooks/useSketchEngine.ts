@@ -27,9 +27,12 @@ export const useSketchEngine = (initialOptions: Partial<SketchOptions> = {}) => 
         };
     }, []); // Init once
 
-    const startDrawing = useCallback((imageUrl: string) => {
+    const startDrawing = useCallback((imageUrl: string, options?: Partial<SketchOptions>) => {
         if (engineRef.current) {
             currentImageUrlRef.current = imageUrl;
+            if (options) {
+                engineRef.current.updateOptions(options);
+            }
             engineRef.current.renderLive(imageUrl);
             setIsDrawing(true);
         }

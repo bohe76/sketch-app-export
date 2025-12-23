@@ -10,6 +10,7 @@ import {
     XMarkIcon,
     SparklesIcon
 } from '@heroicons/react/24/outline';
+import { HexColorPicker } from 'react-colorful';
 
 interface ControlPanelProps {
     isOpen?: boolean;
@@ -60,7 +61,7 @@ const StyleCard: React.FC<{
             onClick={onClick}
             className={`relative group flex items-center gap-4 p-2 rounded-2xl border-2 transition-all duration-300 active:scale-[0.98]
                 ${isActive
-                    ? 'border-zinc-900 bg-zinc-900 shadow-xl'
+                    ? 'border-[var(--color-surface-selected)] bg-[var(--color-surface-selected)] shadow-xl'
                     : 'border-zinc-100 bg-white hover:border-zinc-300 shadow-sm'}`}
         >
             {/* 48px Thumbnail Container */}
@@ -99,7 +100,7 @@ const StyleCard: React.FC<{
 
             {/* Selection indicator */}
             {isActive && (
-                <div className="absolute -top-1 -right-1 bg-zinc-900 border-2 border-white rounded-full p-0.5 shadow-sm">
+                <div className="absolute -top-1 -right-1 bg-[var(--color-surface-selected)] border-2 border-white rounded-full p-0.5 shadow-sm">
                     <div className="w-2 h-2 bg-white rounded-full" />
                 </div>
             )}
@@ -112,6 +113,14 @@ export const ControlPanel: React.FC<ControlPanelProps> = () => {
     const [activeSetting, setActiveSetting] = useState<string | null>(null);
     const [activeStyle, setActiveStyle] = useState('classic');
 
+    // Sync UI selection when options change externally (e.g. Remix/Edit)
+    useEffect(() => {
+        const style = STYLES.find(s => s.mode === options.mode);
+        if (style) {
+            setActiveStyle(style.id);
+        }
+    }, [options.mode]);
+
     const handleStyleChange = (styleId: string) => {
         setActiveStyle(styleId);
         const style = STYLES.find(s => s.id === styleId);
@@ -119,13 +128,21 @@ export const ControlPanel: React.FC<ControlPanelProps> = () => {
             setOptions({
                 mode: style.mode as any,
                 alpha: style.alpha,
-                momentum: style.momentum
+                momentum: style.momentum,
+                // Boost speed when tuning
+                drawSpeed: 150,
+                maxHeads: 100
             });
         }
     };
 
     const handleChange = (key: string, value: number) => {
-        setOptions({ [key]: value });
+        setOptions({
+            [key]: value,
+            // Boost speed when tuning
+            drawSpeed: 150,
+            maxHeads: 100
+        });
     };
 
     const renderSlider = (
@@ -160,6 +177,43 @@ export const ControlPanel: React.FC<ControlPanelProps> = () => {
 
     return (
         <>
+            {/* --- LEFT FLOATING TINT PANEL --- */}
+            {activeStyle === 'vintage' && (
+                <div className="fixed right-[344px] top-[120px] z-40 hidden lg:block animate-in fade-in slide-in-from-right-8 duration-500">
+                    <div className="bg-white/90 backdrop-blur-xl border border-zinc-200/50 shadow-2xl rounded-2xl p-4 w-auto">
+                        <div className="flex flex-col items-start gap-1.5 mb-3">
+                            <h3 className="text-xs font-black uppercase tracking-widest text-zinc-800 flex items-center gap-2">
+                                <div className="w-2 h-2 rounded-full bg-zinc-800" />
+                                Tint Color
+                            </h3>
+                            <div className="flex w-full rounded border border-zinc-200 overflow-hidden h-6 shadow-sm">
+                                <div
+                                    className="w-1/2 h-full border-r border-zinc-100/50"
+                                    style={{ backgroundColor: options.tintColor || '#5d4037' }}
+                                />
+                                <div className="w-1/2 h-full flex items-center justify-center bg-zinc-50 text-[10px] font-mono text-zinc-500 tracking-wider">
+                                    {options.tintColor || '#5d4037'}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* React Colorful Component */}
+                        <div className="custom-color-picker-wrapper">
+                            <HexColorPicker
+                                color={options.tintColor || '#5d4037'}
+                                onChange={(newColor) => setOptions({ tintColor: newColor })}
+                                style={{ width: '100%', height: '160px' }}
+                            />
+                        </div>
+
+                        <div className="mt-3 flex items-center gap-2 text-[10px] text-zinc-400">
+                            <SparklesIcon className="w-3 h-3" />
+                            <span>Pick a tone for vintage effect</span>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* --- DESKTOP SIDEBAR --- */}
             <div className="control-panel-sidebar shadow-2xl border-l border-zinc-100 bg-white/90 backdrop-blur-xl">
                 <div className="flex flex-col h-full">
@@ -191,12 +245,14 @@ export const ControlPanel: React.FC<ControlPanelProps> = () => {
                             </div>
                         </div>
 
+
                         {/* 2. Visual Sliders */}
                         <div className="space-y-8 pt-4">
                             {renderSlider('momentum', 'Texture', 0.0, 1.0, 0.1, options.momentum?.toFixed(1) || '0.5', <Square3Stack3DIcon className="w-4 h-4" />)}
                             {renderSlider('alpha', 'Opacity', 0.1, 1.0, 0.1, options.alpha?.toFixed(1) || '0.1', <SunIcon className="w-4 h-4" />)}
                             {renderSlider('lineWidth', 'Thickness', 0.1, 2.0, 0.1, options.lineWidth?.toFixed(1) || '0.5', <PaintBrushIcon className="w-4 h-4" />)}
                             {renderSlider('threshold', 'Sensitivity', 100, 765, 5, options.threshold, <AdjustmentsHorizontalIcon className="w-4 h-4" />)}
+
                         </div>
 
                         <div className="pt-6 border-t border-zinc-50">
@@ -233,6 +289,36 @@ export const ControlPanel: React.FC<ControlPanelProps> = () => {
                                                 sourceImage={sourceImage}
                                             />
                                         ))}
+                                    </div>
+
+                                    {/* Mobile Tint Picker (Smooth Expansion) */}
+                                    <div className={`grid transition-[grid-template-rows] duration-500 ease-out ${activeStyle === 'vintage' ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
+                                        <div className="overflow-hidden min-h-0">
+                                            <div className="pt-4 mt-4 border-t border-zinc-100">
+                                                <div className="flex items-center justify-between mb-3">
+                                                    <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-500 flex items-center gap-2">
+                                                        <div className="w-1.5 h-1.5 rounded-full bg-zinc-400" />
+                                                        Tint Color
+                                                    </h4>
+                                                    <div className="flex w-24 rounded border border-zinc-100 overflow-hidden h-5">
+                                                        <div
+                                                            className="w-1/3 h-full"
+                                                            style={{ backgroundColor: options.tintColor || '#5d4037' }}
+                                                        />
+                                                        <div className="w-2/3 h-full flex items-center justify-center bg-zinc-50 text-[9px] font-mono text-zinc-400">
+                                                            {options.tintColor || '#5d4037'}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="custom-color-picker-wrapper">
+                                                    <HexColorPicker
+                                                        color={options.tintColor || '#5d4037'}
+                                                        onChange={(newColor) => setOptions({ tintColor: newColor })}
+                                                        style={{ width: '100%', height: '140px' }}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             )}
