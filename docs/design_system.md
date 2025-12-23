@@ -18,6 +18,10 @@
   - Action Buttons (ArtworkCard): 
     - Desktop (≥1024px): Reveal on Hover (0.3s transition).
     - Mobile/Tablet (<1024px): Always Visible (Opacity 100%) for accessibility. (판단 기준: 화면 너비 < 1024px)
+  - **Studio Exit Button**:
+    - Position: `top-24`, `left-6` (고정 헤더 아래 균형 배치)
+    - Style: `bg-white/90 backdrop-blur-md` 원형 버튼 + `shadow-xl`
+    - Interaction: 호버 시 `scale-110` 확대 강조.
 
 ---
 
