@@ -1,21 +1,7 @@
-import type { SketchOptions } from '@/features/sketch/engine/types';
 
-export interface Artwork {
-  _id: string;
-  title: string;
-  imageUrl: string;
-  thumbnailUrl: string;
-  authorName: string;
-  authorId: string;
-  authorAvatar?: string;
-  likeCount?: number;
-  downloadCount?: number;
-  shareCount?: number;
-  remixCount?: number;
-  isLiked?: boolean;
-  options: SketchOptions;
-  _createdAt: string;
-}
+
+import type { Artwork } from '@/shared/types/types';
+export type { Artwork };
 
 export const fetchFeed = async (authorId?: string, sort: 'latest' | 'trending' = 'latest', userId?: string): Promise<Artwork[]> => {
   const query = new URLSearchParams();

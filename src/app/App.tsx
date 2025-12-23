@@ -12,22 +12,17 @@ import type { Artwork } from '@/features/feed/api/feed';
 import { useFeedStore } from '@/features/feed/model/feedStore';
 import { ArtworkDetailModal } from '@/features/feed/components/ArtworkDetailModal';
 import { GlobalModal } from '@/shared/components/GlobalModal';
-import { useModalStore } from '@/shared/model/modalStore';
 import { useUIStore } from '@/shared/model/uiStore';
-import { usePublishModalStore } from '@/shared/model/publishModalStore';
 import { LoginModal } from '@/features/auth/components/LoginModal';
 import { useLoginModalStore } from '@/features/auth/model/loginModalStore';
-import { useToastStore } from '@/shared/model/toastStore';
 import { PublishModal } from '@/features/studio/components/PublishModal';
 import { Toast } from '@/shared/components/Toast';
+import { useSketchFlow } from '@/features/sketch/hooks/useSketchFlow';
 
 const App = () => {
-    const { sourceImage, setSourceImage, options, setOptions, resetOptions } = useSketchStore();
+    const { sourceImage, options } = useSketchStore();
     const { user, isLoading: isAuthLoading } = useAuthStore();
-    const { openModal } = useModalStore();
-    const { openPublishModal } = usePublishModalStore();
     const { openLoginModal } = useLoginModalStore();
-    const { showToast } = useToastStore();
 
     const fileInputRef = useRef<HTMLInputElement>(null);
     const hasCheckedParams = useRef(false);
@@ -35,6 +30,14 @@ const App = () => {
     const { viewMode, setViewMode, activeTab, setActiveTab } = useUIStore();
     const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
     const [hoverText, setHoverText] = useState<string | null>(null);
+
+    // Hook for Sketch Logic
+    const { handleImageUpload, handleReset, handleDownload, handlePublish, handleRemix } = useSketchFlow();
+
+    const onRemixWrapper = (artwork: Artwork) => {
+        handleRemix(artwork);
+        setSelectedArtwork(null);
+    };
 
     // Initial Auth
     useEffect(() => {
@@ -77,77 +80,6 @@ const App = () => {
         }
     }, [isAuthLoading, user]);
 
-    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            const url = URL.createObjectURL(file);
-            setSourceImage(url);
-            setViewMode('studio'); // Switch to studio on upload
-        }
-    };
-
-    const handleDownload = () => {
-        const canvas = document.querySelector('canvas');
-        if (!canvas) return;
-
-        // Read bounds from dataset (Set by SketchEngine)
-        const { imgX, imgY, imgW, imgH } = canvas.dataset;
-        let downloadUrl = canvas.toDataURL('image/png');
-
-        // If bounds are available, crop the canvas to the image area
-        if (imgX !== undefined && imgY !== undefined && imgW !== undefined && imgH !== undefined) {
-            const x = parseFloat(imgX);
-            const y = parseFloat(imgY);
-            const w = parseFloat(imgW);
-            const h = parseFloat(imgH);
-
-            if (w > 0 && h > 0) {
-                const tempCanvas = document.createElement('canvas');
-                tempCanvas.width = w;
-                tempCanvas.height = h;
-                const tempCtx = tempCanvas.getContext('2d');
-                if (tempCtx) {
-                    // Draw only the image portion from the main canvas
-                    tempCtx.drawImage(canvas, x, y, w, h, 0, 0, w, h);
-                    downloadUrl = tempCanvas.toDataURL('image/png');
-                }
-            }
-        }
-
-        const link = document.createElement('a');
-        link.download = `sketch-${new Date().getTime()}.png`;
-        link.href = downloadUrl;
-        link.click();
-        showToast("Downloaded to your device!", "success");
-    };
-
-    const handleReset = () => {
-        openModal({
-            title: "Reset Options",
-            content: "Are you sure you want to reset all sketching parameters to default values?",
-            confirmText: "Reset Now",
-            onConfirm: () => {
-                resetOptions();
-                showToast("Options reset to default", "info");
-            }
-        });
-    };
-
-    const handlePublish = async () => {
-        if (!user) {
-            openLoginModal();
-            return;
-        }
-
-        const canvas = document.querySelector('canvas');
-        if (!canvas) {
-            showToast("Canvas not found.", "error");
-            return;
-        }
-
-        openPublishModal(canvas);
-    };
-
     const { removeArtwork } = useFeedStore();
 
     const handleDelete = (artworkId: string) => {
@@ -170,13 +102,6 @@ const App = () => {
         setViewMode('feed');
     };
 
-    const handleRemix = (artwork: Artwork) => {
-        setSourceImage(artwork.imageUrl);
-        setOptions(artwork.options);
-        setViewMode('studio');
-        setSelectedArtwork(null);
-    };
-
     // We no longer block the entire app with a "Loading..." screen.
     // Sub-components (like FeedList) will handle their own skeleton states.
     // Auth-dependent UI (Login/Logout buttons) will shift once isAuthLoading is false.
@@ -193,7 +118,7 @@ const App = () => {
                     artwork={selectedArtwork}
                     currentUserId={user?.uid}
                     onClose={() => setSelectedArtwork(null)}
-                    onRemix={handleRemix}
+                    onRemix={onRemixWrapper}
                     onDelete={handleDelete}
                 />
             )}

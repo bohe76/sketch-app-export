@@ -6,6 +6,8 @@ import { useAuthStore } from '@/features/auth/model/store';
 import { useFeedStore } from '../model/feedStore';
 import { useToastStore } from '@/shared/model/toastStore';
 import { ArtworkCard } from './ArtworkCard';
+import { useResponsiveGrid } from '@/shared/hooks/useResponsiveGrid';
+import { APP_CONFIG } from '@/shared/config/constants';
 
 interface FeedListProps {
     filterAuthorId?: string;
@@ -19,42 +21,17 @@ export const FeedList: React.FC<FeedListProps> = ({ filterAuthorId, sort = 'late
     const { artworks, setArtworks, updateArtwork } = useFeedStore();
     const [loading, setLoading] = useState(true);
     const [prevProps, setPrevProps] = useState({ filterAuthorId, sort, userId: user?.uid, refreshKey });
-    const containerRef = useRef<HTMLDivElement>(null);
-    const [columnCount, setColumnCount] = useState(2);
     const showToast = useToastStore(state => state.showToast);
+
+    // Use Custom Hook
+    const { containerRef, columnCount } = useResponsiveGrid();
 
     // Request Tracking
     const pendingLikes = useRef<Set<string>>(new Set());
     const pendingDownloads = useRef<Set<string>>(new Set());
     const pendingShares = useRef<Set<string>>(new Set());
 
-    const updateColumnCount = () => {
-        if (!containerRef.current) return;
-        const width = containerRef.current.offsetWidth;
-        const isMobileWidth = width < 640;
 
-        if (isMobileWidth) {
-            setColumnCount(2);
-        } else {
-            const gap = 16;
-            const cardWidth = 232;
-            const padding = 48;
-            const safetyMargin = 16;
-            const count = Math.max(2, Math.floor((width - padding - safetyMargin + gap) / (cardWidth + gap)));
-            setColumnCount(count);
-        }
-    };
-
-    useEffect(() => {
-        const observer = new ResizeObserver(() => {
-            updateColumnCount();
-        });
-        if (containerRef.current) {
-            observer.observe(containerRef.current);
-            setTimeout(updateColumnCount, 0);
-        }
-        return () => observer.disconnect();
-    }, []);
 
     if (prevProps.filterAuthorId !== filterAuthorId || prevProps.sort !== sort || prevProps.userId !== user?.uid || prevProps.refreshKey !== refreshKey) {
         setPrevProps({ filterAuthorId, sort, userId: user?.uid, refreshKey });
@@ -156,7 +133,7 @@ export const FeedList: React.FC<FeedListProps> = ({ filterAuthorId, sort = 'late
         return (
             <div ref={containerRef} className="relative w-full overflow-hidden p-4 lg:p-6 pb-20 flex gap-4 justify-center items-start">
                 {Array.from({ length: columnCount }).map((_, colIndex) => (
-                    <div key={`loading-col-${colIndex}`} className="flex-1 lg:w-[232px] lg:flex-none flex flex-col gap-4">
+                    <div key={`loading-col-${colIndex}`} className={`flex-1 lg:w-[${APP_CONFIG.DEFAULT_DIMENSION_DESKTOP}px] lg:flex-none flex flex-col gap-4`}>
                         {Array.from({ length: 3 }).map((__, i) => (
                             <div key={i} className="bg-zinc-200 rounded-[32px] animate-pulse w-full" style={{ height: `${280 + (Math.random() * 150)}px` }} />
                         ))}

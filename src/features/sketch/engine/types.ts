@@ -29,16 +29,18 @@ export interface DrawingHead {
     life: number;
 }
 
+import { SKETCH_DEFAULTS } from '@/shared/config/constants';
+
 export const DEFAULT_OPTIONS: SketchOptions = {
     drawSpeed: 160,
-    branchProbability: 0.05,
-    maxHeads: 64,
-    scaleFactor: 0.8,
+    branchProbability: SKETCH_DEFAULTS.BRANCH_PROBABILITY,
+    maxHeads: SKETCH_DEFAULTS.MAX_HEADS,
+    scaleFactor: SKETCH_DEFAULTS.SCALE_FACTOR,
     threshold: 640,
     minLife: 100,
     maxLife: 300,
-    momentum: 0.5,
-    lineWidth: 0.5,
-    alpha: 0.1,
+    momentum: SKETCH_DEFAULTS.MOMENTUM,
+    lineWidth: SKETCH_DEFAULTS.LINE_WIDTH,
+    alpha: SKETCH_DEFAULTS.ALPHA,
     mode: 'bw'
 };
