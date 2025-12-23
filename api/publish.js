@@ -14,13 +14,13 @@ export default async function handler(req, res) {
     }
 
     try {
-        const { imageBase64, title, userId, options } = req.body;
+        const { imageBase64, sourceImageBase64, title, userId, options } = req.body;
 
         if (!imageBase64 || !userId) {
             return res.status(400).json({ message: 'Missing required fields' });
         }
 
-        // 1. Upload Image Asset
+        // 1. Upload Sketch Result Asset
         const matches = imageBase64.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
         if (!matches || matches.length !== 3) {
             return res.status(400).json({ message: 'Invalid image data format' });
@@ -31,7 +31,20 @@ export default async function handler(req, res) {
             filename: `sketch-${Date.now()}.png`
         });
 
-        // 2. Create Document
+        // 2. Upload Source Image Asset (Original Photo) if provided
+        let sourceAssetId = null;
+        if (sourceImageBase64) {
+            const srcMatches = sourceImageBase64.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+            if (srcMatches && srcMatches.length === 3) {
+                const srcBuffer = Buffer.from(srcMatches[2], 'base64');
+                const srcAsset = await client.assets.upload('image', srcBuffer, {
+                    filename: `source-${Date.now()}.png`
+                });
+                sourceAssetId = srcAsset._id;
+            }
+        }
+
+        // 3. Create Document
         const doc = {
             _type: 'artwork',
             title: title || 'Untitled Sketch',
@@ -46,8 +59,16 @@ export default async function handler(req, res) {
                     _ref: asset._id
                 }
             },
+            // Link to the original photo for remixing
+            sourceImage: sourceAssetId ? {
+                _type: 'image',
+                asset: {
+                    _type: 'reference',
+                    _ref: sourceAssetId
+                }
+            } : undefined,
             options: options,
-            publishedAt: new Date().toISOString(), // 퍼블리시 날짜/시간
+            publishedAt: new Date().toISOString(),
             likeCount: 0,
             downloadCount: 0,
             shareCount: 0,

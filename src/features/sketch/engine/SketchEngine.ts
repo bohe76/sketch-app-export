@@ -242,6 +242,8 @@ export class SketchEngine {
 
     updateOptions(newOptions: Partial<SketchOptions>) {
         this.options = { ...this.options, ...newOptions };
+        // If already analyzing/drawing, we don't force re-analysis here to avoid flickering
+        // but next renderLive will pick it up.
     }
 
     resize(maxDimension?: number) {
@@ -283,12 +285,12 @@ export class SketchEngine {
         // --- CRITICAL: Fit image to canvas area precisely ---
         if (aspect > canvasAspect) {
             // Image is wider than canvas
-            this.imageWidth = canvasWidth * this.options.scaleFactor;
-            this.imageHeight = this.imageWidth / aspect;
+            this.imageWidth = Math.round(canvasWidth * this.options.scaleFactor);
+            this.imageHeight = Math.round(this.imageWidth / aspect);
         } else {
             // Image is taller than canvas (like most masonry cards)
-            this.imageHeight = canvasHeight * this.options.scaleFactor;
-            this.imageWidth = this.imageHeight * aspect;
+            this.imageHeight = Math.round(canvasHeight * this.options.scaleFactor);
+            this.imageWidth = Math.round(this.imageHeight * aspect);
         }
 
         // Capping resolution for thumbnails (performance optimization)
@@ -310,7 +312,8 @@ export class SketchEngine {
 
         for (let y = 0; y < this.imageHeight; y++) {
             for (let x = 0; x < this.imageWidth; x++) {
-                const i = (y * Math.floor(this.imageWidth) + x) * 4;
+                // STRIDE FIX: Use the stable integer width for index calculation
+                const i = (y * this.imageWidth + x) * 4;
                 if (data[i + 3] > 128) {
                     const r = data[i], g = data[i + 1], b = data[i + 2];
                     const brightness = ImageProcessor.getBrightness(r, g, b);

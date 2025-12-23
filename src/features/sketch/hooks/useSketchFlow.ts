@@ -103,9 +103,11 @@ export const useSketchFlow = () => {
 
     /**
      * Handles loading a shared artwork into the studio for remixing.
+     * CRITICAL: Uses the CLEAN source photo instead of the already-sketched result.
      */
     const handleRemix = useCallback((artwork: Artwork) => {
-        setSourceImage(artwork.imageUrl);
+        // Fallback to imageUrl if sourceImageUrl is missing (for legacy or edge cases)
+        setSourceImage(artwork.sourceImageUrl || artwork.imageUrl);
         // Apply only the original options to ensure it looks exactly the same
         setOptions(artwork.options);
         setViewMode('studio');

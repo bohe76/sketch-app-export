@@ -3,7 +3,7 @@ import { useSketchStore } from '@/features/sketch/model/store';
 
 export const usePublish = () => {
     const { user } = useAuthStore();
-    const { options } = useSketchStore();
+    const { options, sourceImage } = useSketchStore();
 
     const publishArtwork = async (canvas: HTMLCanvasElement, title: string) => {
         if (!user) throw new Error("Must be logged in to publish");
@@ -31,16 +31,32 @@ export const usePublish = () => {
             }
         }
 
-        // 2. Convert to WebP (Supported by modern browsers, much smaller than PNG)
-        // Use 0.8 quality for good balance between size and quality
+        // 2. Convert Sketch result to WebP
         const base64 = finalCanvas.toDataURL('image/webp', 0.8);
 
-        // 3. Call Serverless Function
+        // 3. Prepare Source Image (Original Photo)
+        let sourceImageBase64 = null;
+        if (sourceImage) {
+            try {
+                const res = await fetch(sourceImage);
+                const blob = await res.blob();
+                sourceImageBase64 = await new Promise<string>((resolve) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result as string);
+                    reader.readAsDataURL(blob);
+                });
+            } catch (e) {
+                console.error("Failed to convert source image for publish:", e);
+            }
+        }
+
+        // 4. Call Serverless Function with both images
         const response = await fetch('/api/publish', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 imageBase64: base64,
+                sourceImageBase64,
                 title,
                 userId: user.uid,
                 options

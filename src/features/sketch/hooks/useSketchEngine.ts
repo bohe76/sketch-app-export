@@ -13,10 +13,17 @@ export const useSketchEngine = (initialOptions: Partial<SketchOptions> = {}) => 
 
     useEffect(() => {
         if (canvasRef.current && !engineRef.current) {
+            // Initialize engine with the actual current options from store if provided later
             engineRef.current = new SketchEngine(canvasRef.current, {
                 ...DEFAULT_OPTIONS,
                 ...initialOptionsRef.current,
             });
+
+            // CRITICAL: If an image was already pending (e.g. during Remix transition), start it now
+            if (currentImageUrlRef.current) {
+                engineRef.current.renderLive(currentImageUrlRef.current);
+                setIsDrawing(true);
+            }
         }
 
         return () => {
@@ -28,8 +35,9 @@ export const useSketchEngine = (initialOptions: Partial<SketchOptions> = {}) => 
     }, []); // Init once
 
     const startDrawing = useCallback((imageUrl: string, options?: Partial<SketchOptions>) => {
+        currentImageUrlRef.current = imageUrl;
         if (engineRef.current) {
-            currentImageUrlRef.current = imageUrl;
+            // CRITICAL: Ensure options are applied BEFORE renderLive analysis starts
             if (options) {
                 engineRef.current.updateOptions(options);
             }

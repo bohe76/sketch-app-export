@@ -4,6 +4,7 @@ export interface Artwork {
     _id: string;
     imageUrl: string;
     thumbnailUrl?: string;
+    sourceImageUrl?: string;
     authorId: string;
     authorName: string;
     authorAvatar?: string;

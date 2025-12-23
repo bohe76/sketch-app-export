@@ -20,8 +20,11 @@ export const Canvas: React.FC<CanvasProps> = React.memo(({
     // Trigger drawing when image or options change
     useEffect(() => {
         if (imageUrl) {
-            // Pass current options together to ensure immediate sync
-            startDrawing(imageUrl, options);
+            // Small timeout to ensure engine initialization has completed in the other hook
+            const timer = setTimeout(() => {
+                startDrawing(imageUrl, options);
+            }, 0);
+            return () => clearTimeout(timer);
         }
     }, [imageUrl, startDrawing, options]);
 
