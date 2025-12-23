@@ -13,10 +13,11 @@
   - 두께 표준: 시스템 말풍선(Tooltip)과 동일한 `1px` (border) 사용.
 - **Motion**: 
   - Layout Transitions: `0.15s` duration, `easeOut` easing (Tween type).
-  - Hover Interactions: `0.3s` duration for vignetting/glow effects.
+  - Hover Interactions: `0.3s` duration for vignetting/glow 효과.
+  - **Thumbnail Signature Hover**: `3.0s` duration `easeOut` fade-out (3000ms 동안 서서히 투명해지며 실시간 드로잉 노출).
   - Action Buttons (ArtworkCard): 
     - Desktop (≥1024px): Reveal on Hover (0.3s transition).
-    - Mobile/Tablet (<1024px): Always Visible (Opacity 100%) for accessibility.
+    - Mobile/Tablet (<1024px): Always Visible (Opacity 100%) for accessibility. (판단 기준: 화면 너비 < 1024px)
 
 ---
 
@@ -66,6 +67,7 @@
 
 - **Duration**: `200ms` ~ `300ms` (Snappy Interaction)
 - **Fade-in Reveal**: 이미지 로딩 완료 시 전용 스케일 & 페이드 효과 적용.
+- **Thumbnail Fade-out**: 실시간 드로잉 연출을 위한 3000ms 장기 페이드 아웃 효과.
 - **Pulsing Skeleton**: 은은한 무브먼트를 동반한 박동 효과.
 
 ---

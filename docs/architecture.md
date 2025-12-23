@@ -25,7 +25,7 @@
 
 - **Auth Store**: `useAuthStore` (`src/features/auth/model/store.ts`) - 사용자 세션 및 프로필 관리.
 - **Feed Store**: `useFeedStore` (`src/features/feed/model/feedStore.ts`) - 작품 목록, 탭 상태, 좋아요/삭제 동기화.
-- **Sketch Store**: `useSketchStore` (`src/features/sketch/model/store.ts`) - 캔버스 이미지 소스, 옵션, 드로잉 상태 관리.
+- **Sketch Store**: `useSketchStore` (`src/features/sketch/model/store.ts`) - 캔버스 이미지 소스, 옵션, 드로잉 상태 관리. `isPaused` 필드를 통해 애니메이션 중 엔진 가동 여부를 제어.
 - **UI Store**: `useUIStore` (`src/shared/model/uiStore.ts`) - 뷰 모드(Studio/Feed) 및 액티브 탭 전역 관리.
 - **Modal Stores**:
     - `usePublishModalStore`: 게시 모달 상태 및 캔버스 스냅샷 데이터.
@@ -109,6 +109,11 @@ Vite 개발 서버와 Express API 서버의 충돌을 방지하기 위한 통합
 ### 5-2. Delayed Exposure
 
 - 이미 캐싱된 이미지 로드 시 찰나의 로딩 UI가 깜빡이는 것을 방지하기 위해 **400ms 지연 노출** 전략을 사용합니다.
+
+### 5-3. Kill & Defer (Mobile Optimization)
+
+- 모바일 기기 성능 최적화를 위해 **레이아웃 변화(예: 빈티지 틴트 피커 확장) 감지 시 즉시 엔진 중지 및 캔버스 소거**를 수행합니다.
+- UI 애니메이션이 완료된 것으로 판단되는 **500ms** 후에 드로잉을 재개하여, 인터랙션의 부드러움과 결과물의 정확도를 모두 확보합니다.
 
 ---
 
