@@ -1,5 +1,11 @@
 import { DEFAULT_OPTIONS } from './types';
 import type { SketchOptions, PixelData, DrawingHead } from './types';
+import { ImageProcessor } from '../utils/ImageProcessor';
+import { APP_CONFIG } from '@/shared/config/constants';
+
+
+
+
 
 export class SketchEngine {
     private canvas: HTMLCanvasElement;
@@ -178,7 +184,7 @@ export class SketchEngine {
 
                 // Run until completion (max 100,000 steps for high fidelity)
                 let safety = 0;
-                while (this.step() && safety < 100000) {
+                while (this.step() && safety < APP_CONFIG.MAX_STEPS_INSTANT) {
                     safety++;
                     // Stop if covering 99% of target pixels
                     if (this.drawnBlackPixels >= this.totalBlackPixels * 0.99) break;
@@ -285,12 +291,12 @@ export class SketchEngine {
                 const i = (y * Math.floor(this.imageWidth) + x) * 4;
                 if (data[i + 3] > 128) {
                     const r = data[i], g = data[i + 1], b = data[i + 2];
-                    const brightness = r + g + b;
+                    const brightness = ImageProcessor.getBrightness(r, g, b);
                     if (brightness < this.options.threshold) {
                         const key = `${Math.floor(x)},${Math.floor(y)}`;
                         this.pixelMap.set(key, {
                             x: Math.floor(x), y: Math.floor(y), visitCount: 0,
-                            intensity: 1.0 - (brightness / this.options.threshold),
+                            intensity: ImageProcessor.calculateIntensity(brightness, this.options.threshold),
                             color: { r, g, b }
                         });
                     }

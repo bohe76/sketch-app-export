@@ -61,6 +61,11 @@
 
 ## 5. 레이아웃 및 성능
 
+### 5-0. Responsive Grid (Masonry)
+
+- **Logic Separation**: `useResponsiveGrid` 훅을 통해 화면 너비에 따라 최적의 컬럼 수를 계산합니다. (TDD 검증 완료)
+- **Performance**: ResizeObserver를 활용하여 불필요한 리렌더링을 최소화합니다.
+
 ### 5-1. 포트 관리 (Port 3000)
 
 - 모든 API 요청 및 프론트엔드 서빙은 `localhost:3000`을 기준으로 동작하며, Sanity CORS 설정도 이에 맞춰 관리됩니다.

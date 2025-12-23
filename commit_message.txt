@@ -1,8 +1,0 @@
-chore: remove legacy Vite template files and update documentation
-
-- Delete unused Vite default files:
-  - src/main.ts (conflicting entry point)
-  - src/style.css
-  - src/counter.ts
-  - src/typescript.svg
-- Update documentation files (PRD, Architecture, Functional Spec, Design System)
