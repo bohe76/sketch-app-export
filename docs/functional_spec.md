@@ -43,6 +43,10 @@
     - **Live Animation**: `requestAnimationFrame`을 사용하여 과정을 보여줌 (UX용).
     - **Instant Completion**: 동기 루프를 통해 결과물을 즉시 생성 (썸네일/다운로드용).
 - 모바일에서는 엄지손가락 영역 내 **Bottom Sheet** 형태의 컨트롤 패널 제공.
+- **Style Selection UI**:
+  - 카드 간 구분 명확화를 위해 평상시 `Zinc-300` 테두리 적용.
+  - 마우스 호버 및 스타일 선택 시 `Zinc-800`으로 테두리 색상 강화 피드백 제공.
+  - 모든 테두리 두께는 시스템 툴팁과 동일하게 유지하여 시각적 일관성 확보.
 - **Vintage Tinting**: Vintage 스타일 선택 시 전용 색상 선택기(Color Picker)가 활성화되어 결과물의 틴트 톤을 실시간으로 조절할 수 있습니다.
 
 ### 2-3. 수정 및 리믹스 (Edit/Remix)

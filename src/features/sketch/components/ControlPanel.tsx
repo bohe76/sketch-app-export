@@ -59,10 +59,10 @@ const StyleCard: React.FC<{
     return (
         <button
             onClick={onClick}
-            className={`relative group flex items-center gap-4 p-2 rounded-2xl border-2 transition-all duration-300 active:scale-[0.98]
+            className={`relative group flex items-center gap-4 p-2 rounded-2xl border transition-all duration-300 active:scale-[0.98]
                 ${isActive
-                    ? 'border-[var(--color-surface-selected)] bg-[var(--color-surface-selected)] shadow-xl'
-                    : 'border-zinc-100 bg-white hover:border-zinc-300 shadow-sm'}`}
+                    ? 'border-zinc-800 bg-[var(--color-surface-selected)] shadow-xl'
+                    : 'border-zinc-300 bg-white hover:border-zinc-800 shadow-sm'}`}
         >
             {/* 48px Thumbnail Container */}
             <div className="w-12 h-12 flex-shrink-0 relative overflow-hidden rounded-xl bg-zinc-50 border border-zinc-100">

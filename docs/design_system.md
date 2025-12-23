@@ -6,7 +6,11 @@
 - **Skeleton Background**: `bg-zinc-200` (부드럽고 덜 자극적인 로딩 시각화 표준)
 - **Accent**: Red (`#FF3040` / `text-red-500`) for errors/required, Blue (`#0095F6`) for links.
 - **Emphasis**: `text-red-500 font-bold` - 용량 제한(Max 4MB) 등 사용자가 즉시 인지해야 하는 핵심 제약 사항에 사용.
-- **Border**: `Zinc-200` - 표준 구분선 및 툴팁 테두리.
+- **Border**: 
+  - 기본 가이드라인: `Zinc-200`
+  - 대화형 카드(StyleCard) 평상시: `Zinc-300`
+  - 대화형 카드(StyleCard) 호버/활성: `Zinc-800`
+  - 두께 표준: 시스템 말풍선(Tooltip)과 동일한 `1px` (border) 사용.
 - **Motion**: 
   - Layout Transitions: `0.15s` duration, `easeOut` easing (Tween type).
   - Hover Interactions: `0.3s` duration for vignetting/glow effects.
