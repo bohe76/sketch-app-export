@@ -13,6 +13,7 @@ interface ArtworkCardProps {
     onDownload: (e: React.MouseEvent, art: Artwork) => void;
     onShare: (e: React.MouseEvent, art: Artwork) => void;
     onClick: () => void;
+    showActionsAlways?: boolean;
 }
 
 export const ArtworkCard: React.FC<ArtworkCardProps> = ({
@@ -22,7 +23,8 @@ export const ArtworkCard: React.FC<ArtworkCardProps> = ({
     onLike,
     onDownload,
     onShare,
-    onClick
+    onClick,
+    showActionsAlways = false
 }) => {
     const [isHovered, setIsHovered] = useState(false);
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -32,6 +34,7 @@ export const ArtworkCard: React.FC<ArtworkCardProps> = ({
 
     // Initial check for mobile to prevent hover logic
     const isMobile = typeof window !== 'undefined' && 'ontouchstart' in window;
+    const shouldShowActions = isHovered || showActionsAlways || isMobile;
 
     const stopSketching = useCallback(() => {
         if (hoverTimerRef.current) {
@@ -138,7 +141,7 @@ export const ArtworkCard: React.FC<ArtworkCardProps> = ({
             </div>
 
             {/* 3. Overlay (Actions) - Higher Z-Index and Absolute to prevent layout shifts */}
-            <div className={`feed-card-overlay absolute bottom-0 left-0 right-0 z-40 p-4 transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
+            <div className={`feed-card-overlay absolute bottom-0 left-0 right-0 z-40 p-4 transition-opacity duration-300 ${shouldShowActions ? 'opacity-100' : 'opacity-0'}`}>
                 <div className="flex items-end justify-between w-full">
                     <div className="flex items-center bg-white/80 backdrop-blur-md rounded-full shadow-soft px-1.5 py-1">
                         <button

@@ -51,9 +51,16 @@
 
 - 작품 삭제 시 Sanity 트랜잭션을 사용하여 `artwork` 문서와 연결된 `imageAsset`을 원자적으로 삭제함으로써 고아 에셋 발생을 원천 차단합니다.
 
-### 3-3.- **Metadata Bridge (Canvas Interaction)**:
-  - 캔버스 엔진(`SketchEngine`)과 UI 간의 소통을 위해 HTML5 **Data Attributes**를 활용합니다.
-  - 엔진이 계산한 이미지 실제 위치 정보를 `data-img-x`, `data-img-y`, `data-img-w`, `data-img-h`에 기록하고, UI가 이를 읽어 크롭 다운로드 및 미리보기 생성에 활용합니다.
+### 3-3. Fixed Column Domes (Motion Stability)
+
+- 브라우저 리사이즈 시 썸네일 이동 애니메이션의 끊김을 방지하기 위해 **최대 9개의 정적 컬럼 노드**를 DOM에 상주시키는 방식을 사용합니다.
+- 컬럼 개수가 줄어들더라도 노드를 파괴(Unmount)하지 않고 `flex: 0`, `maxWidth: 0`으로 수렴하게 하여 아이템이 '이미 존재하는 부모' 사이를 부드럽게 이동하도록 보장합니다.
+
+### 3-4. Hybrid Interaction Propagating
+
+- 부모 컴포넌트(`FeedList`)에서 감지한 `isDesktop` 상태를 자식 컴포넌트(`ArtworkCard`)로 전파하여 모바일 환경 여부에 따른 조건부 UI(예: 액션 버튼 항시 노출 여부)를 결정합니다.
+
+### 3-5. Metadata Bridge (Canvas Interaction)
 
 ### 3-4. Data Snapshotting (Publish Flow)
 

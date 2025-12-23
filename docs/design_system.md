@@ -7,6 +7,12 @@
 - **Accent**: Red (`#FF3040` / `text-red-500`) for errors/required, Blue (`#0095F6`) for links.
 - **Emphasis**: `text-red-500 font-bold` - 용량 제한(Max 4MB) 등 사용자가 즉시 인지해야 하는 핵심 제약 사항에 사용.
 - **Border**: `Zinc-200` - 표준 구분선 및 툴팁 테두리.
+- **Motion**: 
+  - Layout Transitions: `0.15s` duration, `easeOut` easing (Tween type).
+  - Hover Interactions: `0.3s` duration for vignetting/glow effects.
+  - Action Buttons (ArtworkCard): 
+    - Desktop (≥1024px): Reveal on Hover (0.3s transition).
+    - Mobile/Tablet (<1024px): Always Visible (Opacity 100%) for accessibility.
 
 ---
 
@@ -18,6 +24,9 @@
   - 섹션 간격: `space-y-6`
   - 슬라이더 간 간격: `space-y-4`
   - 슬라이더 내부(Label-Bar) 간격: `space-y-1.5`
+- **Responsive Grid**:
+  - Desktop (≥1024px): Max 9 컬럼, 카드당 `232px` 고정 너비, 0.15s 이동 애니메이션 적용, 버튼 호버 노출.
+  - Mobile/Tablet (<1024px): 2~3컬럼 자동 조절, 100% 가변 너비, 즉각적 레이아웃 전환(0s) 적용, 버튼 상시 노출.
 - **Layering (Z-Index Hierarchy)**:
   - `z-0`: 캔버스/피드
   - `z-[100]`: 글로벌 헤더

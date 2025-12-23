@@ -76,3 +76,8 @@ author: Antigravity
     - 외부 이미지 로드 시 브라우저 캐시로 인한 분석 실패를 막기 위해 항상 **Anonymous CrossOrigin**과 **Timestamp Cache Buster**를 결합하여 로드합니다.
 3.  **Layout Stability**:
     - `prepareCanvas`는 뷰포트 레이아웃이 완전히 정착된 후(`requestAnimationFrame`) 실행되어 정확한 좌표 계산을 보장합니다.
+## 6. 디자인 정합성 원칙 (Motion & Parameter Harmony)
+
+엔진의 드로잉 파라미터는 UI의 레이아웃 모션(0.15s, `easeOut`)과 시각적 톤앤매너를 공유해야 합니다.
+- **Snappy Alignment**: 캔버스의 실시간 렌더링 속도(`drawSpeed`)는 UI의 기민한 반응성과 조화를 이루도록 튜닝됩니다.
+- **Clean Scale**: 레이아웃 변경 시 발생하는 스케일링 체감이 드로잉의 정교함을 해치지 않도록 `layout="position"` 및 `layout` 최적화를 병행합니다.

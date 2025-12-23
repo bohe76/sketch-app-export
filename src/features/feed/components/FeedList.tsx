@@ -203,6 +203,7 @@ export const FeedList: React.FC<FeedListProps> = ({ filterAuthorId, sort = 'late
                                             onDownload={handleDownload}
                                             onShare={handleShare}
                                             onClick={() => onArtworkClick?.(art)}
+                                            showActionsAlways={!isDesktop}
                                         />
                                     ))}
                             </motion.div>
