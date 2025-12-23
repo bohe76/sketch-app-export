@@ -31,7 +31,7 @@
     - `usePublishModalStore`: 게시 모달 상태 및 캔버스 스냅샷 데이터.
     - `useLoginModalStore`: 로그인 모달 상태.
     - `useToastStore`: 전역 토스트 알림 상태.
-    - `useModalStore`: 기타 일반 모달 상태.
+    - `useModalStore`: 기타 일반 모달 상태. `cancelText`가 빈 문자열(`""`)일 경우 '취소' 버튼을 렌더링하지 않는 가변 인터랙션 지원.
 
 ### 2-3. Shared Resources (Refactored)
 

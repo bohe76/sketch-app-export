@@ -1,6 +1,5 @@
-fix: 4MB 용량 초과 모달에서 취소 버튼 제거 및 모달 시스템 안정화
+docs: 모달 인터랙션 표준 및 용량 제한 UX 정책 업데이트
 
-- GlobalModal: cancelText가 빈 문자열일 경우 취소 버튼을 렌더링하지 않도록 수정
-- useSketchFlow: 용량 초과 안내 모달 호출 시 cancelText: ""를 명시하여 'Understood' 버튼만 노출
-- modalStore: cancelText의 기본값을 'Cancel'로 유지하여 다른 모달들에 대한 사이드 이펙트 방지
-- 가독성 및 UX 개선을 위해 불필요한 선택지 제거
+- design_system.md: 안내용 모달에서의 취소 버튼 숨김 규칙 추가
+- functional_spec.md: 4MB 용량 초과 경고 모달의 UX 정책(Understood 버튼 전용) 명시
+- architecture.md: GlobalModal의 가변 버튼 렌더링 아키텍처 반영
