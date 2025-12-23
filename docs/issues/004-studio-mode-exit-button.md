@@ -1,7 +1,7 @@
 ---
 title: 스튜디오 모드 진입 시 나가기 버튼 부재
 date: 2025-12-22
-status: open
+status: closed
 priority: low
 author: Antigravity
 ---

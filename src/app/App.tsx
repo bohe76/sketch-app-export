@@ -4,7 +4,7 @@ import { ControlPanel } from '@/features/sketch/components/ControlPanel';
 import { useSketchStore } from '@/features/sketch/model/store';
 import { useAuthStore } from '@/features/auth/model/store';
 import { initAuth, logout } from '@/features/auth/api/auth';
-import { ArrowDownTrayIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
+import { ArrowDownTrayIcon, ArrowPathIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { PaperAirplaneIcon as PaperAirplaneSolidIcon } from '@heroicons/react/24/solid';
 import { FeedList } from '@/features/feed/components/FeedList';
 import { fetchArtworkById } from '@/features/feed/api/feed';
@@ -178,6 +178,16 @@ const App = () => {
                 {/* Content View Switcher */}
                 {viewMode === 'studio' && (
                     <div className="viewport-studio overflow-hidden">
+                        {/* 0. Exit Button (Back to Gallery) */}
+                        <button
+                            onClick={() => setViewMode('feed')}
+                            className="absolute top-24 left-6 z-[210] bg-white/90 backdrop-blur-md rounded-full p-2.5 shadow-xl border border-white/20 text-zinc-800 hover:bg-white hover:scale-110 active:scale-95 transition-all group pointer-events-auto"
+                        >
+                            <ArrowLeftIcon className="w-6 h-6" />
+                            <div className="tooltip-box hidden group-hover:flex !left-full !ml-3 !-translate-x-0 !bottom-auto !top-1/2 !-translate-y-1/2 whitespace-nowrap">
+                                BACK TO GALLERY
+                            </div>
+                        </button>
                         {/* Mobile Studio Actions Group (Icons only for mobile) */}
                         <div className="lg:hidden absolute top-20 right-4 z-[210] flex flex-row gap-3 pointer-events-auto">
                             <div className="relative group">
