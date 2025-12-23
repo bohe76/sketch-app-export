@@ -8,7 +8,7 @@ import { useUIStore } from '@/shared/model/uiStore';
 export const PublishModal: React.FC = () => {
     const { isOpen, canvas, closePublishModal } = usePublishModalStore();
     const { publishArtwork } = usePublish();
-    const { setSourceImage } = useSketchStore();
+    const { setSourceImage, sourceImage, options } = useSketchStore();
     const { showToast, hideToast } = useToastStore();
     const { setActiveTab, setViewMode } = useUIStore();
 
@@ -22,7 +22,6 @@ export const PublishModal: React.FC = () => {
         if (isOpen) {
             setTitle('');
             setError(false);
-            // Small delay to ensure modal animation is triggered before focus
             setTimeout(() => inputRef.current?.focus(), 50);
         }
     }, [isOpen]);
@@ -40,15 +39,20 @@ export const PublishModal: React.FC = () => {
             setIsPublishing(true);
             showToast("Publishing...", "loading");
 
-            await publishArtwork(canvas, title.trim());
+            // 1. Send snapshots to ensure cleanup doesn't affect the ongoing upload
+            await publishArtwork(canvas, title.trim(), sourceImage, options);
 
-            // Post-publish actions
-            setSourceImage(null);
-            setActiveTab('mine');
-            setViewMode('feed');
-
+            // 2. Only reach here if server responded with 200 OK
             hideToast();
             closePublishModal();
+
+            // 3. Clear the studio AFTER success to ensure a blank starting point
+            setTimeout(() => {
+                setSourceImage(null);
+                setActiveTab('mine');
+                setViewMode('feed');
+                showToast("Masterpiece published successfully!", "success");
+            }, 300);
         } catch (err) {
             console.error("🔥 Publish failed:", err);
             hideToast();

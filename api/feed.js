@@ -2,7 +2,7 @@ import { createClient } from '@sanity/client';
 
 const client = createClient({
     projectId: process.env.VITE_SANITY_PROJECT_ID,
-    dataset: 'production',
+    dataset: process.env.VITE_SANITY_DATASET || 'production',
     apiVersion: '2023-05-03',
     // Token is NOT needed for reading public datasets, 
     // but using it ensures we don't hit rate limits as easily 

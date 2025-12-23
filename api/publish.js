@@ -2,7 +2,7 @@ import { createClient } from '@sanity/client';
 
 const client = createClient({
     projectId: process.env.VITE_SANITY_PROJECT_ID,
-    dataset: 'production',
+    dataset: process.env.VITE_SANITY_DATASET || 'production',
     apiVersion: '2023-05-03',
     token: process.env.SANITY_API_TOKEN,
     useCdn: false,
@@ -13,6 +13,8 @@ export default async function handler(req, res) {
         return res.status(405).json({ message: 'Method not allowed' });
     }
 
+    console.log(`[Publish] Processing request for user: ${req.body.userId}`);
+
     try {
         const { imageBase64, sourceImageBase64, title, userId, options } = req.body;
 
@@ -21,24 +23,31 @@ export default async function handler(req, res) {
         }
 
         // 1. Upload Sketch Result Asset
-        const matches = imageBase64.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
-        if (!matches || matches.length !== 3) {
-            return res.status(400).json({ message: 'Invalid image data format' });
+        const decode = (b64) => {
+            const matches = b64.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+            return matches && matches.length === 3 ? { buf: Buffer.from(matches[2], 'base64'), type: matches[1] } : null;
+        };
+
+        const sketchData = decode(imageBase64);
+        if (!sketchData) {
+            return res.status(400).json({ message: 'Invalid sketch image data format' });
         }
 
-        const buffer = Buffer.from(matches[2], 'base64');
-        const asset = await client.assets.upload('image', buffer, {
-            filename: `sketch-${Date.now()}.png`
+        console.log(`[Publish] Sketch size: ${sketchData.buf.length} bytes`);
+        const asset = await client.assets.upload('image', sketchData.buf, {
+            contentType: sketchData.type,
+            filename: `sketch-${Date.now()}.webp`
         });
 
         // 2. Upload Source Image Asset (Original Photo) if provided
         let sourceAssetId = null;
         if (sourceImageBase64) {
-            const srcMatches = sourceImageBase64.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
-            if (srcMatches && srcMatches.length === 3) {
-                const srcBuffer = Buffer.from(srcMatches[2], 'base64');
-                const srcAsset = await client.assets.upload('image', srcBuffer, {
-                    filename: `source-${Date.now()}.png`
+            const srcData = decode(sourceImageBase64);
+            if (srcData) {
+                console.log(`[Publish] Source size: ${srcData.buf.length} bytes`);
+                const srcAsset = await client.assets.upload('image', srcData.buf, {
+                    contentType: srcData.type,
+                    filename: `source-${Date.now()}.webp`
                 });
                 sourceAssetId = srcAsset._id;
             }

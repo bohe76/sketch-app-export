@@ -279,6 +279,16 @@ export class SketchEngine {
         const dpr = maxDimension ? 1 : (window.devicePixelRatio || 1);
         const canvasWidth = this.canvas.width / dpr;
         const canvasHeight = this.canvas.height / dpr;
+
+        // Safety check for empty canvas or image
+        if (canvasWidth <= 0 || canvasHeight <= 0 || this.img.width <= 0 || this.img.height <= 0) {
+            console.warn("[SketchEngine] Aborted analysis: Invalid dimensions", {
+                canvas: { w: canvasWidth, h: canvasHeight },
+                img: { w: this.img.width, h: this.img.height }
+            });
+            return;
+        }
+
         const aspect = this.img.width / this.img.height;
         const canvasAspect = canvasWidth / canvasHeight;
 
@@ -293,11 +303,15 @@ export class SketchEngine {
             this.imageWidth = Math.round(this.imageHeight * aspect);
         }
 
+        // Ensure dimensions are at least 1px to avoid IndexSizeError
+        this.imageWidth = Math.max(1, Math.round(this.imageWidth));
+        this.imageHeight = Math.max(1, Math.round(this.imageHeight));
+
         // Capping resolution for thumbnails (performance optimization)
         if (maxDimension) {
             const scale = Math.min(1, (maxDimension * 1.5) / Math.max(this.imageWidth, this.imageHeight));
-            this.imageWidth *= scale;
-            this.imageHeight *= scale;
+            this.imageWidth = Math.max(1, Math.round(this.imageWidth * scale));
+            this.imageHeight = Math.max(1, Math.round(this.imageHeight * scale));
         }
 
         this.offsetX = (canvasWidth - this.imageWidth) / 2;

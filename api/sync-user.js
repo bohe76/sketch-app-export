@@ -6,7 +6,7 @@ export const config = {
 
 const client = createClient({
     projectId: process.env.VITE_SANITY_PROJECT_ID,
-    dataset: 'production',
+    dataset: process.env.VITE_SANITY_DATASET || 'production',
     apiVersion: '2023-05-03',
     token: process.env.SANITY_API_TOKEN, // Server-side token
     useCdn: false,

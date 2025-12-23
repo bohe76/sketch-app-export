@@ -3,13 +3,17 @@ import { useSketchStore } from '@/features/sketch/model/store';
 
 export const usePublish = () => {
     const { user } = useAuthStore();
-    const { options, sourceImage } = useSketchStore();
 
-    const publishArtwork = async (canvas: HTMLCanvasElement, title: string) => {
+    // Pass snapshots of data as arguments to ensure we don't depend on changing store state during async upload
+    const publishArtwork = async (
+        canvas: HTMLCanvasElement,
+        title: string,
+        currentSourceImage: string | null,
+        currentOptions: any
+    ) => {
         if (!user) throw new Error("Must be logged in to publish");
 
         // 1. Crop strategy (Same as handleDownload)
-        // Extract drawing bounds from data attributes set by SketchEngine
         const { imgX, imgY, imgW, imgH } = canvas.dataset;
         let finalCanvas: HTMLCanvasElement = canvas;
 
@@ -31,17 +35,21 @@ export const usePublish = () => {
             }
         }
 
-        // 2. Convert Sketch result to WebP
+        // 2. Convert Sketch result (WebP for efficiency)
         const base64 = finalCanvas.toDataURL('image/webp', 0.8);
+        if (base64.length < 1000) throw new Error("Canvas data is corrupted or empty");
 
-        // 3. Prepare Source Image (Original Photo)
+        // 3. Prepare Source Image Snapshot
         let sourceImageBase64 = null;
-        if (sourceImage) {
+        if (currentSourceImage) {
             try {
-                const res = await fetch(sourceImage);
+                const res = await fetch(currentSourceImage);
+                if (!res.ok) throw new Error("Source photo could not be retrieved from memory");
+
                 const blob = await res.blob();
-                sourceImageBase64 = await new Promise<string>((resolve) => {
+                sourceImageBase64 = await new Promise<string>((resolve, reject) => {
                     const reader = new FileReader();
+                    reader.onerror = reject;
                     reader.onloadend = () => resolve(reader.result as string);
                     reader.readAsDataURL(blob);
                 });
@@ -56,10 +64,10 @@ export const usePublish = () => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 imageBase64: base64,
-                sourceImageBase64,
+                sourceImageBase64: sourceImageBase64,
                 title,
                 userId: user.uid,
-                options
+                options: currentOptions
             })
         });
 
