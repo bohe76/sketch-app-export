@@ -25,99 +25,120 @@ export const useSketchFlow = () => {
     const handleImageUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-            const url = URL.createObjectURL(file);
-            setSourceImage(url);
-            setViewMode('studio');
-        }
-    }, [setSourceImage, setViewMode]);
+            // Check file size (4MB limit)
+            const MAX_SIZE = 4 * 1024 * 1024;
+            if (file.size > MAX_SIZE) {
+                openModal({
+                    title: "File Too Large",
+                    content: (
+                        <div className= "space-y-3" >
+                        <p>The selected image is over<b>4MB < /b>.</p >
+                            <p className="text-sm text-gray-500">
+                                Please upload a smaller image to ensure smooth processing and reliable sharing.
+                            </p>
+                                    </div>
+                    ),
+                    confirmText: "Understood",
+                        cancelText: "Close"
+            });
+    // Clear the input so the same file can be selected again if needed
+    e.target.value = '';
+    return;
+}
 
-    /**
-     * Handles sketch options reset with a confirmation modal.
-     */
-    const handleReset = useCallback(() => {
-        openModal({
-            title: "Reset Options",
-            content: "Are you sure you want to reset all sketching parameters to default values?",
-            confirmText: "Reset Now",
-            onConfirm: () => {
-                resetOptions();
-                showToast("Options reset to default", "info");
+const url = URL.createObjectURL(file);
+setSourceImage(url);
+setViewMode('studio');
+        }
+    }, [setSourceImage, setViewMode, openModal]);
+
+/**
+ * Handles sketch options reset with a confirmation modal.
+ */
+const handleReset = useCallback(() => {
+    openModal({
+        title: "Reset Options",
+        content: "Are you sure you want to reset all sketching parameters to default values?",
+        confirmText: "Reset Now",
+        onConfirm: () => {
+            resetOptions();
+            showToast("Options reset to default", "info");
+        }
+    });
+}, [openModal, resetOptions, showToast]);
+
+/**
+ * Handles downloading the sketched image.
+ * Note: This function relies on DOM manipulation for canvas extraction.
+ */
+const handleDownload = useCallback(() => {
+    const canvas = document.querySelector('canvas');
+    if (!canvas) return;
+
+    const { imgX, imgY, imgW, imgH } = canvas.dataset;
+    let downloadUrl = canvas.toDataURL('image/png');
+
+    if (imgX !== undefined && imgY !== undefined && imgW !== undefined && imgH !== undefined) {
+        const x = parseFloat(imgX);
+        const y = parseFloat(imgY);
+        const w = parseFloat(imgW);
+        const h = parseFloat(imgH);
+
+        if (w > 0 && h > 0) {
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = w;
+            tempCanvas.height = h;
+            const tempCtx = tempCanvas.getContext('2d');
+            if (tempCtx) {
+                tempCtx.drawImage(canvas, x, y, w, h, 0, 0, w, h);
+                downloadUrl = tempCanvas.toDataURL('image/png');
             }
-        });
-    }, [openModal, resetOptions, showToast]);
-
-    /**
-     * Handles downloading the sketched image.
-     * Note: This function relies on DOM manipulation for canvas extraction.
-     */
-    const handleDownload = useCallback(() => {
-        const canvas = document.querySelector('canvas');
-        if (!canvas) return;
-
-        const { imgX, imgY, imgW, imgH } = canvas.dataset;
-        let downloadUrl = canvas.toDataURL('image/png');
-
-        if (imgX !== undefined && imgY !== undefined && imgW !== undefined && imgH !== undefined) {
-            const x = parseFloat(imgX);
-            const y = parseFloat(imgY);
-            const w = parseFloat(imgW);
-            const h = parseFloat(imgH);
-
-            if (w > 0 && h > 0) {
-                const tempCanvas = document.createElement('canvas');
-                tempCanvas.width = w;
-                tempCanvas.height = h;
-                const tempCtx = tempCanvas.getContext('2d');
-                if (tempCtx) {
-                    tempCtx.drawImage(canvas, x, y, w, h, 0, 0, w, h);
-                    downloadUrl = tempCanvas.toDataURL('image/png');
-                }
-            }
         }
+    }
 
-        const link = document.createElement('a');
-        link.download = `sketch-${new Date().getTime()}.png`;
-        link.href = downloadUrl;
-        link.click();
-        showToast("Downloaded to your device!", "success");
-    }, [showToast]);
+    const link = document.createElement('a');
+    link.download = `sketch-${new Date().getTime()}.png`;
+    link.href = downloadUrl;
+    link.click();
+    showToast("Downloaded to your device!", "success");
+}, [showToast]);
 
-    /**
-     * Handles opening the publish modal.
-     * Requires user authentication.
-     */
-    const handlePublish = useCallback(() => {
-        if (!user) {
-            openLoginModal();
-            return;
-        }
+/**
+ * Handles opening the publish modal.
+ * Requires user authentication.
+ */
+const handlePublish = useCallback(() => {
+    if (!user) {
+        openLoginModal();
+        return;
+    }
 
-        const canvas = document.querySelector('canvas');
-        if (!canvas) {
-            showToast("Canvas not found.", "error");
-            return;
-        }
+    const canvas = document.querySelector('canvas');
+    if (!canvas) {
+        showToast("Canvas not found.", "error");
+        return;
+    }
 
-        openPublishModal(canvas);
-    }, [user, openLoginModal, openPublishModal, showToast]);
+    openPublishModal(canvas);
+}, [user, openLoginModal, openPublishModal, showToast]);
 
-    /**
-     * Handles loading a shared artwork into the studio for remixing.
-     * CRITICAL: Uses the CLEAN source photo instead of the already-sketched result.
-     */
-    const handleRemix = useCallback((artwork: Artwork) => {
-        // Fallback to imageUrl if sourceImageUrl is missing (for legacy or edge cases)
-        setSourceImage(artwork.sourceImageUrl || artwork.imageUrl);
-        // Apply only the original options to ensure it looks exactly the same
-        setOptions(artwork.options);
-        setViewMode('studio');
-    }, [setSourceImage, setOptions, setViewMode]);
+/**
+ * Handles loading a shared artwork into the studio for remixing.
+ * CRITICAL: Uses the CLEAN source photo instead of the already-sketched result.
+ */
+const handleRemix = useCallback((artwork: Artwork) => {
+    // Fallback to imageUrl if sourceImageUrl is missing (for legacy or edge cases)
+    setSourceImage(artwork.sourceImageUrl || artwork.imageUrl);
+    // Apply only the original options to ensure it looks exactly the same
+    setOptions(artwork.options);
+    setViewMode('studio');
+}, [setSourceImage, setOptions, setViewMode]);
 
-    return {
-        handleImageUpload,
-        handleReset,
-        handleDownload,
-        handlePublish,
-        handleRemix
-    };
+return {
+    handleImageUpload,
+    handleReset,
+    handleDownload,
+    handlePublish,
+    handleRemix
+};
 };

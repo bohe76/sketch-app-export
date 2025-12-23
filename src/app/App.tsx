@@ -291,7 +291,7 @@ const App = () => {
                             </div>
                         ) : (
                             <div className="empty-state-box">
-                                <p className="text-gray-400 mb-4">Drop an image or upload to start your sketch</p>
+                                <p className="text-gray-400 mb-4">Drop an image or upload to start your sketch (Max 4MB)</p>
                                 <button
                                     onClick={() => fileInputRef.current?.click()}
                                     className="btn-text"
