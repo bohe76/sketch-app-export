@@ -26,6 +26,12 @@
 - **UI Store**: 뷰 모드(Studio/Feed) 및 액티브 탭 전역 관리.
 - **Modal Stores**: 각 모달(Publish, Login, Global)의 독립적 상태 관리.
 
+### 2-3. Shared Resources (Refactored)
+
+- **Config**: 상수(`constants.ts`)를 중앙화하여 유지보수성을 확보합니다.
+- **Types**: 전역 타입(`types.ts`)을 정의하여 컴포넌트 간 타입 일관성을 보장합니다.
+- **Custom Hooks**: 비즈니스 로직(예: `useSketchFlow`, `useResponsiveGrid`)을 훅으로 분리하여 뷰와 로직을 철저히 격리합니다.
+
 ---
 
 ## 3. 데이터 동기화 전략 (Synchronization)

@@ -1,7 +1,5 @@
-refactor: Extract hooks & Centralize constants/types (Phase 3-5)
+docs: Update core docs with refactoring details (Phase 3-5)
 
-- Phase 3: Extract masonry grid logic to `useResponsiveGrid` hook (TDD).
-- Phase 4: Centralize constants in `shared/config/constants.ts`.
-- Phase 5: Integrate shared types in `shared/types/types.ts`.
-- Refactor `SketchEngine`, `FeedList`, `feed.ts` to use shared resources.
-- Fix lint strings and build errors.
+- Update `prd.md`: Add Vitest to Tech Stack.
+- Update `architecture.md`: Document Shared Resources (Config, Types, Hooks).
+- Update `functional_spec.md`: Add Responsive Grid Logic details.
