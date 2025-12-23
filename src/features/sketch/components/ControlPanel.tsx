@@ -154,7 +154,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = () => {
         valueDisplay: string | number,
         icon: React.ReactNode
     ) => (
-        <div className="space-y-3">
+        <div className="space-y-1.5">
             <label className="text-[11px] font-bold uppercase tracking-widest text-zinc-600 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <span className="text-zinc-600">{icon}</span>
@@ -223,10 +223,10 @@ export const ControlPanel: React.FC<ControlPanelProps> = () => {
                         </h2>
                     </div>
 
-                    <div className="flex-1 overflow-y-auto p-6 space-y-10 custom-scrollbar">
+                    <div className="flex-1 overflow-y-auto px-6 py-4 space-y-6 custom-scrollbar">
 
                         {/* 1. Style Selection List */}
-                        <div className="space-y-5">
+                        <div className="space-y-3">
                             <label className="text-[11px] font-bold uppercase tracking-widest text-zinc-600 flex items-center gap-2">
                                 <SwatchIcon className="w-4 h-4 text-zinc-600" />
                                 <span>Style Mode</span>
@@ -247,7 +247,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = () => {
 
 
                         {/* 2. Visual Sliders */}
-                        <div className="space-y-8 pt-4">
+                        <div className="space-y-4 pt-2">
                             {renderSlider('momentum', 'Texture', 0.0, 1.0, 0.1, options.momentum?.toFixed(1) || '0.5', <Square3Stack3DIcon className="w-4 h-4" />)}
                             {renderSlider('alpha', 'Opacity', 0.1, 1.0, 0.1, options.alpha?.toFixed(1) || '0.1', <SunIcon className="w-4 h-4" />)}
                             {renderSlider('lineWidth', 'Thickness', 0.1, 2.0, 0.1, options.lineWidth?.toFixed(1) || '0.5', <PaintBrushIcon className="w-4 h-4" />)}
