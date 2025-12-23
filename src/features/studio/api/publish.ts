@@ -1,5 +1,4 @@
 import { useAuthStore } from '@/features/auth/model/store';
-import { useSketchStore } from '@/features/sketch/model/store';
 
 export const usePublish = () => {
     const { user } = useAuthStore();
