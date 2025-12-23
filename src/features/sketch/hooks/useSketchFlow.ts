@@ -33,7 +33,7 @@ export const useSketchFlow = () => {
                     title: "File Too Large",
                     content: "The selected image is over 4MB. Please upload a smaller image.",
                     confirmText: "Understood",
-                    cancelText: "Close"
+                    cancelText: ""
                 });
                 // Clear the input so the same file can be selected again if needed
                 e.target.value = '';

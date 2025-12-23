@@ -43,12 +43,14 @@ export const GlobalModal: React.FC = () => {
 
                 {/* Footer */}
                 <div className="px-6 py-4 bg-gray-50 flex justify-end gap-3">
-                    <button
-                        onClick={handleCancel}
-                        className="btn-modal-cancel"
-                    >
-                        {cancelText}
-                    </button>
+                    {cancelText && (
+                        <button
+                            onClick={handleCancel}
+                            className="btn-modal-cancel"
+                        >
+                            {cancelText}
+                        </button>
+                    )}
                     <button
                         onClick={handleConfirm}
                         className="btn-modal-primary"
