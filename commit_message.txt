@@ -1,0 +1,6 @@
+fix: 스케치 엔진 핵심 로직 복구 및 절대 수정 금지 원칙(Protection Policy) 수립
+
+- 엔진 드로잉 수식(Alpha, Intensity 계산 등)을 main 브랜치의 안정적인 원본 상태로 완전히 복구
+- 드로잉 세션 관리 및 레이아웃 타이밍 로직 보완으로 실행 성능 및 안정성 확보
+- docs/SKETCH_ENGINE_PARAMETERS.md에 '절대 수정 금지 원칙' 및 'Golden Values' 명문화
+- UI 호환성을 위한 SketchOptions 인터페이스 보정 (tintColor 필드 추가)

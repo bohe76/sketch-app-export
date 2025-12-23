@@ -1,11 +1,5 @@
 import { DEFAULT_OPTIONS } from './types';
 import type { SketchOptions, PixelData, DrawingHead } from './types';
-import { ImageProcessor } from '../utils/ImageProcessor';
-import { APP_CONFIG } from '@/shared/config/constants';
-
-
-
-
 
 export class SketchEngine {
     private canvas: HTMLCanvasElement;
@@ -20,7 +14,6 @@ export class SketchEngine {
     private img: HTMLImageElement;
     private isActive: boolean;
     private animationId: number | null;
-    private drawingSession: number = 0;
 
     // Image properties
     private imageWidth: number = 0;
@@ -127,15 +120,7 @@ export class SketchEngine {
                 if (this.options.mode === 'invert') {
                     strokeStyle = `rgba(255,255,255,${calculatedAlpha})`;
                 } else if (this.options.mode === 'sepia') {
-                    if (this.options.tintColor) {
-                        const hex = this.options.tintColor.replace('#', '');
-                        const r = parseInt(hex.substring(0, 2), 16);
-                        const g = parseInt(hex.substring(2, 4), 16);
-                        const b = parseInt(hex.substring(4, 6), 16);
-                        strokeStyle = `rgba(${r},${g},${b},${calculatedAlpha})`;
-                    } else {
-                        strokeStyle = `rgba(93,64,55,${calculatedAlpha})`;
-                    }
+                    strokeStyle = `rgba(93,64,55,${calculatedAlpha})`;
                 } else if (this.options.mode === 'color' && next.pixel.color) {
                     const { r, g, b } = next.pixel.color;
                     strokeStyle = `rgba(${r},${g},${b},${calculatedAlpha})`;
@@ -165,27 +150,18 @@ export class SketchEngine {
     renderLive(imageUrl: string, maxDimension?: number) {
         this.stop();
         this.isActive = true;
-        this.drawingSession++;
-        const currentSession = this.drawingSession;
-
         this.loadImage(imageUrl, () => {
-            if (currentSession !== this.drawingSession) return;
+            this.prepareCanvas(maxDimension);
 
-            // Ensure layout is stable before preparing canvas
-            requestAnimationFrame(() => {
-                if (currentSession !== this.drawingSession) return;
-                this.prepareCanvas(maxDimension);
-
-                const loop = () => {
-                    if (!this.isActive || currentSession !== this.drawingSession) return;
-                    // Run multiple steps per frame for speed control
-                    for (let i = 0; i < this.options.drawSpeed; i++) {
-                        if (!this.step()) break;
-                    }
-                    this.animationId = requestAnimationFrame(loop);
-                };
+            const loop = () => {
+                if (!this.isActive) return;
+                // Run multiple steps per frame for speed control
+                for (let i = 0; i < this.options.drawSpeed; i++) {
+                    if (!this.step()) break;
+                }
                 this.animationId = requestAnimationFrame(loop);
-            });
+            };
+            this.animationId = requestAnimationFrame(loop);
         });
     }
 
@@ -197,16 +173,12 @@ export class SketchEngine {
     async renderInstant(imageUrl: string, maxDimension?: number) {
         return new Promise<void>((resolve) => {
             this.stop();
-            this.drawingSession++;
-            const currentSession = this.drawingSession;
-
             this.loadImage(imageUrl, () => {
-                if (currentSession !== this.drawingSession) return;
                 this.prepareCanvas(maxDimension);
 
                 // Run until completion (max 100,000 steps for high fidelity)
                 let safety = 0;
-                while (this.step() && safety < APP_CONFIG.MAX_STEPS_INSTANT) {
+                while (this.step() && safety < 100000) {
                     safety++;
                     // Stop if covering 99% of target pixels
                     if (this.drawnBlackPixels >= this.totalBlackPixels * 0.99) break;
@@ -313,12 +285,12 @@ export class SketchEngine {
                 const i = (y * Math.floor(this.imageWidth) + x) * 4;
                 if (data[i + 3] > 128) {
                     const r = data[i], g = data[i + 1], b = data[i + 2];
-                    const brightness = ImageProcessor.getBrightness(r, g, b);
+                    const brightness = r + g + b;
                     if (brightness < this.options.threshold) {
                         const key = `${Math.floor(x)},${Math.floor(y)}`;
                         this.pixelMap.set(key, {
                             x: Math.floor(x), y: Math.floor(y), visitCount: 0,
-                            intensity: ImageProcessor.calculateIntensity(brightness, this.options.threshold),
+                            intensity: 1.0 - (brightness / this.options.threshold),
                             color: { r, g, b }
                         });
                     }

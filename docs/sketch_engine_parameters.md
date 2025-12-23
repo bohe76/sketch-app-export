@@ -42,10 +42,23 @@ author: Antigravity
 
 ---
 
-## 4. Default State (초기화 상태 요약)
+## 4. 절대 수정 금지 원칙 (Absolute Protection Policy)
 
-엔진이 처음 구동될 때의 "Balanced Sketch" 표준 상태입니다.
+이 섹션에 정의된 **'Golden Values'**는 엔진의 고유한 질감을 유지하는 핵심 유산입니다. AI 어시스턴트는 다음 수칙을 반드시 준수해야 합니다.
 
-- **Speed & Performance**: Mid-High Speed (160) / Swarm Effect (64 Heads)
-- **Selection Mode**: Brightness-based Gray Analysis (Threshold: 640)
-- **Standard Look**: momentum: 0.5 / alpha: 0.1 / lineWidth: 0.5
+1.  **수정 금지**: 사용자의 지시 없이 어떠한 수치나 수식도 임의로 최적화하거나 변경할 수 없습니다.
+2.  **경고 및 2단계 컨펌**: 사용자가 수정을 요청하더라도, 해당 수정이 비주얼 품질(진하기, 질감 등)에 미칠 수 있는 영향을 먼저 설명하고 **반드시 2회 이상의 추가 컨펌**을 거친 후 수행합니다.
+3.  **수식 보존**: 리팩토링 과정에서도 드로잉 수식 자체의 비즈니스 로직은 단 한 글자도 수정하지 않습니다.
+
+## 5. Golden Values & Default State
+
+### 5.1 Drawing Formulas (Essential Logic)
+- **Alpha Calculation**: `Math.max(0.05, (intensity || 0.5) * (baseAlpha / 0.1) - (visitCount * 0.05))`
+- **Brightness Analysis**: `R + G + B` (Sum-based Gray)
+- **Intensity Filter**: `1.0 - (brightness / threshold)`
+
+### 5.2 표준 초기 상태 (Balanced Sketch)
+- **Speed & Performance**: `drawSpeed`: 160 / `maxHeads`: 64
+- **Swarm Control**: `branchProbability`: 0.05 / `scaleFactor`: 0.8
+- **Standard Look**: `momentum`: 0.5 / `alpha`: 0.1 / `lineWidth`: 0.5 / `threshold`: 640
+- **Life Cycle**: `minLife`: 100 / `maxLife`: 300
