@@ -15,6 +15,8 @@ interface SketchStore {
     // UI State
     isDrawing: boolean;
     setIsDrawing: (isDrawing: boolean) => void;
+    isPaused: boolean;
+    setIsPaused: (isPaused: boolean) => void;
 }
 
 export const useSketchStore = create<SketchStore>((set) => ({
@@ -29,4 +31,6 @@ export const useSketchStore = create<SketchStore>((set) => ({
 
     isDrawing: false,
     setIsDrawing: (isDrawing) => set({ isDrawing }),
+    isPaused: false,
+    setIsPaused: (isPaused) => set({ isPaused }),
 }));

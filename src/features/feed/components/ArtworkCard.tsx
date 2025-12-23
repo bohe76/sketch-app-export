@@ -33,7 +33,7 @@ export const ArtworkCard: React.FC<ArtworkCardProps> = ({
     const cleanupTimerRef = useRef<any>(null);
 
     // Initial check for mobile to prevent hover logic
-    const isMobile = typeof window !== 'undefined' && 'ontouchstart' in window;
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
     const shouldShowActions = isHovered || showActionsAlways || isMobile;
 
     const stopSketching = useCallback(() => {

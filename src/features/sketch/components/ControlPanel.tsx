@@ -32,6 +32,7 @@ const StyleCard: React.FC<{
 }> = ({ style, isActive, onClick, sourceImage }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const engineRef = useRef<SketchEngine | null>(null);
+    const [isHovered, setIsHovered] = useState(false);
 
     useEffect(() => {
         // Only run the engine if there's a user-uploaded image
@@ -53,12 +54,34 @@ const StyleCard: React.FC<{
             alpha: style.alpha,
             momentum: style.momentum
         });
-        engineRef.current.renderInstant(sourceImage, 120);
-    }, [sourceImage, style]);
+
+        // Ensure instant render only if not currently hovering to avoid interrupting live draw
+        if (!isHovered) {
+            engineRef.current.renderInstant(sourceImage, 120);
+        }
+    }, [sourceImage, style, isHovered]);
+
+    const handleMouseEnter = () => {
+        setIsHovered(true);
+        if (engineRef.current && sourceImage) {
+            engineRef.current.stop();
+            engineRef.current.renderLive(sourceImage, 120);
+        }
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovered(false);
+        if (engineRef.current && sourceImage) {
+            engineRef.current.stop();
+            engineRef.current.renderInstant(sourceImage, 120);
+        }
+    };
 
     return (
         <button
             onClick={onClick}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
             className={`relative group flex items-center gap-4 p-2 rounded-2xl border transition-all duration-300 active:scale-[0.98]
                 ${isActive
                     ? 'border-zinc-800 bg-[var(--color-surface-selected)] shadow-xl'
@@ -67,13 +90,21 @@ const StyleCard: React.FC<{
             {/* 48px Thumbnail Container */}
             <div className="w-12 h-12 flex-shrink-0 relative overflow-hidden rounded-xl bg-zinc-50 border border-zinc-100">
                 {sourceImage ? (
-                    // Live Mode: Show actual sketch of user's photo
-                    <canvas
-                        ref={canvasRef}
-                        width={96}
-                        height={96}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
+                    <div className="relative w-full h-full">
+                        {/* Background Canvas: Shows the drawing process */}
+                        <canvas
+                            ref={canvasRef}
+                            width={96}
+                            height={96}
+                            className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-110`}
+                        />
+                        {/* Overlay Image: Disappears over 3 seconds on hover */}
+                        <img
+                            src={sourceImage}
+                            alt="preview"
+                            className={`absolute inset-0 w-full h-full object-cover transition-all duration-[3000ms] ease-out pointer-events-none group-hover:scale-110 ${isHovered ? 'opacity-0' : 'opacity-100'}`}
+                        />
+                    </div>
                 ) : (
                     // Static Mode: Show high-quality pre-rendered thumbnail
                     <img
@@ -109,7 +140,7 @@ const StyleCard: React.FC<{
 };
 
 export const ControlPanel: React.FC<ControlPanelProps> = () => {
-    const { options, setOptions, isDrawing, sourceImage } = useSketchStore();
+    const { options, setOptions, isDrawing, sourceImage, setIsPaused } = useSketchStore();
     const [activeSetting, setActiveSetting] = useState<string | null>(null);
     const [activeStyle, setActiveStyle] = useState('classic');
 
@@ -121,10 +152,24 @@ export const ControlPanel: React.FC<ControlPanelProps> = () => {
         }
     }, [options.mode]);
 
+    const styleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
     const handleStyleChange = (styleId: string) => {
-        setActiveStyle(styleId);
+        // Clear any pending style updates
+        if (styleTimerRef.current) {
+            clearTimeout(styleTimerRef.current);
+        }
+
+        const prevStyle = activeStyle;
+        const nextStyle = styleId;
         const style = STYLES.find(s => s.id === styleId);
-        if (style) {
+
+        // Immediate UI Update (for smooth CSS transitions)
+        setActiveStyle(styleId);
+
+        if (!style) return;
+
+        const updateDrawing = () => {
             setOptions({
                 mode: style.mode as any,
                 alpha: style.alpha,
@@ -133,6 +178,23 @@ export const ControlPanel: React.FC<ControlPanelProps> = () => {
                 drawSpeed: 150,
                 maxHeads: 100
             });
+        };
+
+        // If entering or exiting Vintage mode, delay drawing to keep UI animations smooth
+        const isVintageTransition = prevStyle === 'vintage' || nextStyle === 'vintage';
+        const isMobile = window.innerWidth < 1024;
+
+        if (isMobile && isVintageTransition) {
+            // CRITICAL OPTIMIZATION: STOP and CLEAR drawing immediately to free up CPU for animation
+            setIsPaused(true);
+
+            styleTimerRef.current = setTimeout(() => {
+                setIsPaused(false);
+                updateDrawing();
+            }, 500);
+        } else {
+            // Normal transition: Just update instantly
+            updateDrawing();
         }
     };
 
