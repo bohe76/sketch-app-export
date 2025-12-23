@@ -17,8 +17,8 @@
 
 ### 2-1. SketchEngine 분석 로직
 
-- **CORS 대응**: Sanity CDN 이미지 로드 시 캐시 충돌을 방지하기 위해 **Cache Buster (`?t=...`)**를 URL에 추가합니다.
-- **Blob 예외 처리**: 로컬에서 업로드한 이미지(`blob:`)에는 쿼리 스트링을 붙이지 않아 로드 오류를 방지합니다.
+- **CORS 대응**: Sanity CDN 이미지 로드 시 캐시 충돌을 방지하기 위해 **Cache Buster (`?t=Timestamp`)**를 URL에 추가합니다.
+- **Blob 예외 처리**: 사용자가 로컬에서 갓 업로드한 이미지(`blob:`)에는 쿼리 스트링을 붙이지 않아 로드 오류를 원천 차단합니다.
 
 ### 2-1-1. 파일 용량 제한 (Payload Constraints)
 
@@ -32,6 +32,7 @@
     - **Live Animation**: `requestAnimationFrame`을 사용하여 과정을 보여줌 (UX용).
     - **Instant Completion**: 동기 루프를 통해 결과물을 즉시 생성 (썸네일/다운로드용).
 - 모바일에서는 엄지손가락 영역 내 **Bottom Sheet** 형태의 컨트롤 패널 제공.
+- **Vintage Tinting**: Vintage 스타일 선택 시 전용 색상 선택기(Color Picker)가 활성화되어 결과물의 틴트 톤을 실시간으로 조절할 수 있습니다.
 
 ### 2-3. 수정 및 리믹스 (Edit/Remix)
 

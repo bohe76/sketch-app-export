@@ -5,6 +5,7 @@
 - **Primary**: Pure Black (`#000000`) & White (`#FFFFFF`) using Tailwind `black` / `white`.
 - **Skeleton Background**: `bg-zinc-200` (부드럽고 덜 자극적인 로딩 시각화 표준)
 - **Accent**: Red (`#FF3040` / `text-red-500`) for errors/required, Blue (`#0095F6`) for links.
+- **Emphasis**: `text-red-500 font-bold` - 용량 제한(Max 4MB) 등 사용자가 즉시 인지해야 하는 핵심 제약 사항에 사용.
 - **Border**: `Zinc-200` - 표준 구분선 및 툴팁 테두리.
 
 ---
@@ -12,7 +13,11 @@
 ## 2. Layout & Spacing
 
 - **Mobile-First Layout**: 하단 탭 바(`z-50`)와 엄지 영역 중심의 버튼 배치.
-- **Desktop Sidebar**: 튜닝 패널은 우측 고정 사이드바(`z-10`)로 구성.
+- **Desktop Sidebar**: 튜닝 패널은 우측 고정 사이드바(`z-10`)로 구성. 
+  - 표준 패딩: `px-6 py-4`
+  - 섹션 간격: `space-y-6`
+  - 슬라이더 간 간격: `space-y-4`
+  - 슬라이더 내부(Label-Bar) 간격: `space-y-1.5`
 - **Layering (Z-Index Hierarchy)**:
   - `z-0`: 캔버스/피드
   - `z-[100]`: 글로벌 헤더

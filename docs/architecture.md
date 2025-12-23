@@ -51,13 +51,13 @@
 
 - 작품 삭제 시 Sanity 트랜잭션을 사용하여 `artwork` 문서와 연결된 `imageAsset`을 원자적으로 삭제함으로써 고아 에셋 발생을 원천 차단합니다.
 
-### 3-3. Metadata Bridge (Canvas Interaction)
-
-- 캔버스 엔진(`SketchEngine`)과 UI 간의 소통을 위해 HTML5 **Data Attributes**를 활용합니다. 엔진이 계산한 이미지 좌표 정보를 DOM에 기록하고, UI가 이를 읽어 크롭 다운로드 등에 활용합니다.
+### 3-3.- **Metadata Bridge (Canvas Interaction)**:
+  - 캔버스 엔진(`SketchEngine`)과 UI 간의 소통을 위해 HTML5 **Data Attributes**를 활용합니다.
+  - 엔진이 계산한 이미지 실제 위치 정보를 `data-img-x`, `data-img-y`, `data-img-w`, `data-img-h`에 기록하고, UI가 이를 읽어 크롭 다운로드 및 미리보기 생성에 활용합니다.
 
 ### 3-4. Data Snapshotting (Publish Flow)
 
-- 게시(`Publish`) 과정에서 비동기 전송 시점의 데이터 무결성을 보장하기 위해 **Snapshot** 방식을 사용합니다. 
+- 게시(`Publish`) 과정에서 비동기 전송 시점의 데이터 무결성을 보장하기 위해 **Snapshot** 방식을 사용합니다.
 - 통신이 시작되는 즉시 캔버스 베이스64, 드로잉 옵션, 원본 이미지 정보를 상수로 고정하여, 업로드 도중에 스토어 상태가 변경되거나 초기화되어도 안전하게 전송될 수 있도록 설계되었습니다.
 
 ### 3-5. Sequential Upload & Payload Management
@@ -65,7 +65,9 @@
 - **Payload Separation**: Vercel의 4.5MB 요청 제한을 극복하기 위해 **2단계 순차 업로드**를 수행합니다.
     1. `/api/upload-asset`: 원본 이미지를 먼저 업로드하여 Sanity `assetId`를 획득.
     2. `/api/publish`: 스케치 결과물과 위에서 받은 `assetId`를 함께 전송하여 최종 문서를 생성.
-- **Size Limits**: 각 이미지당 **최대 4MB**까지 허용하며, 전체 발행 과정에서 총 8~9MB 수준의 고해상도 데이터를 안전하게 처리할 수 있습니다.
+- **Size & Timeout Limits**: 
+    - 각 이미지당 **최대 4MB**까지 허용 (전체 발행 시 약 8MB 수준).
+    - Vercel Serverless Function 타임아웃 방지를 위해 `/api/publish` 등 핵심 엔드포인트에 `maxDuration: 60` 설정을 적용하여 안정적인 대용량 처리를 보장합니다.
 
 ---
 
