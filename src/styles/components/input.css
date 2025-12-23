@@ -4,23 +4,29 @@
     }
 
     .input-range-premium {
-        @apply w-full cursor-pointer appearance-none bg-transparent;
+        @apply w-full h-10 -my-3 cursor-pointer appearance-none bg-transparent relative z-10;
+        /* h-10 (40px) for hit area, -my-3 to restore visual spacing */
     }
 
     .input-range-premium::-webkit-slider-runnable-track {
-        @apply w-full h-1 bg-zinc-100 rounded-full border-none;
+        @apply w-full h-10 rounded-full border-none;
+        /* Visually thin track (4px) in the center of 40px hit area */
+        background: linear-gradient(to bottom, transparent calc(50% - 2px), #e4e4e7 calc(50% - 2px), #e4e4e7 calc(50% + 2px), transparent calc(50% + 2px));
     }
 
     .input-range-premium::-webkit-slider-thumb {
-        @apply appearance-none h-4 w-4 rounded-full bg-zinc-900 border-2 border-white shadow-md -mt-1.5 transition-transform active:scale-125;
+        @apply appearance-none h-5 w-5 rounded-full bg-zinc-900 border-[2px] border-white shadow-md transition-transform active:scale-125;
+        /* Center thumb: (40px track - 20px thumb) / 2 = 10px */
+        margin-top: 10px;
     }
 
     .input-range-premium::-moz-range-track {
-        @apply w-full h-1 bg-zinc-100 rounded-full border-none;
+        @apply w-full h-10 rounded-full border-none;
+        background: linear-gradient(to bottom, transparent calc(50% - 2px), #e4e4e7 calc(50% - 2px), #e4e4e7 calc(50% + 2px), transparent calc(50% + 2px));
     }
 
     .input-range-premium::-moz-range-thumb {
-        @apply h-4 w-4 rounded-full bg-zinc-900 border-2 border-white shadow-md transition-transform active:scale-125;
+        @apply h-5 w-5 rounded-full bg-zinc-900 border-[2px] border-white shadow-md transition-transform active:scale-125;
     }
 
     .input-file-hidden {
