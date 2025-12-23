@@ -106,7 +106,8 @@ export const ArtworkCard: React.FC<ArtworkCardProps> = ({
     return (
         <motion.div
             layoutId={art._id}
-            layout="position"
+            layout
+            transition={{ type: "tween", ease: "easeOut", duration: 0.15 }}
             className="feed-card group cursor-pointer relative overflow-hidden" // Removed bg-white
             onClick={onClick}
             onMouseEnter={handleMouseEnter}

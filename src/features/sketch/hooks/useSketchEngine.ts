@@ -22,7 +22,7 @@ export const useSketchEngine = (initialOptions: Partial<SketchOptions> = {}) => 
             // CRITICAL: If an image was already pending (e.g. during Remix transition), start it now
             if (currentImageUrlRef.current) {
                 engineRef.current.renderLive(currentImageUrlRef.current);
-                setIsDrawing(true);
+                setTimeout(() => setIsDrawing(true), 0);
             }
         }
 

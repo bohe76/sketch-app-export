@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { LayoutGroup } from 'framer-motion';
+import { LayoutGroup, motion } from 'framer-motion';
 import { fetchFeed, toggleLike, trackMetric } from '../api/feed';
 import type { Artwork } from '../api/feed';
 import { useAuthStore } from '@/features/auth/model/store';
@@ -20,8 +20,15 @@ export const FeedList: React.FC<FeedListProps> = ({ filterAuthorId, sort = 'late
     const { user } = useAuthStore();
     const { artworks, setArtworks, updateArtwork } = useFeedStore();
     const [loading, setLoading] = useState(true);
-    const [prevProps, setPrevProps] = useState({ filterAuthorId, sort, userId: user?.uid, refreshKey });
+    const lastProps = useRef({ filterAuthorId, sort, userId: user?.uid, refreshKey });
     const showToast = useToastStore(state => state.showToast);
+    const [isDesktop, setIsDesktop] = useState(typeof window !== 'undefined' && window.innerWidth >= 1024);
+
+    useEffect(() => {
+        const handleResize = () => setIsDesktop(window.innerWidth >= 1024);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     // Use Custom Hook
     const { containerRef, columnCount } = useResponsiveGrid();
@@ -33,8 +40,8 @@ export const FeedList: React.FC<FeedListProps> = ({ filterAuthorId, sort = 'late
 
 
 
-    if (prevProps.filterAuthorId !== filterAuthorId || prevProps.sort !== sort || prevProps.userId !== user?.uid || prevProps.refreshKey !== refreshKey) {
-        setPrevProps({ filterAuthorId, sort, userId: user?.uid, refreshKey });
+    if (lastProps.current.filterAuthorId !== filterAuthorId || lastProps.current.sort !== sort || lastProps.current.userId !== user?.uid || lastProps.current.refreshKey !== refreshKey) {
+        lastProps.current = { filterAuthorId, sort, userId: user?.uid, refreshKey };
         setLoading(true);
     }
 
@@ -132,8 +139,11 @@ export const FeedList: React.FC<FeedListProps> = ({ filterAuthorId, sort = 'late
     if (loading) {
         return (
             <div ref={containerRef} className="relative w-full overflow-hidden p-4 lg:p-6 pb-20 flex gap-4 justify-center items-start">
-                {Array.from({ length: columnCount }).map((_, colIndex) => (
-                    <div key={`loading-col-${colIndex}`} className={`flex-1 lg:w-[${APP_CONFIG.DEFAULT_DIMENSION_DESKTOP}px] lg:flex-none flex flex-col gap-4`}>
+                {Array.from({ length: 9 }).map((_, colIndex) => (
+                    <div key={`loading-col-${colIndex}`}
+                        className="flex-1 lg:w-[232px] lg:flex-none flex flex-col gap-4"
+                        style={{ display: colIndex < columnCount ? 'flex' : 'none' }}
+                    >
                         {Array.from({ length: 3 }).map((__, i) => (
                             <div key={i} className="bg-zinc-200 rounded-[32px] animate-pulse w-full" style={{ height: `${280 + (Math.random() * 150)}px` }} />
                         ))}
@@ -154,18 +164,35 @@ export const FeedList: React.FC<FeedListProps> = ({ filterAuthorId, sort = 'late
 
     return (
         <div ref={containerRef} className="relative w-full overflow-hidden p-4 lg:p-6 pb-20 min-h-screen">
-            <LayoutGroup>
-                <div className="flex gap-4 justify-center items-start">
-                    {Array.from({ length: 15 }).map((_, colIndex) => {
-                        const isVisible = colIndex < displayColumnCount;
+            <LayoutGroup id="feed-grid">
+                <motion.div
+                    layout="position"
+                    transition={{ type: "tween", ease: "easeOut", duration: 0.15 }}
+                    className="flex justify-center items-start"
+                >
+                    {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((colIndex) => {
+                        const isActive = colIndex < columnCount;
                         return (
-                            <div
-                                key={`col-${colIndex}`}
-                                style={{ display: isVisible ? 'flex' : 'none' }}
-                                className="flex-1 lg:w-[232px] lg:flex-none flex flex-col gap-4"
+                            <motion.div
+                                key={`fixed-col-${colIndex}`}
+                                layout
+                                initial={false}
+                                animate={{
+                                    flex: isActive ? 1 : 0,
+                                    opacity: isActive ? 1 : 0,
+                                    maxWidth: isActive ? (isDesktop ? '232px' : '100%') : '0px',
+                                    padding: isActive ? '0px 8px' : '0px'
+                                }}
+                                transition={{
+                                    type: "tween",
+                                    ease: "easeOut",
+                                    duration: isDesktop ? 0.15 : 0
+                                }}
+                                className="flex flex-col gap-4 overflow-hidden lg:flex-none"
+                                style={{ pointerEvents: isActive ? 'auto' : 'none' }}
                             >
                                 {validArtworks
-                                    .filter((_, idx) => idx % displayColumnCount === colIndex)
+                                    .filter((_, idx) => idx % columnCount === colIndex)
                                     .map((art) => (
                                         <ArtworkCard
                                             key={art._id}
@@ -178,10 +205,10 @@ export const FeedList: React.FC<FeedListProps> = ({ filterAuthorId, sort = 'late
                                             onClick={() => onArtworkClick?.(art)}
                                         />
                                     ))}
-                            </div>
+                            </motion.div>
                         );
                     })}
-                </div>
+                </motion.div>
             </LayoutGroup>
         </div>
     );
