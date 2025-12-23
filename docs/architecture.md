@@ -55,6 +55,18 @@
 
 - 캔버스 엔진(`SketchEngine`)과 UI 간의 소통을 위해 HTML5 **Data Attributes**를 활용합니다. 엔진이 계산한 이미지 좌표 정보를 DOM에 기록하고, UI가 이를 읽어 크롭 다운로드 등에 활용합니다.
 
+### 3-4. Data Snapshotting (Publish Flow)
+
+- 게시(`Publish`) 과정에서 비동기 전송 시점의 데이터 무결성을 보장하기 위해 **Snapshot** 방식을 사용합니다. 
+- 통신이 시작되는 즉시 캔버스 베이스64, 드로잉 옵션, 원본 이미지 정보를 상수로 고정하여, 업로드 도중에 스토어 상태가 변경되거나 초기화되어도 안전하게 전송될 수 있도록 설계되었습니다.
+
+### 3-5. Sequential Upload & Payload Management
+
+- **Payload Separation**: Vercel의 4.5MB 요청 제한을 극복하기 위해 **2단계 순차 업로드**를 수행합니다.
+    1. `/api/upload-asset`: 원본 이미지를 먼저 업로드하여 Sanity `assetId`를 획득.
+    2. `/api/publish`: 스케치 결과물과 위에서 받은 `assetId`를 함께 전송하여 최종 문서를 생성.
+- **Size Limits**: 각 이미지당 **최대 4MB**까지 허용하며, 전체 발행 과정에서 총 8~9MB 수준의 고해상도 데이터를 안전하게 처리할 수 있습니다.
+
 ---
 
 ## 4. 서버 아키텍처 (Unified Server)
@@ -64,10 +76,21 @@ Vite 개발 서버와 Express API 서버의 충돌을 방지하기 위한 통합
 - **Unified Entry**: `api/server.js`에서 Express를 실행하고, Vite를 미들웨어로 주입합니다.
 - **Single Port**: 모든 요청(API, Static, Frontend)은 단일 포트(3000)에서 처리되어 CORS 설정을 단순화합니다.
 - **API Handling**: `/api/*` 요청은 로컬 Express 핸들러(`api/*.js`)가 처리하고, 그 외 요청은 Vite가 SPA로 서빙합니다.
+- **Environment Aware**: 모든 API 엔드포인트는 `VITE_SANITY_DATASET` 환경 변수를 참조하여 `development`와 `production` 환경 간의 데이터 정합성을 유지합니다.
 
 ---
 
-## 5. 로딩 전략 (Loading Strategy)
+## 5. 관리 및 유틸리티 스크립트 (Admin Scripts)
+
+반복적인 관리 업무 및 데이터 정리를 위한 전용 노드 스크립트를 제공합니다. (`scripts/`)
+
+- **`nuke-dataset.js`**: 현재 설정된 Sanity 데이터셋의 모든 작품(`artwork`)과 연결된 이미지 에셋을 통째로 삭제하여 깨끗한 테스트 환경을 구축합니다.
+- **`check-users.js`**: 현재 등록된 사용자 목록과 닉네임 상태를 점검합니다.
+- **`migrate-published-at.js`**: 기존 데이터의 발행일 형식을 최신 스펙으로 일괄 마이그레이션합니다.
+
+---
+
+## 6. 로딩 전략 (Loading Strategy)
 
 ### 5-1. Skeleton UI
 
@@ -77,3 +100,24 @@ Vite 개발 서버와 Express API 서버의 충돌을 방지하기 위한 통합
 ### 5-2. Delayed Exposure
 
 - 이미 캐싱된 이미지 로드 시 찰나의 로딩 UI가 깜빡이는 것을 방지하기 위해 **400ms 지연 노출** 전략을 사용합니다.
+
+---
+
+## 7. 문제 해결 및 서버 관리 (Troubleshooting)
+
+### 7-1. 좀비 프로세스 관리 (Zombie Process)
+
+윈도우 환경에서 서버 재시작 시 이전 프로세스가 포트(3000)를 점유하여 요청이 증발하거나 구버전 코드가 실행되는 현상이 발생할 수 있습니다. 
+
+- **증상**: 코드를 수정했는데 반영이 안 됨, API 요청이 무한 대기(Pending) 상태에 빠짐.
+- **해결**: 아래 명령어를 터미널에서 실행하여 모든 노드 프로세스를 강제 종료한 후 다시 실행합니다.
+  ```powershell
+  taskkill /F /IM node.exe
+  ```
+
+### 7-2. 데이터 정합성 체크
+
+발행 과정에서 문제가 발생할 경우, 다음 스크립트로 실제 Sanity에 데이터가 도달했는지 확인할 수 있습니다.
+```bash
+node scripts/sanity-check.js
+```

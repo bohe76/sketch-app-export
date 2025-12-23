@@ -16,7 +16,7 @@ export default async function handler(req, res) {
     console.log(`[Publish] Processing request for user: ${req.body.userId}`);
 
     try {
-        const { imageBase64, sourceImageBase64, title, userId, options } = req.body;
+        const { imageBase64, sourceAssetId, title, userId, options } = req.body;
 
         if (!imageBase64 || !userId) {
             return res.status(400).json({ message: 'Missing required fields' });
@@ -39,21 +39,7 @@ export default async function handler(req, res) {
             filename: `sketch-${Date.now()}.webp`
         });
 
-        // 2. Upload Source Image Asset (Original Photo) if provided
-        let sourceAssetId = null;
-        if (sourceImageBase64) {
-            const srcData = decode(sourceImageBase64);
-            if (srcData) {
-                console.log(`[Publish] Source size: ${srcData.buf.length} bytes`);
-                const srcAsset = await client.assets.upload('image', srcData.buf, {
-                    contentType: srcData.type,
-                    filename: `source-${Date.now()}.webp`
-                });
-                sourceAssetId = srcAsset._id;
-            }
-        }
-
-        // 3. Create Document
+        // 2. Document Creation (Source Asset is now passed as an ID)
         const doc = {
             _type: 'artwork',
             title: title || 'Untitled Sketch',
@@ -68,7 +54,7 @@ export default async function handler(req, res) {
                     _ref: asset._id
                 }
             },
-            // Link to the original photo for remixing
+            // Link to the pre-uploaded source photo
             sourceImage: sourceAssetId ? {
                 _type: 'image',
                 asset: {
@@ -85,11 +71,13 @@ export default async function handler(req, res) {
             likedBy: []
         };
 
+        console.log(`[Publish] Creating Sanity document for user: ${userId}`);
         const result = await client.create(doc);
+        console.log(`[Publish] Successfully created artwork: ${result._id}`);
         return res.status(200).json(result);
 
     } catch (error) {
-        console.error("Publish Error:", error);
+        console.error("[Publish] Critical Error:", error);
         return res.status(500).json({ message: 'Publish failed', error: error.message });
     }
 }

@@ -36,35 +36,60 @@ export const usePublish = () => {
         }
 
         // 2. Convert Sketch result (WebP for efficiency)
+        console.log("[Publish] Creating sketch base64...");
         const base64 = finalCanvas.toDataURL('image/webp', 0.8);
+        console.log("[Publish] Sketch base64 size:", base64.length);
         if (base64.length < 1000) throw new Error("Canvas data is corrupted or empty");
 
-        // 3. Prepare Source Image Snapshot
-        let sourceImageBase64 = null;
+        // 3. Step 1: Upload Source Image (if exists) sequentially to secure its own 4.5MB payload limit
+        let sourceAssetId = null;
         if (currentSourceImage) {
+            console.log("[Publish] Fetching source image blob...");
             try {
                 const res = await fetch(currentSourceImage);
                 if (!res.ok) throw new Error("Source photo could not be retrieved from memory");
 
                 const blob = await res.blob();
-                sourceImageBase64 = await new Promise<string>((resolve, reject) => {
+                console.log("[Publish] Source blob size:", blob.size);
+
+                const sourceBase64 = await new Promise<string>((resolve, reject) => {
                     const reader = new FileReader();
                     reader.onerror = reject;
                     reader.onloadend = () => resolve(reader.result as string);
                     reader.readAsDataURL(blob);
                 });
+                console.log("[Publish] Source base64 ready. Uploading to /api/upload-asset...");
+
+                const uploadRes = await fetch('/api/upload-asset', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        imageBase64: sourceBase64,
+                        filename: `source-${Date.now()}.webp`
+                    })
+                });
+
+                if (uploadRes.ok) {
+                    const uploadData = await uploadRes.json();
+                    sourceAssetId = uploadData.assetId;
+                    console.log("[Publish] Source asset uploaded successfully:", sourceAssetId);
+                } else {
+                    console.error("[Publish] Source asset upload failed with status:", uploadRes.status);
+                }
             } catch (e) {
-                console.error("Failed to convert source image for publish:", e);
+                console.error("Failed to upload source image asset:", e);
+                // We continue even if source fails, just without the source photo link
             }
         }
 
-        // 4. Call Serverless Function with both images
+        // 4. Step 2: Final Publish with Sketch and Source ID
+        console.log("[Publish] Sending final publish request to /api/publish...");
         const response = await fetch('/api/publish', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 imageBase64: base64,
-                sourceImageBase64: sourceImageBase64,
+                sourceAssetId: sourceAssetId,
                 title,
                 userId: user.uid,
                 options: currentOptions

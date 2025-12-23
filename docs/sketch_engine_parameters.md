@@ -62,3 +62,17 @@ author: Antigravity
 - **Swarm Control**: `branchProbability`: 0.05 / `scaleFactor`: 0.8
 - **Standard Look**: `momentum`: 0.5 / `alpha`: 0.1 / `lineWidth`: 0.5 / `threshold`: 640
 - **Life Cycle**: `minLife`: 100 / `maxLife`: 300
+
+---
+
+## 6. Safe Analysis Policy (안정성 수칙)
+
+엔진이 이미지를 분석하거나 캔버스를 준비할 때 발생할 수 있는 런타임 에러를 방지하기 위한 정책입니다.
+
+1.  **Zero-Dimension Protection**: 
+    - 캔버스나 이미지의 가로/세로 크기가 0일 경우 분석을 즉시 중단합니다. (IndexSizeError 방지)
+    - 모든 드로잉 영역은 최소 **1px** 이상의 크기를 확보하도록 강제합니다.
+2.  **CORS & Cache**:
+    - 외부 이미지 로드 시 브라우저 캐시로 인한 분석 실패를 막기 위해 항상 **Anonymous CrossOrigin**과 **Timestamp Cache Buster**를 결합하여 로드합니다.
+3.  **Layout Stability**:
+    - `prepareCanvas`는 뷰포트 레이아웃이 완전히 정착된 후(`requestAnimationFrame`) 실행되어 정확한 좌표 계산을 보장합니다.
