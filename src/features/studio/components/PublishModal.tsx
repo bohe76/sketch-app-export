@@ -6,8 +6,8 @@ import { useToastStore } from '@/shared/model/toastStore';
 import { useUIStore } from '@/shared/model/uiStore';
 
 export const PublishModal: React.FC = () => {
-    const { isOpen, canvas, closePublishModal } = usePublishModalStore();
-    const { publishArtwork } = usePublish();
+    const { isOpen, canvas, uploadPromise, abortController, closePublishModal } = usePublishModalStore();
+    const { prepareAssets, finalizePublish } = usePublish();
     const { setSourceImage, sourceImage, options } = useSketchStore();
     const { showToast, hideToast } = useToastStore();
     const { setActiveTab, setViewMode } = useUIStore();
@@ -17,11 +17,22 @@ export const PublishModal: React.FC = () => {
     const [isPublishing, setIsPublishing] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
 
-    // Reset state and focus when modal opens
+    // 1. Trigger background upload when modal opens
     useEffect(() => {
-        if (isOpen) {
+        if (isOpen && canvas) {
             setTitle('');
             setError(false);
+
+            // Start dual-track background upload
+            const controller = new AbortController();
+            usePublishModalStore.getState().resetUploadState(); // Clear previous state
+            const promise = prepareAssets(canvas, sourceImage, controller.signal);
+
+            usePublishModalStore.setState({
+                uploadPromise: promise,
+                abortController: controller
+            });
+
             setTimeout(() => inputRef.current?.focus(), 50);
         }
     }, [isOpen]);
@@ -37,23 +48,32 @@ export const PublishModal: React.FC = () => {
 
         try {
             setIsPublishing(true);
+
+            // Check if background upload is still in progress
+            if (!uploadPromise) {
+                // Should not happen, but for safety:
+                throw new Error("Upload state is missing");
+            }
+
             showToast("Publishing...", "loading");
 
-            // 1. Send snapshots to ensure cleanup doesn't affect the ongoing upload
-            await publishArtwork(canvas, title.trim(), sourceImage, options);
+            // 2. Wait for the background upload to finish (if it hasn't already)
+            const { sketchId, sourceId } = await uploadPromise;
 
-            // 2. Only reach here if server responded with 200 OK
+            // 3. Final Lean Publish (Document creation only)
+            await finalizePublish(sketchId, sourceId, title.trim(), options);
+
             hideToast();
             closePublishModal();
 
-            // 3. Clear the studio AFTER success to ensure a blank starting point
             setTimeout(() => {
                 setSourceImage(null);
                 setActiveTab('mine');
                 setViewMode('feed');
                 showToast("Masterpiece published successfully!", "success");
             }, 300);
-        } catch (err) {
+        } catch (err: any) {
+            if (err.name === 'AbortError') return; // Ignore if user canceled
             console.error("🔥 Publish failed:", err);
             hideToast();
             showToast("Failed to publish.", "error");

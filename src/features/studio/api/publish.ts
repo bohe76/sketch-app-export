@@ -1,106 +1,118 @@
 import { useAuthStore } from '@/features/auth/model/store';
+import { usePublishModalStore } from '@/shared/model/publishModalStore';
 
 export const usePublish = () => {
     const { user } = useAuthStore();
+    const store = usePublishModalStore();
 
-    // Pass snapshots of data as arguments to ensure we don't depend on changing store state during async upload
-    const publishArtwork = async (
+    /**
+     * 1. Pre-upload both source and sketch assets in parallel
+     */
+    const prepareAssets = async (
         canvas: HTMLCanvasElement,
-        title: string,
-        currentSourceImage: string | null,
-        currentOptions: any
+        sourceImage: string | null,
+        signal: AbortSignal
     ) => {
-        if (!user) throw new Error("Must be logged in to publish");
+        if (!user) throw new Error("Must be logged in");
 
-        // 1. Crop strategy (Same as handleDownload)
-        const { imgX, imgY, imgW, imgH } = canvas.dataset;
-        let finalCanvas: HTMLCanvasElement = canvas;
+        // Prepare Sketch Asset
+        const prepareSketch = async (): Promise<string> => {
+            const { imgX, imgY, imgW, imgH } = canvas.dataset;
+            let finalCanvas: HTMLCanvasElement = canvas;
 
-        if (imgX !== undefined && imgY !== undefined && imgW !== undefined && imgH !== undefined) {
-            const tempCanvas = document.createElement('canvas');
-            const dx = parseFloat(imgX);
-            const dy = parseFloat(imgY);
-            const dw = parseFloat(imgW);
-            const dh = parseFloat(imgH);
-
-            if (dw > 0 && dh > 0) {
-                tempCanvas.width = dw;
-                tempCanvas.height = dh;
-                const tempCtx = tempCanvas.getContext('2d');
-                if (tempCtx) {
-                    tempCtx.drawImage(canvas, dx, dy, dw, dh, 0, 0, dw, dh);
-                    finalCanvas = tempCanvas;
+            if (imgX !== undefined && imgY !== undefined && imgW !== undefined && imgH !== undefined) {
+                const tempCanvas = document.createElement('canvas');
+                const [dx, dy, dw, dh] = [parseFloat(imgX), parseFloat(imgY), parseFloat(imgW), parseFloat(imgH)];
+                if (dw > 0 && dh > 0) {
+                    tempCanvas.width = dw;
+                    tempCanvas.height = dh;
+                    const tempCtx = tempCanvas.getContext('2d');
+                    if (tempCtx) {
+                        tempCtx.drawImage(canvas, dx, dy, dw, dh, 0, 0, dw, dh);
+                        finalCanvas = tempCanvas;
+                    }
                 }
             }
-        }
 
-        // 2. Convert Sketch result (WebP for efficiency)
-        console.log("[Publish] Creating sketch base64...");
-        const base64 = finalCanvas.toDataURL('image/webp', 0.8);
-        console.log("[Publish] Sketch base64 size:", base64.length);
-        if (base64.length < 1000) throw new Error("Canvas data is corrupted or empty");
+            const base64 = finalCanvas.toDataURL('image/webp', 0.8);
+            const res = await fetch('/api/upload-asset', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ imageBase64: base64, filename: `sketch-${Date.now()}.webp` }),
+                signal
+            });
+            if (!res.ok) throw new Error("Sketch upload failed");
+            const data = await res.json();
+            return data.assetId;
+        };
 
-        // 3. Step 1: Upload Source Image (if exists) sequentially to secure its own 4.5MB payload limit
-        let sourceAssetId = null;
-        if (currentSourceImage) {
-            console.log("[Publish] Fetching source image blob...");
-            try {
-                const res = await fetch(currentSourceImage);
-                if (!res.ok) throw new Error("Source photo could not be retrieved from memory");
+        // Prepare Source Asset
+        const prepareSource = async (): Promise<string | null> => {
+            if (!sourceImage) return null;
+            const res = await fetch(sourceImage, { signal });
+            const blob = await res.blob();
 
-                const blob = await res.blob();
-                console.log("[Publish] Source blob size:", blob.size);
+            const sourceBase64 = await new Promise<string>((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onerror = reject;
+                reader.onloadend = () => resolve(reader.result as string);
+                reader.readAsDataURL(blob);
+            });
 
-                const sourceBase64 = await new Promise<string>((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onerror = reject;
-                    reader.onloadend = () => resolve(reader.result as string);
-                    reader.readAsDataURL(blob);
-                });
-                console.log("[Publish] Source base64 ready. Uploading to /api/upload-asset...");
+            const uploadRes = await fetch('/api/upload-asset', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ imageBase64: sourceBase64, filename: `source-${Date.now()}.webp` }),
+                signal
+            });
+            if (!uploadRes.ok) return null;
+            const data = await uploadRes.json();
+            return data.assetId;
+        };
 
-                const uploadRes = await fetch('/api/upload-asset', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        imageBase64: sourceBase64,
-                        filename: `source-${Date.now()}.webp`
-                    })
-                });
+        // Run in parallel
+        const [sketchId, sourceId] = await Promise.all([prepareSketch(), prepareSource()]);
+        return { sketchId, sourceId };
+    };
 
-                if (uploadRes.ok) {
-                    const uploadData = await uploadRes.json();
-                    sourceAssetId = uploadData.assetId;
-                    console.log("[Publish] Source asset uploaded successfully:", sourceAssetId);
-                } else {
-                    console.error("[Publish] Source asset upload failed with status:", uploadRes.status);
-                }
-            } catch (e) {
-                console.error("Failed to upload source image asset:", e);
-                // We continue even if source fails, just without the source photo link
-            }
-        }
+    /**
+     * 2. Final publish using pre-uploaded asset IDs
+     */
+    const finalizePublish = async (
+        sketchId: string,
+        sourceId: string | null,
+        title: string,
+        options: any
+    ) => {
+        if (!user) throw new Error("Must be logged in");
 
-        // 4. Step 2: Final Publish with Sketch and Source ID
-        console.log("[Publish] Sending final publish request to /api/publish...");
-        const response = await fetch('/api/publish', {
+        const response = await fetch('/api/publish-v2', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                imageBase64: base64,
-                sourceAssetId: sourceAssetId,
+                sketchAssetId: sketchId,
+                sourceAssetId: sourceId,
                 title,
                 userId: user.uid,
-                options: currentOptions
+                options
             })
         });
 
-        if (!response.ok) {
-            throw new Error(`Publish failed: ${response.statusText}`);
-        }
-
+        if (!response.ok) throw new Error(`Publish failed: ${response.statusText}`);
         return await response.json();
     };
 
-    return { publishArtwork };
+    // Keep legacy publishArtwork for compatibility or one-shot usage if needed
+    const publishArtwork = async (
+        canvas: HTMLCanvasElement,
+        title: string,
+        sourceImage: string | null,
+        options: any
+    ) => {
+        const controller = new AbortController();
+        const { sketchId, sourceId } = await prepareAssets(canvas, sourceImage, controller.signal);
+        return await finalizePublish(sketchId, sourceId, title, options);
+    };
+
+    return { prepareAssets, finalizePublish, publishArtwork };
 };

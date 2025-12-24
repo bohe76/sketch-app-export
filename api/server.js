@@ -81,6 +81,7 @@ const handle = async (moduleId, req, res) => {
 app.get('/api/feed', (req, res) => handle('feed', req, res));
 app.post('/api/upload-asset', (req, res) => handle('upload-asset', req, res));
 app.post('/api/publish', (req, res) => handle('publish', req, res));
+app.post('/api/publish-v2', (req, res) => handle('publish-v2', req, res));
 app.post('/api/sync-user', (req, res) => handle('sync-user', req, res));
 app.post('/api/like', (req, res) => handle('like', req, res));
 app.post('/api/track-metric', (req, res) => handle('track-metric', req, res));
