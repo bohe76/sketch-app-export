@@ -19,6 +19,8 @@ import { PublishModal } from '@/features/studio/components/PublishModal';
 import { Toast } from '@/shared/components/Toast';
 import { useSketchFlow } from '@/features/sketch/hooks/useSketchFlow';
 
+import { ShareModal } from '@/shared/components/ShareModal';
+
 const App = () => {
     const { sourceImage, options } = useSketchStore();
     const { user, isLoading: isAuthLoading } = useAuthStore();
@@ -108,10 +110,8 @@ const App = () => {
 
     return (
         <div className="app-container">
-            <GlobalModal /> {/* Global Modal Mount Point */}
             <LoginModal /> {/* Login Modal Mount Point */}
             <PublishModal /> {/* Publish Modal Mount Point */}
-            <Toast />
 
             {selectedArtwork && (
                 <ArtworkDetailModal
@@ -123,16 +123,27 @@ const App = () => {
                 />
             )}
 
+            <GlobalModal /> {/* Global Modal Mount Point */}
+            <ShareModal /> {/* Share Sheet Mount Point */}
+            <Toast />
+
             {/* Main Content Area - Padding bottom for mobile nav */}
             <main className="flex-1 flex flex-col relative h-full pb-16 lg:pb-0">
 
                 {/* Header Overlay */}
                 <header className="header-overlay">
-                    <div className="flex items-center gap-6 pointer-events-auto">
+                    <div className="flex items-center gap-2 pointer-events-auto">
+                        <div className="w-6 h-6 rounded-full overflow-hidden border border-zinc-800 shadow-sm cursor-pointer mt-[2px]" onClick={handleNavToGallery}>
+                            <img
+                                src="/logo.png"
+                                alt="Logo"
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
                         <h1 className="logo-text" onClick={handleNavToGallery}>
                             SKETCHRANG
                         </h1>
-                        <nav className="nav-pill-group hidden lg:flex">
+                        <nav className="nav-pill-group hidden lg:flex ml-4">
                             <button
                                 onClick={() => setViewMode('studio')}
                                 className={`px-4 py-1.5 rounded-full text-sm font-bold transition-all ${viewMode === 'studio' ? 'bg-primary text-white' : 'hover:bg-gray-100'}`}

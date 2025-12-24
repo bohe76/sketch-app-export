@@ -7,7 +7,6 @@ import { useFeedStore } from '../model/feedStore';
 import { useToastStore } from '@/shared/model/toastStore';
 import { ArtworkCard } from './ArtworkCard';
 import { useResponsiveGrid } from '@/shared/hooks/useResponsiveGrid';
-import { APP_CONFIG } from '@/shared/config/constants';
 
 interface FeedListProps {
     filterAuthorId?: string;
@@ -16,6 +15,8 @@ interface FeedListProps {
     refreshKey?: number;
 }
 
+import { useShareStore } from '@/shared/model/shareStore';
+
 export const FeedList: React.FC<FeedListProps> = ({ filterAuthorId, sort = 'latest', onArtworkClick, refreshKey }) => {
     const { user } = useAuthStore();
     const { artworks, setArtworks, updateArtwork } = useFeedStore();
@@ -23,6 +24,7 @@ export const FeedList: React.FC<FeedListProps> = ({ filterAuthorId, sort = 'late
     const lastProps = useRef({ filterAuthorId, sort, userId: user?.uid, refreshKey });
     const showToast = useToastStore(state => state.showToast);
     const [isDesktop, setIsDesktop] = useState(typeof window !== 'undefined' && window.innerWidth >= 1024);
+    const { openShareModal } = useShareStore();
 
     useEffect(() => {
         const handleResize = () => setIsDesktop(window.innerWidth >= 1024);
@@ -107,34 +109,12 @@ export const FeedList: React.FC<FeedListProps> = ({ filterAuthorId, sort = 'late
     const handleShare = async (e: React.MouseEvent, art: Artwork) => {
         e.stopPropagation();
         if (pendingShares.current.has(art._id)) return;
-        pendingShares.current.add(art._id);
 
-        const shareUrl = `${window.location.origin}/?artwork=${art._id}`;
-        const nextCount = (art.shareCount || 0) + 1;
-        updateArtwork(art._id, { shareCount: nextCount });
-
-        if (navigator.share) {
-            try {
-                await navigator.share({ title: art.title, text: `Check out this artwork by @${art.authorName} on Sketchrang!`, url: shareUrl });
-                const result = await trackMetric(art._id, 'share');
-                if (result.success) updateArtwork(art._id, { shareCount: result.count });
-            } catch { /* aborted */ }
-        } else {
-            try {
-                await navigator.clipboard.writeText(shareUrl);
-                showToast("Link copied to clipboard!", "success");
-                const result = await trackMetric(art._id, 'share');
-                if (result.success) updateArtwork(art._id, { shareCount: result.count });
-            } catch {
-                showToast("Failed to copy link.", "error");
-            } finally {
-                pendingShares.current.delete(art._id);
-            }
-        }
+        // Open our beautiful custom Share Sheet
+        openShareModal(art);
     };
 
     const validArtworks = artworks.filter(art => art && art._id);
-    const displayColumnCount = validArtworks.length > 0 ? Math.min(columnCount, validArtworks.length) : columnCount;
 
     if (loading) {
         return (

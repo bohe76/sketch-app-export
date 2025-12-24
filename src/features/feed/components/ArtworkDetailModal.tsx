@@ -14,6 +14,7 @@ import type { Artwork } from '../api/feed';
 import { toggleLike, trackMetric, deleteArtwork, fetchArtworkById } from '../api/feed';
 import { useToastStore } from '@/shared/model/toastStore';
 import { useModalStore } from '@/shared/model/modalStore';
+import { useShareStore } from '@/shared/model/shareStore';
 
 interface ArtworkDetailModalProps {
     artwork: Artwork;
@@ -147,51 +148,16 @@ export const ArtworkDetailModal: React.FC<ArtworkDetailModalProps> = ({ artwork:
         }
     };
 
+    const { openShareModal } = useShareStore();
+
     const handleShare = async () => {
         // Request Tracking: Block if already processing
         if (pendingShare.current) {
             return;
         }
 
-        pendingShare.current = true;
-
-        const shareUrl = `${window.location.origin}/?artwork=${artwork._id}`;
-
-        // Optimistic Update in the Store
-        const nextCount = (artwork.shareCount || 0) + 1;
-        updateArtwork(artwork._id, { shareCount: nextCount });
-
-        if (navigator.share) {
-            try {
-                await navigator.share({
-                    title: artwork.title,
-                    text: `Check out this artwork by @${artwork.authorName} on Sketchrang!`,
-                    url: shareUrl,
-                });
-                const result = await trackMetric(artwork._id, 'share');
-                if (result.success) {
-                    updateArtwork(artwork._id, { shareCount: result.count });
-                }
-            } catch (error) {
-                console.error("Share failed:", error);
-            } finally {
-                pendingShare.current = false;
-            }
-        } else {
-            try {
-                await navigator.clipboard.writeText(shareUrl);
-                showToast("Link copied to clipboard!", "success");
-                const result = await trackMetric(artwork._id, 'share');
-                if (result.success) {
-                    updateArtwork(artwork._id, { shareCount: result.count });
-                }
-            } catch (error) {
-                console.error("Clipboard failed:", error);
-                alert("Could not copy link.");
-            } finally {
-                pendingShare.current = false;
-            }
-        }
+        // Open our beautiful custom Share Sheet
+        openShareModal(artwork);
     };
 
     const handleDelete = async () => {

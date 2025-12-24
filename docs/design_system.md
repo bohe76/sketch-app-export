@@ -59,7 +59,15 @@
 - **Text**: **UPPERCASE** (강조된 기능 안내)
 - **Position**: 버튼 상단 중앙(`left: 50%`, `translate-x: -50%`)
 
-### 3-3. Modal Action Standards
+### 3-3. Standardized Toast Notifications
+
+- **Animation**: `animate-toast-in`
+  - **Timing**: `0.3s` cubic-bezier `(0.16, 1, 0.3, 1)` (Soft Expo Out)
+  - **Movement**: `translateY(10px)` → `translateY(0)` (아래에서 위로 부드럽게 등장)
+  - **Scale**: `scale(0.95)` → `scale(1)` (약간 커지며 등장)
+- **Usage**: 모든 시스템 성공/실패 알림에 공통 적용.
+
+### 3-4. Modal Action Standards
 
 - **Actionable (Confirmation)**: 중요한 결정 시 'Confirm' + 'Cancel' 버튼을 모두 제공합니다. (예: 옵션 초기화, 작품 삭제)
 - **Informational (Constraints)**: 시스템 제약 사항 안내 시 'Confirm' (Understood) 버튼만 제공하여 사용자 동선을 단순화합니다. (예: 4MB 용량 초과 안내)
