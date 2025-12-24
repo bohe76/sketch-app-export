@@ -1,17 +1,15 @@
 import { createClient } from '@sanity/client';
 
-const client = createClient({
+const getClient = () => createClient({
     projectId: process.env.VITE_SANITY_PROJECT_ID,
     dataset: process.env.VITE_SANITY_DATASET || 'production',
     apiVersion: '2023-05-03',
-    // Token is NOT needed for reading public datasets, 
-    // but using it ensures we don't hit rate limits as easily 
-    // and keeps config consistent.
-    // token: process.env.SANITY_API_TOKEN, 
-    useCdn: false, // Ensure fresh data
+    useCdn: false,
 });
 
 export default async function handler(req, res) {
+    const client = getClient();
+    console.log(`[API][Feed] Using Dataset: ${client.config().dataset}`);
     if (req.method !== 'GET') {
         return res.status(405).json({ message: 'Method not allowed' });
     }

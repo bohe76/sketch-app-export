@@ -1,6 +1,6 @@
 import { createClient } from '@sanity/client';
 
-const client = createClient({
+const getClient = () => createClient({
     projectId: process.env.VITE_SANITY_PROJECT_ID,
     dataset: process.env.VITE_SANITY_DATASET || 'production',
     apiVersion: '2023-05-03',
@@ -9,6 +9,8 @@ const client = createClient({
 });
 
 export default async function handler(req, res) {
+    const client = getClient();
+    console.log(`[API][Publish-v2] Using Dataset: ${client.config().dataset}`);
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Method not allowed' });
     }

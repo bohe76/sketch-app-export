@@ -1,6 +1,4 @@
-import dotenv from 'dotenv';
-dotenv.config();
-
+import 'dotenv/config'; // ESM 최적화 로드
 import express from 'express';
 import cors from 'cors';
 import { fileURLToPath } from 'url';
@@ -8,12 +6,11 @@ import { dirname, join } from 'path';
 import fs from 'fs';
 import { fetchArtworkForSEO, injectMetadata } from './utils/seo_helper.js';
 
-// Load env vars - Already called above
-
-
-// Fix __dirname in ESM
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+console.log(`
+[Server Initialization]
+- SANITY_PROJECT_ID: ${process.env.VITE_SANITY_PROJECT_ID}
+- SANITY_DATASET: ${process.env.VITE_SANITY_DATASET || 'production'} (Default: production)
+`);
 
 const app = express();
 const PORT = 3000;

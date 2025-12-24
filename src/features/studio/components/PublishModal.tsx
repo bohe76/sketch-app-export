@@ -19,7 +19,8 @@ export const PublishModal: React.FC = () => {
 
     // 1. Trigger background upload when modal opens
     useEffect(() => {
-        if (isOpen && canvas) {
+        // Only trigger if modal is open, canvas exists, and we HAVEN'T started an upload yet
+        if (isOpen && canvas && !usePublishModalStore.getState().uploadPromise) {
             setTitle('');
             setError(false);
 
@@ -35,6 +36,13 @@ export const PublishModal: React.FC = () => {
 
             setTimeout(() => inputRef.current?.focus(), 50);
         }
+
+        // Cleanup: Abort only when the modal is explicitly closed
+        return () => {
+            if (!isOpen) {
+                // abortController?.abort(); // Optional: user's choice to keep or kill on close
+            }
+        };
     }, [isOpen, canvas, prepareAssets, sourceImage]);
 
     if (!isOpen || !canvas) return null;
@@ -70,7 +78,6 @@ export const PublishModal: React.FC = () => {
                 setSourceImage(null);
                 setActiveTab('mine');
                 setViewMode('feed');
-                showToast("Masterpiece published successfully!", "success");
             }, 300);
         } catch (err: unknown) {
             if ((err as Error).name === 'AbortError') return; // Ignore if user canceled

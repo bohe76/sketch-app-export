@@ -165,6 +165,7 @@ export class SketchEngine {
     renderLive(imageUrl: string, maxDimension?: number) {
         this.stop();
         this.isActive = true;
+
         this.drawingSession++;
         const currentSession = this.drawingSession;
 
@@ -197,6 +198,7 @@ export class SketchEngine {
     async renderInstant(imageUrl: string, maxDimension?: number) {
         return new Promise<void>((resolve) => {
             this.stop();
+
             this.drawingSession++;
             const currentSession = this.drawingSession;
 

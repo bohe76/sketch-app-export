@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { useAuthStore } from '@/features/auth/model/store';
 
 export const usePublish = () => {
@@ -6,7 +7,7 @@ export const usePublish = () => {
     /**
      * 1. Pre-upload both source and sketch assets in parallel
      */
-    const prepareAssets = async (
+    const prepareAssets = useCallback(async (
         canvas: HTMLCanvasElement,
         sourceImage: string | null,
         signal: AbortSignal
@@ -71,12 +72,12 @@ export const usePublish = () => {
         // Run in parallel
         const [sketchId, sourceId] = await Promise.all([prepareSketch(), prepareSource()]);
         return { sketchId, sourceId };
-    };
+    }, [user]);
 
     /**
      * 2. Final publish using pre-uploaded asset IDs
      */
-    const finalizePublish = async (
+    const finalizePublish = useCallback(async (
         sketchId: string,
         sourceId: string | null,
         title: string,
@@ -98,10 +99,10 @@ export const usePublish = () => {
 
         if (!response.ok) throw new Error(`Publish failed: ${response.statusText}`);
         return await response.json();
-    };
+    }, [user]);
 
     // Keep legacy publishArtwork for compatibility or one-shot usage if needed
-    const publishArtwork = async (
+    const publishArtwork = useCallback(async (
         canvas: HTMLCanvasElement,
         title: string,
         sourceImage: string | null,
@@ -110,7 +111,7 @@ export const usePublish = () => {
         const controller = new AbortController();
         const { sketchId, sourceId } = await prepareAssets(canvas, sourceImage, controller.signal);
         return await finalizePublish(sketchId, sourceId, title, options);
-    };
+    }, [prepareAssets, finalizePublish]);
 
     return { prepareAssets, finalizePublish, publishArtwork };
 };

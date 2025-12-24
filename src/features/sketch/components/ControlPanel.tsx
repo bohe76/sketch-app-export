@@ -30,89 +30,52 @@ const StyleCard: React.FC<{
     onClick: () => void;
     sourceImage: string | null;
 }> = ({ style, isActive, onClick, sourceImage }) => {
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const engineRef = useRef<SketchEngine | null>(null);
-    const [isHovered, setIsHovered] = useState(false);
 
     useEffect(() => {
-        // Only run the engine if there's a user-uploaded image
-        if (!canvasRef.current || !sourceImage) return;
-
-        if (!engineRef.current) {
-            engineRef.current = new SketchEngine(canvasRef.current, {
+        // CASE: User image exists -> Generate live preview snapshot
+        if (sourceImage && canvasRef.current) {
+            const engine = new SketchEngine(canvasRef.current, {
                 mode: style.mode,
                 alpha: style.alpha,
                 momentum: style.momentum,
                 scaleFactor: 1.2,
-                drawSpeed: 2000,
-                maxHeads: 40
+                threshold: 640
+            });
+
+            // Render instantly and capture as image for flicker-free zoom
+            engine.renderInstant(sourceImage, 120).then(() => {
+                if (canvasRef.current) {
+                    setPreviewUrl(canvasRef.current.toDataURL('image/webp', 0.8));
+                }
             });
         }
 
-        engineRef.current.updateOptions({
-            mode: style.mode,
-            alpha: style.alpha,
-            momentum: style.momentum
-        });
-
-        // Ensure instant render only if not currently hovering to avoid interrupting live draw
-        if (!isHovered) {
-            engineRef.current.renderInstant(sourceImage, 120);
+        // CASE: User image cleared (e.g. published) -> Reset to default
+        if (!sourceImage) {
+            setPreviewUrl(null);
         }
-    }, [sourceImage, style, isHovered]);
-
-    const handleMouseEnter = () => {
-        setIsHovered(true);
-        if (engineRef.current && sourceImage) {
-            engineRef.current.stop();
-            engineRef.current.renderLive(sourceImage, 120);
-        }
-    };
-
-    const handleMouseLeave = () => {
-        setIsHovered(false);
-        if (engineRef.current && sourceImage) {
-            engineRef.current.stop();
-            engineRef.current.renderInstant(sourceImage, 120);
-        }
-    };
+    }, [sourceImage, style.mode, style.alpha, style.momentum]);
 
     return (
         <button
             onClick={onClick}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
             className={`relative group flex items-center gap-4 p-2 rounded-2xl border transition-all duration-300 active:scale-[0.98]
                 ${isActive
                     ? 'border-zinc-800 bg-[var(--color-surface-selected)] shadow-xl'
                     : 'border-zinc-300 bg-white hover:border-zinc-800 shadow-sm'}`}
         >
+            {/* Hidden canvas for background snapshot generation */}
+            <canvas ref={canvasRef} width={80} height={80} className="hidden" />
+
             {/* 48px Thumbnail Container */}
             <div className="w-12 h-12 flex-shrink-0 relative overflow-hidden rounded-xl bg-zinc-50 border border-zinc-100">
-                {sourceImage ? (
-                    <div className="relative w-full h-full">
-                        {/* Background Canvas: Shows the drawing process */}
-                        <canvas
-                            ref={canvasRef}
-                            width={96}
-                            height={96}
-                            className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-110`}
-                        />
-                        {/* Overlay Image: Disappears over 3 seconds on hover */}
-                        <img
-                            src={sourceImage}
-                            alt="preview"
-                            className={`absolute inset-0 w-full h-full object-cover transition-all duration-[3000ms] ease-out pointer-events-none group-hover:scale-110 ${isHovered ? 'opacity-0' : 'opacity-100'}`}
-                        />
-                    </div>
-                ) : (
-                    // Static Mode: Show high-quality pre-rendered thumbnail
-                    <img
-                        src={`/images/thumb_${style.id}.png`}
-                        alt={style.name}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                )}
+                <img
+                    src={previewUrl || `/images/thumb_${style.id}.png`}
+                    alt={style.name}
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                />
             </div>
 
             <div className="flex-1 text-left min-w-0 pr-2">
