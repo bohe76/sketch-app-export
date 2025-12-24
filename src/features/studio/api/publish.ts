@@ -81,7 +81,7 @@ export const usePublish = () => {
         sketchId: string,
         sourceId: string | null,
         title: string,
-        options: Record<string, unknown>
+        options: any
     ) => {
         if (!user) throw new Error("Must be logged in");
 
@@ -106,7 +106,7 @@ export const usePublish = () => {
         canvas: HTMLCanvasElement,
         title: string,
         sourceImage: string | null,
-        options: Record<string, unknown>
+        options: any
     ) => {
         const controller = new AbortController();
         const { sketchId, sourceId } = await prepareAssets(canvas, sourceImage, controller.signal);

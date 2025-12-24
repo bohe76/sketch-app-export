@@ -54,7 +54,7 @@ const StyleCard: React.FC<{
 
         // CASE: User image cleared (e.g. published) -> Reset to default
         if (!sourceImage) {
-            setPreviewUrl(null);
+            Promise.resolve().then(() => setPreviewUrl(null));
         }
     }, [sourceImage, style.mode, style.alpha, style.momentum]);
 
