@@ -120,6 +120,7 @@ export const ArtworkCard: React.FC<ArtworkCardProps> = ({
             <motion.img
                 src={art.thumbnailUrl}
                 alt={art.title}
+                crossOrigin="anonymous"
                 className="w-full h-auto block relative z-10"
                 initial={{ opacity: 1 }}
                 animate={{

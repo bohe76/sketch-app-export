@@ -3,7 +3,9 @@ import { useAuthStore } from '@/features/auth/model/store';
 import { syncUserToSanity } from '@/features/auth/api/auth';
 
 export const usePublish = () => {
-    const { user } = useAuthStore();
+    // Check if store is defined to avoid race conditions during module loading
+    const store = useAuthStore();
+    const user = store?.user;
 
     /**
      * 1. Pre-upload both source and sketch assets in parallel
