@@ -1,9 +1,5 @@
 import { createClient } from '@sanity/client';
 
-export const config = {
-    runtime: 'edge', // or 'nodejs'
-};
-
 const getClient = () => createClient({
     projectId: process.env.VITE_SANITY_PROJECT_ID,
     dataset: process.env.VITE_SANITY_DATASET || 'production',
