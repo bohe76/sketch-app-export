@@ -35,7 +35,7 @@ export const PublishModal: React.FC = () => {
 
             setTimeout(() => inputRef.current?.focus(), 50);
         }
-    }, [isOpen]);
+    }, [isOpen, canvas, prepareAssets, sourceImage]);
 
     if (!isOpen || !canvas) return null;
 
@@ -72,8 +72,8 @@ export const PublishModal: React.FC = () => {
                 setViewMode('feed');
                 showToast("Masterpiece published successfully!", "success");
             }, 300);
-        } catch (err: any) {
-            if (err.name === 'AbortError') return; // Ignore if user canceled
+        } catch (err: unknown) {
+            if ((err as Error).name === 'AbortError') return; // Ignore if user canceled
             console.error("🔥 Publish failed:", err);
             hideToast();
             showToast("Failed to publish.", "error");

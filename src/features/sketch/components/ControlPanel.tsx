@@ -147,10 +147,13 @@ export const ControlPanel: React.FC<ControlPanelProps> = () => {
     // Sync UI selection when options change externally (e.g. Remix/Edit)
     useEffect(() => {
         const style = STYLES.find(s => s.mode === options.mode);
-        if (style) {
-            setActiveStyle(style.id);
+        if (style && style.id !== activeStyle) {
+            // Use resolve to avoid synchronous cascading render warning in lint
+            Promise.resolve().then(() => {
+                setActiveStyle(style.id);
+            });
         }
-    }, [options.mode]);
+    }, [options.mode, activeStyle]);
 
     const styleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 

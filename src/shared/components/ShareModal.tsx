@@ -53,6 +53,12 @@ const SOCIAL_PLATFORMS = [
     }
 ];
 
+declare global {
+    interface Window {
+        Kakao: any; // Still need any for the whole object or define it properly
+    }
+}
+
 export const ShareModal: React.FC = () => {
     const { isOpen, artwork, closeShareModal } = useShareStore();
     const showToast = useToastStore(state => state.showToast);
@@ -63,17 +69,17 @@ export const ShareModal: React.FC = () => {
         const kakaoKey = import.meta.env.VITE_KAKAO_JS_KEY;
         if (!kakaoKey) return;
 
-        if (!(window as any).Kakao) {
+        if (!window.Kakao) {
             const script = document.createElement('script');
             script.src = 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.0/kakao.min.js';
             script.onload = () => {
-                if (!(window as any).Kakao.isInitialized()) {
-                    (window as any).Kakao.init(kakaoKey);
+                if (!window.Kakao.isInitialized()) {
+                    window.Kakao.init(kakaoKey);
                 }
             };
             document.head.appendChild(script);
-        } else if (!(window as any).Kakao.isInitialized()) {
-            (window as any).Kakao.init(kakaoKey);
+        } else if (!window.Kakao.isInitialized()) {
+            window.Kakao.init(kakaoKey);
         }
     }, []);
 
@@ -109,8 +115,8 @@ export const ShareModal: React.FC = () => {
             console.error("Metric tracking failed:", error);
         }
 
-        if (platform.id === 'kakao' && (window as any).Kakao?.isInitialized()) {
-            (window as any).Kakao.Share.sendDefault({
+        if (platform.id === 'kakao' && window.Kakao?.isInitialized()) {
+            window.Kakao.Share.sendDefault({
                 objectType: 'feed',
                 content: {
                     title: 'Sketchrang Artwork',

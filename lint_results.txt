@@ -1,0 +1,65 @@
+
+> temp_app@0.0.0 lint
+> eslint . --report-unused-disable-directives --max-warnings 0
+
+
+D:\BuyMeaCoffee\sketch_app_export\src\features\feed\components\ArtworkCard.tsx
+  32:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  33:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\BuyMeaCoffee\sketch_app_export\src\features\sketch\components\Canvas.tsx
+  37:8  warning  React Hook useEffect has a missing dependency: 'canvasRef'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  52:8  warning  React Hook useEffect has a missing dependency: 'canvasRef'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+D:\BuyMeaCoffee\sketch_app_export\src\features\sketch\components\ControlPanel.tsx
+  151:13  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\BuyMeaCoffee\sketch_app_export\src\features\sketch\components\ControlPanel.tsx:151:13
+  149 |         const style = STYLES.find(s => s.mode === options.mode);
+  150 |         if (style) {
+> 151 |             setActiveStyle(style.id);
+      |             ^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  152 |         }
+  153 |     }, [options.mode]);
+  154 |  react-hooks/set-state-in-effect
+  174:37  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         @typescript-eslint/no-explicit-any
+  232:36  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         @typescript-eslint/no-explicit-any
+
+D:\BuyMeaCoffee\sketch_app_export\src\features\sketch\hooks\__tests__\useSketchFlow.test.ts
+  36:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  41:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  44:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  45:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  46:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  47:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  48:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  90:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\BuyMeaCoffee\sketch_app_export\src\features\studio\api\publish.ts
+   83:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  108:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\BuyMeaCoffee\sketch_app_export\src\features\studio\components\PublishModal.tsx
+  38:8   warning  React Hook useEffect has missing dependencies: 'canvas', 'prepareAssets', and 'sourceImage'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  75:23  warning  Unexpected any. Specify a different type                                                                                                         @typescript-eslint/no-explicit-any
+
+D:\BuyMeaCoffee\sketch_app_export\src\shared\components\ShareModal.tsx
+   66:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   70:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   71:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   75:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   76:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  112:51  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  113:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\BuyMeaCoffee\sketch_app_export\src\shared\hooks\__tests__\useResponsiveGrid.test.ts
+  38:41  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 27 problems (1 error, 26 warnings)
+
