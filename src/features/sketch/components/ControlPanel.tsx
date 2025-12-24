@@ -103,7 +103,7 @@ const StyleCard: React.FC<{
 };
 
 export const ControlPanel: React.FC<ControlPanelProps> = () => {
-    const { options, setOptions, isDrawing, sourceImage, setIsPaused } = useSketchStore();
+    const { options, setOptions, isDrawing, sourceImage } = useSketchStore();
     const [activeSetting, setActiveSetting] = useState<string | null>(null);
     const [activeStyle, setActiveStyle] = useState('classic');
 
@@ -118,16 +118,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = () => {
         }
     }, [options.mode, activeStyle]);
 
-    const styleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
     const handleStyleChange = (styleId: string) => {
-        // Clear any pending style updates
-        if (styleTimerRef.current) {
-            clearTimeout(styleTimerRef.current);
-        }
-
-        const prevStyle = activeStyle;
-        const nextStyle = styleId;
         const style = STYLES.find(s => s.id === styleId);
 
         // Immediate UI Update (for smooth CSS transitions)
@@ -146,22 +137,8 @@ export const ControlPanel: React.FC<ControlPanelProps> = () => {
             });
         };
 
-        // If entering or exiting Vintage mode, delay drawing to keep UI animations smooth
-        const isVintageTransition = prevStyle === 'vintage' || nextStyle === 'vintage';
-        const isMobile = window.innerWidth < 1024;
-
-        if (isMobile && isVintageTransition) {
-            // CRITICAL OPTIMIZATION: STOP and CLEAR drawing immediately to free up CPU for animation
-            setIsPaused(true);
-
-            styleTimerRef.current = setTimeout(() => {
-                setIsPaused(false);
-                updateDrawing();
-            }, 500);
-        } else {
-            // Normal transition: Just update instantly
-            updateDrawing();
-        }
+        // Efficient Drawing Update (No artificial delay for mobile anymore)
+        updateDrawing();
     };
 
     const handleChange = (key: string, value: number) => {
@@ -295,59 +272,117 @@ export const ControlPanel: React.FC<ControlPanelProps> = () => {
             {/* --- MOBILE COMPACT TOOLBAR --- */}
             {activeSetting && (
                 <div className="md:hidden slider-popup">
-                    <div className="slider-popup-content relative">
+                    <div className="slider-popup-content relative flex flex-col">
                         <button
                             onClick={() => setActiveSetting(null)}
-                            className="absolute top-2 right-2 text-zinc-400 hover:text-zinc-600"
+                            className="absolute top-2 right-2 text-zinc-400 hover:text-zinc-600 z-10"
                         >
                             <XMarkIcon className="w-5 h-5" />
                         </button>
 
-                        <div className="flex-1 pr-6">
+                        <div className="flex-1 w-full">
                             {activeSetting === 'style' && (
-                                <div className="space-y-4 py-2">
-                                    <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-600">Choose Style</h3>
-                                    <div className="flex flex-col gap-3 pb-4">
-                                        {STYLES.map((style) => (
-                                            <StyleCard
-                                                key={style.id}
-                                                style={style}
-                                                isActive={activeStyle === style.id}
-                                                onClick={() => handleStyleChange(style.id)}
-                                                sourceImage={sourceImage}
-                                            />
-                                        ))}
+                                <div className="flex flex-col h-full pt-1 pb-2">
+                                    {/* 1. Dynamic Header Info */}
+                                    <div className="mb-3 px-1">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <span className="text-sm font-black uppercase tracking-widest text-zinc-800">
+                                                {STYLES.find(s => s.id === activeStyle)?.name}
+                                            </span>
+                                            {activeStyle === 'vintage' && (
+                                                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-orange-100 text-orange-700 font-bold border border-orange-200">
+                                                    Tint Active
+                                                </span>
+                                            )}
+                                        </div>
+                                        <span className="text-[11px] text-zinc-500 font-medium leading-tight block">
+                                            {STYLES.find(s => s.id === activeStyle)?.desc}
+                                        </span>
                                     </div>
 
-                                    {/* Mobile Tint Picker (Smooth Expansion) */}
-                                    <div className={`grid transition-[grid-template-rows] duration-500 ease-out ${activeStyle === 'vintage' ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
-                                        <div className="overflow-hidden min-h-0">
-                                            <div className="pt-4 mt-4 border-t border-zinc-100">
+                                    {/* 2. Horizontal Scrollable Thumbnails */}
+                                    <div className="relative w-full">
+                                        <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4">
+                                            {STYLES.map((style) => {
+                                                const isActive = activeStyle === style.id;
+                                                return (
+                                                    <button
+                                                        key={style.id}
+                                                        onClick={() => handleStyleChange(style.id)}
+                                                        className={`relative flex-shrink-0 group rounded-xl border transition-all duration-200 active:scale-95
+                                                            ${isActive
+                                                                ? 'border-zinc-800 ring-2 ring-zinc-800 ring-offset-2'
+                                                                : 'border-zinc-200 hover:border-zinc-400'}`}
+                                                    >
+                                                        {/* Thumbnail Only */}
+                                                        <div className="w-16 h-16 rounded-[10px] overflow-hidden bg-zinc-100 relative">
+                                                            <div className={`absolute inset-0 z-10 ${isActive ? 'bg-transparent' : 'bg-black/5'}`} />
+                                                            <img
+                                                                src={`/images/thumb_${style.id}.png`}
+                                                                alt={style.name}
+                                                                className="w-full h-full object-cover"
+                                                            />
+                                                        </div>
+
+                                                        {/* Active Dot */}
+                                                        {isActive && (
+                                                            <div className="absolute -top-1 -right-1 w-3 h-3 bg-zinc-800 rounded-full border-2 border-white shadow-sm z-20" />
+                                                        )}
+                                                    </button>
+                                                );
+                                            })}
+                                            {/* Spacer for right padding */}
+                                            <div className="w-1 flex-shrink-0" />
+                                        </div>
+                                    </div>
+
+                                    {/* 3. Tint Picker Overlay (Only for Vintage) */}
+                                    {activeStyle === 'vintage' && (
+                                        <div className="absolute left-0 right-0 bottom-full mb-4 mx-0 animate-in slide-in-from-bottom-4 duration-300 z-50">
+                                            <div className="bg-white/95 backdrop-blur-xl border border-zinc-200 shadow-2xl rounded-2xl p-4 mx-4">
                                                 <div className="flex items-center justify-between mb-3">
-                                                    <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-500 flex items-center gap-2">
-                                                        <div className="w-1.5 h-1.5 rounded-full bg-zinc-400" />
+                                                    <h4 className="text-[11px] font-black uppercase tracking-widest text-zinc-600 flex items-center gap-2">
+                                                        <div className="w-2 h-2 rounded-full bg-orange-400" />
                                                         Tint Color
                                                     </h4>
-                                                    <div className="flex w-24 rounded border border-zinc-100 overflow-hidden h-5">
+                                                    <div className="flex w-28 rounded-md border border-zinc-200 overflow-hidden h-7 shadow-sm">
                                                         <div
-                                                            className="w-1/3 h-full"
+                                                            className="w-[45%] h-full border-r border-zinc-100"
                                                             style={{ backgroundColor: options.tintColor || '#5d4037' }}
                                                         />
-                                                        <div className="w-2/3 h-full flex items-center justify-center bg-zinc-50 text-[9px] font-mono text-zinc-400">
+                                                        <div className="w-[55%] h-full flex items-center justify-center bg-zinc-50 text-[10px] font-mono text-zinc-500 font-medium tracking-wide">
                                                             {options.tintColor || '#5d4037'}
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className="custom-color-picker-wrapper">
+                                                {/* Fixed styles to prevent 1px gap and layout shift */}
+                                                <style>{`
+                                                    .custom-color-picker-wrapper .react-colorful {
+                                                        height: 120px !important;
+                                                        width: 100% !important;
+                                                    }
+                                                    .custom-color-picker-wrapper .react-colorful__saturation {
+                                                        border-bottom: none !important;
+                                                        border-radius: 8px 8px 0 0 !important;
+                                                        margin-bottom: 0 !important;
+                                                    }
+                                                    .custom-color-picker-wrapper .react-colorful__hue {
+                                                        height: 24px !important;
+                                                        border-radius: 0 0 8px 8px !important;
+                                                        margin-top: -1px !important; /* Overlap to hide gap */
+                                                    }
+                                                `}</style>
+                                                <div className="custom-color-picker-wrapper overflow-hidden rounded-lg bg-black">
                                                     <HexColorPicker
                                                         color={options.tintColor || '#5d4037'}
                                                         onChange={(newColor) => setOptions({ tintColor: newColor })}
-                                                        style={{ width: '100%', height: '140px' }}
                                                     />
                                                 </div>
                                             </div>
+                                            {/* Pointer Arrow */}
+                                            <div className="absolute left-1/2 -ml-2 -bottom-2 w-4 h-4 bg-white border-b border-r border-zinc-200 transform rotate-45" />
                                         </div>
-                                    </div>
+                                    )}
                                 </div>
                             )}
                             {activeSetting === 'texture' && renderSlider('momentum', 'Texture', 0.0, 1.0, 0.1, options.momentum?.toFixed(1) || '0.5', <Square3Stack3DIcon className="w-4 h-4" />)}
