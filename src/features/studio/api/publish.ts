@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { useAuthStore } from '@/features/auth/model/store';
+import { syncUserToSanity } from '@/features/auth/api/auth';
 
 export const usePublish = () => {
     const { user } = useAuthStore();
@@ -84,6 +85,9 @@ export const usePublish = () => {
         options: any
     ) => {
         if (!user) throw new Error("Must be logged in");
+
+        // SAFETY NET: Ensure user exists in Sanity before referencing
+        await syncUserToSanity(user);
 
         const response = await fetch('/api/publish-v2', {
             method: 'POST',

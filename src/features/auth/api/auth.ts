@@ -52,8 +52,8 @@ export const logout = async () => {
     }
 };
 
-// Internal: Sync Firebase User to Sanity User Document via Serverless Function
-const syncUserToSanity = async (user: User) => {
+// Sync Firebase User to Sanity User Document via Serverless Function
+export const syncUserToSanity = async (user: User) => {
     try {
         await fetch('/api/sync-user', {
             method: 'POST',
