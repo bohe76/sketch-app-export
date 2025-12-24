@@ -220,11 +220,11 @@ export const ArtworkDetailModal: React.FC<ArtworkDetailModalProps> = ({ artwork:
                 onClick={onClose}
             />
 
-            {/* Modal Container: 90vw width, 90vh height */}
+            {/* Modal Container: 90vw width, 85vh fixed height on mobile */}
             <motion.div
                 layout
                 transition={{ duration: 0.3, ease: "easeOut" }}
-                className="relative bg-white w-full lg:w-[90vw] min-h-[80vh] h-auto lg:h-[90vh] max-h-[90vh] rounded-[32px] lg:rounded-[40px] shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-300"
+                className="relative bg-white w-full lg:w-[90vw] h-[85vh] lg:h-[90vh] max-h-[90vh] rounded-[32px] lg:rounded-[40px] shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-300"
             >
 
                 {/* 1. Header: Author & Title (Left) */}
@@ -268,7 +268,7 @@ export const ArtworkDetailModal: React.FC<ArtworkDetailModalProps> = ({ artwork:
                                 src={artwork.imageUrl}
                                 alt={artwork.title}
                                 onLoad={() => setImgLoaded(true)}
-                                className={`max-w-full lg:max-w-[72vw] max-h-[50vh] lg:max-h-[72vh] w-auto h-auto object-contain transition-all duration-[800ms] ease-out ${imgLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-100'} `}
+                                className={`max-w-full lg:max-w-[72vw] max-h-[50vh] lg:max-h-[72vh] w-auto h-auto object-contain transition-all duration-[1200ms] ease-out ${imgLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-100'} `}
                             />
                         )}
                     </div>
