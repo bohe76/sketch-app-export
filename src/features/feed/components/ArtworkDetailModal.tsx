@@ -268,7 +268,7 @@ export const ArtworkDetailModal: React.FC<ArtworkDetailModalProps> = ({ artwork:
                                 src={artwork.imageUrl}
                                 alt={artwork.title}
                                 onLoad={() => setImgLoaded(true)}
-                                className={`max - w - full lg: max - w - [72vw] max - h - [50vh] lg: max - h - [72vh] w - auto h - auto object - contain transition - all duration - 700 ease - out ${imgLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'} `}
+                                className={`max-w-full lg:max-w-[72vw] max-h-[50vh] lg:max-h-[72vh] w-auto h-auto object-contain transition-all duration-[950ms] ease-out ${imgLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'} `}
                             />
                         )}
                     </div>
