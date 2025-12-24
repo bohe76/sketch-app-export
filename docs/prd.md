@@ -39,14 +39,17 @@
 - **Ultra-High-Res Support**: 고해상도 환경에서 최대 9컬럼까지 확장되는 압도적인 시각적 갤러리 경험 제공.
 - **Mobile First Accessibility**: 호버가 불가능한 환경을 고려하여 좋아요/다운로드/공유 등 핵심 액션 버튼 항시 노출.
 - **Download**: 완성된 작품을 내 기기에 고화질 이미지(PNG)로 즉시 저장. (개인 소장용)
+- **Flicker-free Performance**: 썸네일 스냅샷 전략을 통해 스타일 전환 시에도 깜빡임 없는 매끄러운 시각적 연속성 보장.
 
 ### 3.2 Feed (소셜 피드)
 
 다른 사람들의 작품을 감상하는 공간입니다.
 
-- **Infinite Gallery**: 무한 스크롤 형태의 갤러리 뷰.
-- **Interaction (SSOT)**: 모든 인터랙션은 단일 진실 공급원(Single Source of Truth) 기반으로 실시간 동기화됩니다.
-  - **Likes (좋아요)**: 하트 토글 및 인기 랭킹 산정 기준.
+- 모바일에서는 엄지손가락 영역 내 **Bottom Sheet** 형태의 컨트롤 패널 제공.
+- **Thumbnail Snapshot Strategy (New)**: 스타일 카드의 썸네일을 캔버스가 아닌 정적 이미지(Base64)로 렌더링하도록 캡처하여, 줌 동작이나 스크롤 시 CPU 부하와 깜빡임을 근본적으로 제거함.
+- **Studio Navigation**:
+  - **Back Button**: 스튜디오 좌측 상단에 배치된 원형 버튼을 통해 언제든지 갤러리 피드로 복귀 가능 (`setViewMode('feed')`).
+  - **Tooltip Support**: 호버 시 이동 경로를 명시적으로 안내하여 UX 심리적 안전감 확보.
   - **Share (공유)**: Web Share API를 활용한 PC/Mobile 통합 공유.
   - **Download (다운로드)**: 고화질 PNG 저장 및 횟수 트래킹.
   - **Remix & Edit (리믹스 및 수정)**: 다른 사람의 설정값을 가져와 그리거나(Remix), 본인의 작품을 다시 수정(Edit)할 수 있습니다.
@@ -87,6 +90,11 @@
 4. **튜닝**: 처음엔 너무 사실적이라 재미없음. '관성'을 낮추고 '펜 굵기'를 키우니 힙한 크로키 느낌이 남. 만족.
 5. **공유**: "우리 집 댕댕이 크로키"라는 제목으로 게시.
 6. **확산**: 다음 날, 내 그림이 'Daily Best' 3위에 올라가 있고 알림이 옴. 뿌듯함을 느낌.
+- **Fail-safe Logic (Safety Net)**: 
+    - **User Availability Check**: 게시(`finalizePublish`) 직전에 유저 데이터 존재 여부를 런타임에 확인하고 필요 시 즉시 동기화(Sync)하여 DB 초기화 상황에서도 게시 실패를 방지함.
+    - `AbortController`를 연동하여 모달 폐쇄 시 진행 중인 모든 네트워크 요청을 즉시 중단함.
+    - 발행 성공 후에는 스튜디오 상태를 초기화하여 새로운 작업 준비 보장.
+- **Error Feedback**: 발행 실패 시 상세한 원인을 토스트로 노출하며, 취소된 요청에 대해서는 불필요한 에러 알림을 생략함.
 
 ---
 
@@ -114,6 +122,13 @@
   - 피드에 내 작품 **게시(Publish)**
   - 다른 작품에 **좋아요(Like)**
   - **[My Gallery]** 탭 접근 및 본인 작품 관리(수정/삭제)
+- **CORS & Cache**:
+    - 외부 이미지 분석 시 픽셀 데이터를 읽기 위해 `crossOrigin="anonymous"` 속성을 명시적으로 할당합니다.
+    - 브라우저 캐시로 인한 분석 실패를 막기 위해 항상 **Timestamp Cache Buster**를 결합하여 로드합니다.
+- **Layout Stability**:
+    - `prepareCanvas`는 뷰포트 레이아웃이 완전히 정착된 후(`requestAnimationFrame`) 실행되어 정확한 좌표 계산을 보장합니다.
+- **Runtime Specification**:
+    - 모든 연동 API는 Node.js 런타임을 표준으로 하며, Edge Runtime 환경에서의 비표준 API(Buffer 등) 호환성 이슈를 원천 차단합니다.
 
 ### 7.2 Login Flow
 

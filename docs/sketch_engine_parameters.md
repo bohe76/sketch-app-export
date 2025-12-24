@@ -72,10 +72,12 @@ author: Antigravity
 1.  **Zero-Dimension Protection**: 
     - 캔버스나 이미지의 가로/세로 크기가 0일 경우 분석을 즉시 중단합니다. (IndexSizeError 방지)
     - 모든 드로잉 영역은 최소 **1px** 이상의 크기를 확보하도록 강제합니다.
-2.  **CORS & Cache**:
-    - 외부 이미지 로드 시 브라우저 캐시로 인한 분석 실패를 막기 위해 항상 **Anonymous CrossOrigin**과 **Timestamp Cache Buster**를 결합하여 로드합니다.
+2.  **CORS & Cache Control**:
+    - 외부 이미지 분석 시 픽셀 데이터를 읽기 위해 `crossOrigin="anonymous"` 속성과 **Timestamp Cache Buster**를 결합합니다. (실서버 렌더링 무결성 보장)
 3.  **Layout Stability**:
-    - `prepareCanvas`는 뷰포트 레이아웃이 완전히 정착된 후(`requestAnimationFrame`) 실행되어 정확한 좌표 계산을 보장합니다.
+    - `prepareCanvas`는 뷰포트 레이아웃 정착 후(`requestAnimationFrame`) 실행되어 정확한 좌표 분석을 보장합니다.
+4. **Runtime Standardization**:
+    - 모든 연동 API는 Node.js 런타임을 표준으로 하며, Edge Runtime 환경 배제 정책을 통해 라이브러리 호환성(Buffer 등)을 확보합니다.
 ## 6. 디자인 정합성 원칙 (Motion & Parameter Harmony)
 
 엔진의 드로잉 파라미터는 UI의 레이아웃 모션(0.15s, `easeOut`)과 시각적 톤앤매너를 공유해야 합니다.

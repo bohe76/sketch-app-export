@@ -27,8 +27,13 @@
 
 ### 2-1. SketchEngine 분석 로직
 
-- **CORS 대응**: Sanity CDN 이미지 로드 시 캐시 충돌을 방지하기 위해 **Cache Buster (`?t=Timestamp`)**를 URL에 추가합니다.
-- **Blob 예외 처리**: 사용자가 로컬에서 갓 업로드한 이미지(`blob:`)에는 쿼리 스트링을 붙이지 않아 로드 오류를 원천 차단합니다.
+-2.  **CORS & Cache Control**:
+    - 외부 이미지 분석 시 픽셀 데이터를 읽기 위해 `crossOrigin="anonymous"` 속성을 명시적으로 사용합니다. (실서버 렌더링 정상화)
+    - 브라우저 캐시 충돌 방지를 위해 **Timestamp Cache Buster**를 URL에 추가합니다.
+3.  **Layout Stability**:
+    - `prepareCanvas`는 뷰포트 레이아웃 정착 후(`requestAnimationFrame`) 실행되어 정확한 좌표 계산을 보정합니다.
+4. **Runtime Specification**:
+    - 모든 서버리스 함수는 Node.js 런타임을 표준으로 하며, Edge Runtime 환경 배제 정책을 준수하여 라이브러리 호환성을 확보합니다.
 
 ### 2-1-1. 파일 용량 제한 (Payload Constraints)
 
@@ -50,7 +55,8 @@
   - 카드 간 구분 명확화를 위해 평상시 `Zinc-300` 테두리 적용.
   - 마우스 호버 및 스타일 선택 시 `Zinc-800`으로 테두리 색상 강화 피드백 제공.
   - 모든 테두리 두께는 시스템 툴팁과 동일하게 유지하여 시각적 일관성 확보.
-  - **Signature Hover**: PC 뷰에서 마우스 오버 시 소스 이미지가 **3초**에 걸쳐 서서히 사라지며 그 뒤에서 실시간으로 그려지는 스케치 과정을 노출합니다.
+- **Thumbnail Snapshot Strategy**: 썸네일 스타일 카드에서 실시간 캔버스 대신 정적 이미지(Base64) 스냅샷을 사용하여 줌 애니메이션 깜빡임 현상을 제거하고 성능 최적화 완료.
+- **Signature Hover**: PC 뷰에서 마우스 오버 시 소스 이미지가 **3초**에 걸쳐 서서히 사라지며 그 뒤에서 실시간으로 그려지는 스케치 과정을 노출합니다.
 - **Vintage Tinting**: Vintage 스타일 선택 시 전용 색상 선택기(Color Picker)가 활성화되어 결과물의 틴트 톤을 실시간으로 조절할 수 있습니다.
 
 ### 2-3. 수정 및 리믹스 (Edit/Remix)
@@ -85,7 +91,8 @@
 - **Background Pre-upload**: 
     - 모달이 활성화되는 즉시 백그라운드에서 **원본 및 스케치 이미지 업로드**를 병렬로 시작하여 사용자 대기 시간을 활용함.
     - 게시 확정 시점에서 업로드가 미완료된 상태라면 완료될 때까지 대기하도록 설계.
-- **Fail-safe Logic**: 
+- **Fail-safe Logic (Safety Net)**: 
+    - **User Availability Check**: 게시(`finalizePublish`) 직전에 유저 정보가 Sanity에 존재하는지 런타임에 보장하여 DB 초기화 중에도 게시 실패 차단.
     - `AbortController`를 연동하여 모달 폐쇄 시 진행 중인 모든 네트워크 요청을 즉시 중단함.
     - 발행 성공 후에는 스튜디오 상태를 초기화하여 새로운 작업 준비 보장.
 - **Error Feedback**: 발행 실패 시 상세한 원인을 토스트로 노출하며, 취소된 요청에 대해서는 불필요한 에러 알림을 생략함.등)를 토스트로 노출하여 근본 원인 파악 지원.

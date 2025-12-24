@@ -70,9 +70,9 @@ author: Antigravity
   - 상세보기: 클릭 시 데이터 실시간 동기화 및 **Delayed Image Loading 전략**(400ms 지연 노출)이 포함된 `ArtworkDetailModal` 구현 완료.
   - **[x] 딥 링크 (Deep Linking)**: 공유 링크 접속 시 모달 즉시 실행 및 스켈레톤 UI 연동 완료.
   - **[x] UI Refinement**: 개별 글래스모피즘(White Glass) 버튼 시스템 전환 및 카드 내 즉시 액션(Like/Download/Share) 구현 완료.
-- [ ] **라이브 리플레이 (진행 예정)**
-  - 현황: 단순 이미지 표시.
-  - 잔여 작업: (P2) 호버 시 스케치 과정 재생 효과. (사용자 다음 지시 예정)
+- [x] **라이브 리플레이 (Live Sketch Preview)**
+  - 구현: 피드에서 썸네일 호버 시 스케치가 실시간으로 그려지는 효과 구현 완료.
+  - 특징: **CORS 안정화** 조치로 실서버(Vercel)에서도 투명 이미지 위에 즉시 렌더링되도록 최적화됨.
 
 ### 체크리스트 4: UI/UX 및 레이아웃
 
@@ -90,8 +90,11 @@ author: Antigravity
 - [x] **로컬 개발 환경**
   - `api/server.js` 및 Vite Proxy 설정 완료.
   - `npm run build` 검증 완료.
-- [x] **Vercel 배포 검증**
-  - 현황: 실서버 배포 및 API 동작 확인 완료.
+- [x] **Vercel 배포 및 기술적 안정화**
+  - [x] **Runtime Standardization**: Node.js 표준 런타임 적용으로 Sanity API 호환성 확보.
+  - [x] **Publish Safety Net**: 게시 단계에서 유저 동기화 강제로 서비스 영속성 보장.
+  - [x] **CORS Resolution**: 실서버 캔버스 조작을 위한 Sanity API 및 클라이언트 crossOrigin 설정 완료.
 - [x] **서버 데이터 무결성 (Integrity Check)**
   - [x] **Atomic Deletion**: 작품 삭제 시 이미지 자산까지 트랜잭션으로 묶어 고아 에셋 방지 완료.
   - [x] **Sanity DB Sync**: 딥 링크 및 모딩 모달 오픈 시 실시간 동기화 로직 검증 완료.
+  - [x] **Data Isolation**: 로컬(dev)과 실서버(prod) 데이터셋 완전 분리 및 검증 완료.
