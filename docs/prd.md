@@ -39,7 +39,10 @@
 - **Ultra-High-Res Support**: 고해상도 환경에서 최대 9컬럼까지 확장되는 압도적인 시각적 갤러리 경험 제공.
 - **Mobile First Accessibility**: 호버가 불가능한 환경을 고려하여 좋아요/다운로드/공유 등 핵심 액션 버튼 항시 노출.
 - **Download**: 완성된 작품을 내 기기에 고화질 이미지(PNG)로 즉시 저장. (개인 소장용)
-- **Flicker-free Performance**: 썸네일 스냅샷 전략을 통해 스타일 전환 시에도 깜빡임 없는 매끄러운 시각적 연속성 보장.
+- **Flicker-free Performance**: 줌인/줌아웃 시 캔버스 대신 고화질 스냅샷 이미지를 사용하여 깜빡임 방지.
+- **Visual Stability (CLS)**: 모바일 상세 모달의 초기 로딩 시 최소 높이(`80vh`)를 확보하여 레이아웃 점프 현상 완전 제거.
+- **Responsive Layout**: PC/Mobile 디바이스에 따른 최적화된 그리드 시스템 (Masonry Layout).
+- **Interactive Share**: 브라우저 기본 공유가 아닌, 직관적이고 아름다운 커스텀 공유 시트(Share Sheet).
 
 ### 3.2 Feed (소셜 피드)
 

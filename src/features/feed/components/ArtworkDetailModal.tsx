@@ -220,7 +220,7 @@ export const ArtworkDetailModal: React.FC<ArtworkDetailModalProps> = ({ artwork:
             />
 
             {/* Modal Container: 90vw width, 90vh height */}
-            <div className="relative bg-white w-full lg:w-[90vw] h-auto lg:h-[90vh] max-h-[90vh] rounded-[32px] lg:rounded-[40px] shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-300">
+            <div className="relative bg-white w-full lg:w-[90vw] min-h-[80vh] h-auto lg:h-[90vh] max-h-[90vh] rounded-[32px] lg:rounded-[40px] shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-300">
 
                 {/* 1. Header: Author & Title (Left) */}
                 <header className="px-6 lg:px-10 pt-6 lg:pt-10 pb-4 lg:pb-6 flex items-start justify-between">
