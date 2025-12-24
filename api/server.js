@@ -1,11 +1,15 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import fs from 'fs';
+import { fetchArtworkForSEO, injectMetadata } from './utils/seo_helper.js';
 
-// Load env vars
-dotenv.config();
+// Load env vars - Already called above
+
 
 // Fix __dirname in ESM
 const __filename = fileURLToPath(import.meta.url);
@@ -23,7 +27,32 @@ app.use(express.json({ limit: '10mb' })); // Increase limit for base64 images
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok', uptime: process.uptime() }));
 
-import fs from 'fs';
+// SEO Middleware for Social Sharing
+app.get('/', async (req, res, next) => {
+    const artworkId = req.query.artwork;
+
+    // Only intercept if artwork ID is present and it's a GET request for the root
+    if (artworkId) {
+        console.log(`[SEO] Intercepting request for artwork: ${artworkId}`);
+        try {
+            const artwork = await fetchArtworkForSEO(artworkId);
+            if (artwork) {
+                const templatePath = join(__dirname, '../index.html');
+                let html = fs.readFileSync(templatePath, 'utf-8');
+
+                // Inject metadata
+                html = injectMetadata(html, artwork);
+
+                console.log(`[SEO] Serving dynamic HTML for: ${artwork.title}`);
+                return res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
+            }
+        } catch (error) {
+            console.error('[SEO Error]:', error);
+            // Fallback to default behavior if SEO injection fails
+        }
+    }
+    next();
+});
 
 // Dynamic Import Helper for Vercel-style handlers
 const handle = async (moduleId, req, res) => {

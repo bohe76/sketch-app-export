@@ -73,6 +73,7 @@
 
 - **Deep Linking**: `?artwork=ID` 파라미터 감지 시 모달 즉시 실행.
 - **Tooltips**: 모든 액션 버튼에 전역 공통 스타일이 적용된 대문자(UPPERCASE) 툴팁 적용.
+- **Dynamic SEO Preview**: 특정 작품 공유 시 (`/?artwork=ID`) 소셜 봇에게 해당 작품의 제목과 썸네일이 포함된 동적 메타 태그를 제공하여 풍부한 미리보기(Rich Preview)를 구현합니다.
 
 ---
 
