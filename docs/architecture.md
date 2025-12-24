@@ -134,6 +134,13 @@ Vite 개발 서버와 Express API 서버의 충돌을 방지하기 위한 통합
     - API 핸들러 내에서 Sanity 클라이언트를 요청 시점마다 생성하는 팩토리 패턴(`getClient()`) 적용으로 런타임 환경 변수 정합성 보장.
     - 서버 부팅 및 API 요청 시 현재 사용 중인 `dataset` 명칭을 로그로 명시하여 육안 감시(Visual Monitoring) 체계 구축.
 
+### 6-5. User Availability Safety Net (Fault Tolerance)
+
+- **Principle**: 데이터베이스 초기화나 일시적 동기화 오류로 인해 Sanity에 유저 정보가 존재하지 않는 경우에도 서비스 연속성을 보장합니다.
+- **Implementation**: 
+    - `Publish` 최종 단계(`finalizePublish`) 직전에 `syncUserToSanity`를 명시적으로 호출하여, 유저 문서의 존재 여부를 런타임에 보장(Ensure)합니다.
+    - 이는 '무중단 배포' 및 '데이터 정제 작업' 중에도 사용자의 핵심 액션(게시)이 중단 없이 수행되도록 하는 방어적 프로그래밍 전략입니다.
+
 ---
 
 ## 7. 문제 해결 및 서버 관리 (Troubleshooting)
@@ -148,9 +155,13 @@ Vite 개발 서버와 Express API 서버의 충돌을 방지하기 위한 통합
   taskkill /F /IM node.exe
   ```
 
-### 7-2. 데이터 정합성 체크
+### 7-2. API Runtime Guide (Standardization)
 
-발행 과정에서 문제가 발생할 경우, 다음 스크립트로 실제 Sanity에 데이터가 도달했는지 확인할 수 있습니다.
-```bash
-node scripts/sanity-check.js
-```
+- **Runtime**: 모든 API 핸들러는 Vercel **Node.js Runtime**을 표준으로 사용합니다.
+- **Warning**: `Edge Runtime`은 `@sanity/client` 일부 기능 및 Node.js 표준 API(`Buffer` 등)와 호환성 이슈가 발생할 수 있으므로, 명시적인 이유가 없는 한 사용을 금지합니다.
+- **Sync Issue**: `sync-user.js`와 같은 동기화 모듈에서 런타임 설정이 잘못될 경우 유저 정보가 유실되어 서비스 전반에 장애를 초래할 수 있으니 `export const config = { runtime: 'nodejs' }` 또는 기본값을 준수합니다.
+
+### 7-3. Data Management Procedure (Maintenance)
+
+- **전수 초기화**: 데이터셋을 완전히 비우고 다시 시작해야 할 경우 `scripts/clear-sanity-data.js`를 사용합니다.
+- **주의 사항**: 참조 관계(References) 에러 방지를 위해 스크립트 내부적으로 `artwork` -> `user` -> `assets` 순서로 정교하게 삭제를 수행합니다.
