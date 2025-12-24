@@ -11,15 +11,21 @@ import { useAuthStore } from '../model/store';
 
 // Initialize Auth Listener
 export const initAuth = () => {
-    const { setUser, setIsLoading } = useAuthStore.getState();
+    const { setUser, setIsLoading, setIsAdmin } = useAuthStore.getState();
 
     return onAuthStateChanged(auth, async (firebaseUser) => {
         setUser(firebaseUser);
         setIsLoading(false);
 
         if (firebaseUser) {
+            // Check admin status
+            const adminUids = (import.meta.env.VITE_ADMIN_UIDS || '').split(',').map((id: string) => id.trim());
+            setIsAdmin(adminUids.includes(firebaseUser.uid));
+
             // Sync user to Sanity
             await syncUserToSanity(firebaseUser);
+        } else {
+            setIsAdmin(false);
         }
     });
 };

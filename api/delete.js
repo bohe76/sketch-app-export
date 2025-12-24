@@ -31,14 +31,20 @@ export default async function handler(req, res) {
             return res.status(404).json({ message: 'Artwork not found' });
         }
 
-        if (doc.authorId !== userId) {
+        const assetId = doc.assetId;
+        const authorId = doc.authorId;
+
+        // 2. Authorization: Author OR Admin
+        const adminUids = (process.env.VITE_ADMIN_UIDS || '').split(',').map(id => id.trim());
+        const isAdmin = adminUids.includes(userId);
+
+        if (authorId !== userId && !isAdmin) {
             return res.status(403).json({ message: 'You are not authorized to delete this artwork' });
         }
 
-        const assetId = doc.assetId;
-        console.log(`[API] Atomic Delete: Artwork(${artworkId}), Asset(${assetId || 'none'})`);
+        console.log(`[API] Atomic Delete: Artwork(${artworkId}), Asset(${assetId || 'none'}), AdminAction: ${isAdmin}`);
 
-        // 2. Atomic Transaction: Delete both or none
+        // 3. Atomic Transaction: Delete both or none
         const transaction = client.transaction();
         transaction.delete(artworkId);
         if (assetId) {

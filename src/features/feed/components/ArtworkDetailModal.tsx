@@ -15,6 +15,7 @@ import { toggleLike, trackMetric, deleteArtwork, fetchArtworkById } from '../api
 import { useToastStore } from '@/shared/model/toastStore';
 import { useModalStore } from '@/shared/model/modalStore';
 import { useShareStore } from '@/shared/model/shareStore';
+import { useAuthStore } from '@/features/auth/model/store';
 
 interface ArtworkDetailModalProps {
     artwork: Artwork;
@@ -27,6 +28,7 @@ interface ArtworkDetailModalProps {
 export const ArtworkDetailModal: React.FC<ArtworkDetailModalProps> = ({ artwork: initialArtwork, currentUserId, onClose, onRemix, onDelete }) => {
     const showToast = useToastStore(state => state.showToast);
     const { openModal } = useModalStore();
+    const isAdmin = useAuthStore(state => state.isAdmin);
     const { artworks, updateArtwork } = useFeedStore();
     const [hoverItem, setHoverItem] = useState<string | null>(null);
     const [imgLoaded, setImgLoaded] = useState(false);
@@ -161,7 +163,7 @@ export const ArtworkDetailModal: React.FC<ArtworkDetailModalProps> = ({ artwork:
     };
 
     const handleDelete = async () => {
-        if (!currentUserId || currentUserId !== artwork.authorId) return;
+        if (!currentUserId || (currentUserId !== artwork.authorId && !isAdmin)) return;
 
         openModal({
             title: "Delete Artwork",
@@ -345,26 +347,28 @@ export const ArtworkDetailModal: React.FC<ArtworkDetailModalProps> = ({ artwork:
                             </div>
                         )}
                         {/* Right Group: Owner Actions (Edit & Delete) */}
-                        {currentUserId === artwork.authorId && (
+                        {(currentUserId === artwork.authorId || isAdmin) && (
                             <div className="flex items-center gap-7 lg:gap-8">
-                                {/* Edit Action */}
-                                <div className="relative group">
-                                    <button
-                                        onClick={() => onRemix(artwork)}
-                                        onMouseEnter={() => setHoverItem('edit')}
-                                        onMouseLeave={() => setHoverItem(null)}
-                                        className="flex items-center gap-2 text-zinc-600 hover:text-zinc-900 transition-colors"
-                                    >
-                                        <PencilIcon className="w-5 h-5 lg:w-6 h-6" />
-                                    </button>
-                                    {hoverItem === 'edit' && (
-                                        <div className="tooltip-box animate-tooltip-in">
-                                            EDIT ART
-                                        </div>
-                                    )}
-                                </div>
+                                {/* Edit Action - ONLY for Author */}
+                                {currentUserId === artwork.authorId && (
+                                    <div className="relative group">
+                                        <button
+                                            onClick={() => onRemix(artwork)}
+                                            onMouseEnter={() => setHoverItem('edit')}
+                                            onMouseLeave={() => setHoverItem(null)}
+                                            className="flex items-center gap-2 text-zinc-600 hover:text-zinc-900 transition-colors"
+                                        >
+                                            <PencilIcon className="w-5 h-5 lg:w-6 h-6" />
+                                        </button>
+                                        {hoverItem === 'edit' && (
+                                            <div className="tooltip-box animate-tooltip-in">
+                                                EDIT ART
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
 
-                                {/* Delete Action */}
+                                {/* Delete Action - Author OR Admin */}
                                 <div className="relative group">
                                     <button
                                         onClick={handleDelete}

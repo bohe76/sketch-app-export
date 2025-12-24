@@ -141,7 +141,14 @@ Vite 개발 서버와 Express API 서버의 충돌을 방지하기 위한 통합
     - `Publish` 최종 단계(`finalizePublish`) 직전에 `syncUserToSanity`를 명시적으로 호출하여, 유저 문서의 존재 여부를 런타임에 보장(Ensure)합니다.
     - 이는 '무중단 배포' 및 '데이터 정제 작업' 중에도 사용자의 핵심 액션(게시)이 중단 없이 수행되도록 하는 방어적 프로그래밍 전략입니다.
 
-### 6-6. Security & Protocol Integrity (Mixed Content Prevention)
+### 6-6. Admin Moderation & Content Safety
+
+- **Principle**: 유해 콘텐츠를 즉각 관리하기 위해 신뢰할 수 있는 사용자에게 수퍼 어드민 권한을 부여합니다.
+- **Implementation**: 
+    - 환경 변수(`VITE_ADMIN_UIDS`)에 등록된 UID는 런타임에 서비스 전체의 삭제 권한을 가집니다.
+    - 백엔드 삭제 API는 '소유자 본인' 혹은 '어드민'인 경우에만 Sanity 트랜잭션을 승인하도록 설계되었습니다.
+
+### 6-7. Security & Protocol Integrity (Mixed Content Prevention)
 
 - **Principle**: 실서버(HTTPS) 환경에서 비보안 리소스(HTTP) 요청으로 인한 보안 취약점 및 브라우저 경고를 방지합니다.
 - **Implementation**: 
