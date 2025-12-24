@@ -6,7 +6,7 @@ import { useToastStore } from '@/shared/model/toastStore';
 import { useUIStore } from '@/shared/model/uiStore';
 
 export const PublishModal: React.FC = () => {
-    const { isOpen, canvas, uploadPromise, abortController, closePublishModal } = usePublishModalStore();
+    const { isOpen, canvas, uploadPromise, closePublishModal } = usePublishModalStore();
     const { prepareAssets, finalizePublish } = usePublish();
     const { setSourceImage, sourceImage, options } = useSketchStore();
     const { showToast, hideToast } = useToastStore();

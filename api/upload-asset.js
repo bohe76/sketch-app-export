@@ -10,11 +10,8 @@ const client = createClient({
 
 export default async function handler(req, res) {
     const requestId = Date.now();
-    console.log(`[UploadAsset][${requestId}] Request received`);
-    console.time(`[UploadAsset][${requestId}] Total Duration`);
 
     if (req.method !== 'POST') {
-        console.warn(`[UploadAsset][${requestId}] Method not allowed: ${req.method}`);
         return res.status(405).json({ message: 'Method not allowed' });
     }
 
@@ -22,32 +19,22 @@ export default async function handler(req, res) {
         const { imageBase64, filename } = req.body;
 
         if (!imageBase64) {
-            console.error(`[UploadAsset][${requestId}] Missing imageBase64`);
             return res.status(400).json({ message: 'Missing image data' });
         }
 
-        console.log(`[UploadAsset][${requestId}] Decoding base64...`);
         const matches = imageBase64.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
         if (!matches || matches.length !== 3) {
-            console.error(`[UploadAsset][${requestId}] Invalid base64 format`);
             return res.status(400).json({ message: 'Invalid base64 format' });
         }
 
         const buffer = Buffer.from(matches[2], 'base64');
         const contentType = matches[1];
 
-        console.log(`[UploadAsset][${requestId}] Starting Sanity upload: ${filename || 'image'} (${buffer.length} bytes)`);
-        console.time(`[UploadAsset][${requestId}] Sanity Upload Time`);
-
         const asset = await client.assets.upload('image', buffer, {
             contentType,
             filename: filename || `upload-${Date.now()}.webp`
         });
 
-        console.timeEnd(`[UploadAsset][${requestId}] Sanity Upload Time`);
-
-        console.log(`[UploadAsset][${requestId}] Successfully uploaded asset: ${asset._id}`);
-        console.timeEnd(`[UploadAsset][${requestId}] Total Duration`);
         return res.status(200).json({ assetId: asset._id, url: asset.url });
 
     } catch (error) {

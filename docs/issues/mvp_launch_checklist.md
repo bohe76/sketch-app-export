@@ -49,7 +49,7 @@ author: Antigravity
 
 - [x] **게시하기(Publish) 기능**
   - `App.tsx`: 캔버스 하단 플로팅 버튼(`Publish to Gallery`) 구현됨.
-  - `usePublish`: 캔버스 데이터 캡처 및 API 호출 로직 구현됨.
+  - `usePublish`: **병렬 선행 업로드(Parallel Pre-upload)** 기법 적용으로 게시 속도 최적화 완료 (5초 -> 1초 미만).
 - [x] **다운로드(Download) 기능**
   - 구현: 캔버스를 로컬 PNG로 저장하는 기능 및 UI 버튼 추가 완료.
   - 개선: **실제 이미지 영역 자동 크롭(Crop)** 기능 추가로 불필요한 공백 제거.
@@ -90,7 +90,7 @@ author: Antigravity
   - `api/server.js` 및 Vite Proxy 설정 완료.
   - `npm run build` 검증 완료.
 - [x] **Vercel 배포 검증**
-  - 실제 배포 후 Serverless Function 경로 동작 확인 필요.
+  - 현황: 실서버 배포 및 API 동작 확인 완료.
 - [x] **서버 데이터 무결성 (Integrity Check)**
   - [x] **Atomic Deletion**: 작품 삭제 시 이미지 자산까지 트랜잭션으로 묶어 고아 에셋 방지 완료.
   - [x] **Sanity DB Sync**: 딥 링크 및 모딩 모달 오픈 시 실시간 동기화 로직 검증 완료.

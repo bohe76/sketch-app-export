@@ -1,9 +1,7 @@
 import { useAuthStore } from '@/features/auth/model/store';
-import { usePublishModalStore } from '@/shared/model/publishModalStore';
 
 export const usePublish = () => {
     const { user } = useAuthStore();
-    const store = usePublishModalStore();
 
     /**
      * 1. Pre-upload both source and sketch assets in parallel

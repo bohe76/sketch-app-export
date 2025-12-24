@@ -67,14 +67,15 @@
 - 게시(`Publish`) 과정에서 비동기 전송 시점의 데이터 무결성을 보장하기 위해 **Snapshot** 방식을 사용합니다.
 - 통신이 시작되는 즉시 캔버스 베이스64, 드로잉 옵션, 원본 이미지 정보를 상수로 고정하여, 업로드 도중에 스토어 상태가 변경되거나 초기화되어도 안전하게 전송될 수 있도록 설계되었습니다.
 
-### 3-5. Sequential Upload & Payload Management
+### 3-5. Parallel Pre-upload & Payload Optimization (게시 성능 최적화)
 
-- **Payload Separation**: Vercel의 4.5MB 요청 제한을 극복하기 위해 **2단계 순차 업로드**를 수행합니다.
-    1. `/api/upload-asset`: 원본 이미지를 먼저 업로드하여 Sanity `assetId`를 획득.
-    2. `/api/publish`: 스케치 결과물과 위에서 받은 `assetId`를 함께 전송하여 최종 문서를 생성.
-- **Size & Timeout Limits**: 
-    - 각 이미지당 **최대 4MB**까지 허용 (전체 발행 시 약 8MB 수준).
-    - Vercel Serverless Function 타임아웃 방지를 위해 `/api/publish` 등 핵심 엔드포인트에 `maxDuration: 60` 설정을 적용하여 안정적인 대용량 처리를 보장합니다.
+- **Parallel Pre-upload**: Vercel의 4.5MB 페이로드 제한을 준수하면서도 업로드 대기 시간을 0에 수렴시키기 위해 **선행 병렬 업로드** 전략을 사용합니다.
+    1. **Trigger**: 사용자가 'Publish' 클릭 시 모달이 열림과 동시에 백그라운드에서 원본과 스케치 어셋 업로드를 병렬로 시작.
+    2. **Wait-free UX**: 사용자가 제목을 입력하는 대기 시간을 활용해 업로드를 완료함으로써 최종 버튼 클릭 시 지연 최소화.
+    3. **Finalize**: `/api/publish-v2` 엔드포인트를 통해 이미 업로드된 Asset ID들만 연결하여 최종 문서를 생성.
+- **Payload Management**: 
+    - 이미지 전송을 독립적인 요청으로 분리하여 각 요청당 **4.5MB** 제한을 안전하게 확보.
+    - `AbortController`를 통해 모달 닫기나 취소 시 진행 중인 모든 네트워크 요청을 즉시 중단하여 리소스 낭비 및 상태 꼬임 방지.
 
 ---
 

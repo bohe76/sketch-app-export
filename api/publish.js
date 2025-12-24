@@ -14,8 +14,6 @@ export default async function handler(req, res) {
     }
 
     const reqId = Date.now();
-    console.log(`[Publish][${reqId}] Processing request for user: ${req.body.userId}`);
-    console.time(`[Publish][${reqId}] Total Duration`);
 
     try {
         const { imageBase64, sourceAssetId, title, userId, options } = req.body;
@@ -35,13 +33,10 @@ export default async function handler(req, res) {
             return res.status(400).json({ message: 'Invalid sketch image data format' });
         }
 
-        console.log(`[Publish][${reqId}] Sketch size: ${sketchData.buf.length} bytes`);
-        console.time(`[Publish][${reqId}] Asset Upload Time`);
         const asset = await client.assets.upload('image', sketchData.buf, {
             contentType: sketchData.type,
             filename: `sketch-${Date.now()}.webp`
         });
-        console.timeEnd(`[Publish][${reqId}] Asset Upload Time`);
 
         // 2. Document Creation (Source Asset is now passed as an ID)
         const doc = {
@@ -75,13 +70,8 @@ export default async function handler(req, res) {
             likedBy: []
         };
 
-        console.log(`[Publish][${reqId}] Creating Sanity document for user: ${userId}`);
-        console.time(`[Publish][${reqId}] Doc Creation Time`);
         const result = await client.create(doc);
-        console.timeEnd(`[Publish][${reqId}] Doc Creation Time`);
 
-        console.log(`[Publish][${reqId}] Successfully created artwork: ${result._id}`);
-        console.timeEnd(`[Publish][${reqId}] Total Duration`);
         return res.status(200).json(result);
 
     } catch (error) {

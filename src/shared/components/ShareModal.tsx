@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { XMarkIcon, ClipboardDocumentIcon, CheckIcon } from '@heroicons/react/24/outline';
+import React, { useEffect } from 'react';
+import { AnimatePresence } from 'framer-motion';
+import { XMarkIcon, ClipboardDocumentIcon } from '@heroicons/react/24/outline';
 import { useShareStore } from '../model/shareStore';
 import { useToastStore } from '@/shared/model/toastStore';
 import { trackMetric } from '@/features/feed/api/feed';
