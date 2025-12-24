@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
     XMarkIcon,
@@ -12,7 +12,7 @@ import {
 import { HeartIcon as HeartSolid } from '@heroicons/react/24/solid';
 import { useFeedStore } from '../model/feedStore';
 import type { Artwork } from '../api/feed';
-import { toggleLike, trackMetric, deleteArtwork, fetchArtworkById } from '../api/feed';
+import { deleteArtwork, fetchArtworkById } from '../api/feed';
 import { useToastStore } from '@/shared/model/toastStore';
 import { useModalStore } from '@/shared/model/modalStore';
 import { useShareStore } from '@/shared/model/shareStore';
@@ -35,10 +35,7 @@ export const ArtworkDetailModal: React.FC<ArtworkDetailModalProps> = ({ artwork:
     const [imgLoaded, setImgLoaded] = useState(false);
     const [showLoading, setShowLoading] = useState(false);
 
-    // Request Tracking: Prevent race conditions from rapid clicks
-    const pendingLike = useRef(false);
-    const pendingDownload = useRef(false);
-    const pendingShare = useRef(false);
+
 
     // Get the latest artwork data from the store
     const artwork = artworks.find(a => a._id === initialArtwork._id) || initialArtwork;
@@ -47,8 +44,10 @@ export const ArtworkDetailModal: React.FC<ArtworkDetailModalProps> = ({ artwork:
     // Randomize Mask Origin (Top-Left or Top-Right) on mount
     const maskOrigin = React.useMemo(() => {
         const origins = ['0% 0%', '100% 0%'];
-        return origins[Math.floor(Math.random() * origins.length)];
-    }, []);
+        // Use artwork ID to pick a stable origin instead of Math.random (impurity)
+        const idSum = initialArtwork._id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+        return origins[idSum % origins.length];
+    }, [initialArtwork._id]);
 
     // Delayed Loading Strategy: Only show loading UI if image takes more than 400ms
     useEffect(() => {
@@ -58,7 +57,9 @@ export const ArtworkDetailModal: React.FC<ArtworkDetailModalProps> = ({ artwork:
                 setShowLoading(true);
             }, 400); // 400ms threshold for cached images
         } else {
-            setShowLoading(false);
+            // Avoid synchronous setState in effect (react-hooks/set-state-in-effect)
+            const st = setTimeout(() => setShowLoading(false), 0);
+            return () => clearTimeout(st);
         }
         return () => clearTimeout(timer);
     }, [imgLoaded, artwork.imageUrl]);
@@ -74,96 +75,45 @@ export const ArtworkDetailModal: React.FC<ArtworkDetailModalProps> = ({ artwork:
             .catch(err => console.error("Failed to sync artwork on open:", err));
     }, [initialArtwork._id, currentUserId, updateArtwork]);
 
+    const syncLike = useFeedStore(state => state.syncLike);
+    const syncMetric = useFeedStore(state => state.syncMetric);
+
     const handleLikeToggle = async () => {
         if (!currentUserId) {
             alert("Please login to like artworks.");
             return;
         }
 
-        // Request Tracking: Block if already processing
-        if (pendingLike.current) {
-            return;
-        }
-
-        pendingLike.current = true;
-
-        const newLikedState = !artwork.isLiked;
-        const newLikes = newLikedState ? (artwork.likeCount || 0) + 1 : (artwork.likeCount || 0) - 1;
-
-        // Optimistic Update directly in the Store (Single Source of Truth)
-        updateArtwork(artwork._id, { likeCount: newLikes, isLiked: newLikedState });
-
-        try {
-            const result = await toggleLike(artwork._id, currentUserId, newLikedState);
-            // Sync precisely with DB result
-            updateArtwork(artwork._id, {
-                likeCount: result.likeCount,
-                isLiked: newLikedState
-            });
-        } catch {
-            // Revert in the Store on failure
-            const revertedState = !newLikedState;
-            const revertedLikes = revertedState ? newLikes + 1 : newLikes - 1;
-            updateArtwork(artwork._id, { likeCount: revertedLikes, isLiked: revertedState });
-        } finally {
-            pendingLike.current = false;
-        }
+        // High-performance background sync
+        await syncLike(initialArtwork._id, currentUserId);
     };
 
     const handleDownload = async () => {
-        // Request Tracking: Block if already processing
-        if (pendingDownload.current) {
-            return;
-        }
-
-        pendingDownload.current = true;
-
-        const downloadUrl = artwork.imageUrl + (artwork.imageUrl.includes('?') ? '&' : '?') + `dl = ${encodeURIComponent(artwork.title)}.png`;
-
-        // Optimistic Update in the Store
-        const nextCount = (artwork.downloadCount || 0) + 1;
-        updateArtwork(artwork._id, { downloadCount: nextCount });
+        // High-performance background sync
+        await syncMetric(initialArtwork._id, 'download');
 
         try {
-            // 1. Try Blob fetch for a "quiet" download (silent if CORS allows)
-            const response = await fetch(artwork.imageUrl, { mode: 'cors' });
-            if (!response.ok) throw new Error();
-
+            const response = await fetch(artwork.imageUrl);
             const blob = await response.blob();
-            const blobUrl = URL.createObjectURL(blob);
-
+            const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
-            link.href = blobUrl;
-            link.download = `${artwork.title.replace(/\s+/g, '_')}.png`;
+            link.href = url;
+            link.download = `sketch-${initialArtwork._id}.png`;
+            document.body.appendChild(link);
             link.click();
-            URL.revokeObjectURL(blobUrl);
-        } catch {
-            // 2. Fallback: Use standard link with Sanity's dl parameter (silent browser-level download)
-            const link = document.createElement('a');
-            link.href = downloadUrl;
-            link.click();
-        }
-
-        // Always track metric silently and sync with DB response
-        try {
-            const result = await trackMetric(artwork._id, 'download');
-            if (result.success) {
-                updateArtwork(artwork._id, { downloadCount: result.count });
-            }
-        } catch {
-            /* metric failure is non-critical */
-        } finally {
-            pendingDownload.current = false;
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error("Download failed:", error);
+            alert("Failed to download image.");
         }
     };
 
     const { openShareModal } = useShareStore();
 
     const handleShare = async () => {
-        // Request Tracking: Block if already processing
-        if (pendingShare.current) {
-            return;
-        }
+        // High-performance background sync
+        await syncMetric(initialArtwork._id, 'share');
 
         // Open our beautiful custom Share Sheet
         openShareModal(artwork);
@@ -202,20 +152,9 @@ export const ArtworkDetailModal: React.FC<ArtworkDetailModalProps> = ({ artwork:
     };
 
     const handleRemixClick = async () => {
+        // High-performance background sync
+        await syncMetric(initialArtwork._id, 'remix');
         onRemix(artwork);
-
-        // Optimistic Update in the Store
-        const nextCount = (artwork.remixCount || 0) + 1;
-        updateArtwork(artwork._id, { remixCount: nextCount });
-
-        try {
-            const result = await trackMetric(artwork._id, 'remix');
-            if (result.success) {
-                updateArtwork(artwork._id, { remixCount: result.count });
-            }
-        } catch (error) {
-            console.error("Failed to track remix:", error);
-        }
     };
 
     return (

@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { LayoutGroup, motion } from 'framer-motion';
-import { fetchFeed, toggleLike, trackMetric } from '../api/feed';
+import { fetchFeed } from '../api/feed';
 import type { Artwork } from '../api/feed';
 import { useAuthStore } from '@/features/auth/model/store';
 import { useFeedStore } from '../model/feedStore';
@@ -19,12 +19,12 @@ import { useShareStore } from '@/shared/model/shareStore';
 
 export const FeedList: React.FC<FeedListProps> = ({ filterAuthorId, sort = 'latest', onArtworkClick, refreshKey }) => {
     const { user } = useAuthStore();
-    const { artworks, setArtworks, updateArtwork } = useFeedStore();
+    const { artworks, setArtworks } = useFeedStore();
     const [loading, setLoading] = useState(true);
-    const lastProps = useRef({ filterAuthorId, sort, userId: user?.uid, refreshKey });
-    const showToast = useToastStore(state => state.showToast);
-    const [isDesktop, setIsDesktop] = useState(typeof window !== 'undefined' && window.innerWidth >= 1024);
+    const { showToast } = useToastStore();
     const { openShareModal } = useShareStore();
+    const { containerRef, columnCount } = useResponsiveGrid();
+    const [isDesktop, setIsDesktop] = useState(typeof window !== 'undefined' && window.innerWidth >= 1024);
 
     useEffect(() => {
         const handleResize = () => setIsDesktop(window.innerWidth >= 1024);
@@ -32,18 +32,16 @@ export const FeedList: React.FC<FeedListProps> = ({ filterAuthorId, sort = 'late
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    // Use Custom Hook
-    const { containerRef, columnCount } = useResponsiveGrid();
+    // Render-phase state update to set loading when relevant props change
+    const [lastKnownProps, setLastKnownProps] = useState({ filterAuthorId, sort, userId: user?.uid, refreshKey });
 
-    // Request Tracking
-    const pendingLikes = useRef<Set<string>>(new Set());
-    const pendingDownloads = useRef<Set<string>>(new Set());
-    const pendingShares = useRef<Set<string>>(new Set());
-
-
-
-    if (lastProps.current.filterAuthorId !== filterAuthorId || lastProps.current.sort !== sort || lastProps.current.userId !== user?.uid || lastProps.current.refreshKey !== refreshKey) {
-        lastProps.current = { filterAuthorId, sort, userId: user?.uid, refreshKey };
+    if (
+        lastKnownProps.filterAuthorId !== filterAuthorId ||
+        lastKnownProps.sort !== sort ||
+        lastKnownProps.userId !== user?.uid ||
+        lastKnownProps.refreshKey !== refreshKey
+    ) {
+        setLastKnownProps({ filterAuthorId, sort, userId: user?.uid, refreshKey });
         setLoading(true);
     }
 
@@ -53,62 +51,48 @@ export const FeedList: React.FC<FeedListProps> = ({ filterAuthorId, sort = 'late
             .finally(() => setLoading(false));
     }, [filterAuthorId, sort, user?.uid, refreshKey, setArtworks]);
 
-    const handleLike = async (e: React.MouseEvent, art: Artwork) => {
+    const syncLike = useFeedStore(state => state.syncLike);
+
+    const syncMetric = useFeedStore(state => state.syncMetric);
+
+    const handleLike = async (e: React.MouseEvent, artSnapshot: Artwork) => {
         e.stopPropagation();
         if (!user) {
             showToast("Please login to like artworks.", "info");
             return;
         }
-        if (pendingLikes.current.has(art._id)) return;
-        pendingLikes.current.add(art._id);
-
-        const newLikedState = !art.isLiked;
-        const newLikes = newLikedState ? (art.likeCount || 0) + 1 : (art.likeCount || 0) - 1;
-
-        updateArtwork(art._id, { likeCount: newLikes, isLiked: newLikedState });
-
-        try {
-            const result = await toggleLike(art._id, user.uid, newLikedState);
-            updateArtwork(art._id, { likeCount: result.likeCount, isLiked: newLikedState });
-        } catch {
-            updateArtwork(art._id, { likeCount: art.likeCount, isLiked: art.isLiked });
-            showToast("Failed to update like status.", "error");
-        } finally {
-            pendingLikes.current.delete(art._id);
-        }
+        await syncLike(artSnapshot._id, user.uid);
     };
 
-    const handleDownload = async (e: React.MouseEvent, art: Artwork) => {
+    const handleDownload = async (e: React.MouseEvent, artSnapshot: Artwork) => {
         e.stopPropagation();
-        if (pendingDownloads.current.has(art._id)) return;
-        pendingDownloads.current.add(art._id);
 
-        const nextCount = (art.downloadCount || 0) + 1;
-        updateArtwork(art._id, { downloadCount: nextCount });
+        // Instant response using store sync
+        await syncMetric(artSnapshot._id, 'download');
 
+        // Continue with original download logic
         try {
-            const response = await fetch(art.imageUrl, { mode: 'cors' });
+            const response = await fetch(artSnapshot.imageUrl);
             const blob = await response.blob();
-            const blobUrl = URL.createObjectURL(blob);
+            const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
-            link.href = blobUrl;
-            link.download = `${art.title.replace(/\s+/g, '_')}.png`;
+            link.href = url;
+            link.download = `sketch - ${artSnapshot._id}.png`;
+            document.body.appendChild(link);
             link.click();
-            URL.revokeObjectURL(blobUrl);
-            const result = await trackMetric(art._id, 'download');
-            if (result.success) updateArtwork(art._id, { downloadCount: result.count });
-        } catch {
-            const downloadUrl = art.imageUrl + (art.imageUrl.includes('?') ? '&' : '?') + `dl=${encodeURIComponent(art.title)}.png`;
-            window.open(downloadUrl, '_blank');
-            try { trackMetric(art._id, 'download'); } catch { /* ignore */ }
-        } finally {
-            pendingDownloads.current.delete(art._id);
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error("Download failed:", error);
+            showToast("Failed to download image.", "error");
         }
     };
 
     const handleShare = async (e: React.MouseEvent, art: Artwork) => {
         e.stopPropagation();
-        if (pendingShares.current.has(art._id)) return;
+
+        // Instant response using store sync
+        await syncMetric(art._id, 'share');
 
         // Open our beautiful custom Share Sheet
         openShareModal(art);
@@ -120,12 +104,12 @@ export const FeedList: React.FC<FeedListProps> = ({ filterAuthorId, sort = 'late
         return (
             <div ref={containerRef} className="relative w-full overflow-hidden p-4 lg:p-6 pb-20 flex gap-4 justify-center items-start">
                 {Array.from({ length: 9 }).map((_, colIndex) => (
-                    <div key={`loading-col-${colIndex}`}
+                    <div key={`loading - col - ${colIndex} `}
                         className="flex-1 lg:w-[232px] lg:flex-none flex flex-col gap-4"
                         style={{ display: colIndex < columnCount ? 'flex' : 'none' }}
                     >
                         {Array.from({ length: 3 }).map((__, i) => (
-                            <div key={i} className="bg-zinc-200 rounded-[32px] animate-pulse w-full" style={{ height: `${280 + (Math.random() * 150)}px` }} />
+                            <div key={i} className="bg-zinc-200 rounded-[32px] animate-pulse w-full" style={{ height: `${280 + (Math.random() * 150)} px` }} />
                         ))}
                     </div>
                 ))}
@@ -154,7 +138,7 @@ export const FeedList: React.FC<FeedListProps> = ({ filterAuthorId, sort = 'late
                         const isActive = colIndex < columnCount;
                         return (
                             <motion.div
-                                key={`fixed-col-${colIndex}`}
+                                key={`fixed - col - ${colIndex} `}
                                 layout
                                 initial={false}
                                 animate={{

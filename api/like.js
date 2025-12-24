@@ -1,3 +1,5 @@
+import { createClient } from '@sanity/client';
+
 const getClient = () => createClient({
     projectId: process.env.VITE_SANITY_PROJECT_ID,
     dataset: process.env.VITE_SANITY_DATASET || 'production',
@@ -19,10 +21,29 @@ export default async function handler(req, res) {
             return res.status(400).json({ message: 'Missing required fields' });
         }
 
-        console.log(`[API] Like Toggle: artworkId=${artworkId}, userId=${userId}, action=${isLiked ? 'LIKE' : 'UNLIKE'}`);
+        console.log(`[API] Like Toggle Requested: artworkId=${artworkId}, userId=${userId}, targetState=${isLiked ? 'LIKE' : 'UNLIKE'}`);
 
-        // We use likedBy array to keep track of WHO liked it
-        // and likeCount for easy sorting/display
+        // 1. Fetch current state to ensure idempotency
+        const currentData = await client.fetch(`*[_type == "artwork" && _id == $id][0]{likedBy, likeCount}`, { id: artworkId });
+
+        if (!currentData) {
+            return res.status(404).json({ message: 'Artwork not found' });
+        }
+
+        const likedBy = currentData.likedBy || [];
+        const currentlyLiked = likedBy.includes(userId);
+
+        // 2. If already in the target state, just return current data (Idempotency)
+        if (currentlyLiked === isLiked) {
+            console.log(`[API] Idempotent hit: userId=${userId} already has state=${isLiked}. No action taken.`);
+            return res.status(200).json({
+                success: true,
+                likeCount: currentData.likeCount ?? 0,
+                likedBy: likedBy
+            });
+        }
+
+        // 3. Perform the patch
         const operation = isLiked
             ? client.patch(artworkId)
                 .setIfMissing({ likedBy: [], likeCount: 0 })

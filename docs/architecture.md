@@ -77,6 +77,20 @@
     - 이미지 전송을 독립적인 요청으로 분리하여 각 요청당 **4.5MB** 제한을 안전하게 확보.
     - `AbortController`를 통해 모달 닫기나 취소 시 진행 중인 모든 네트워크 요청을 즉시 중단하여 리소스 낭비 및 상태 꼬임 방지.
 
+### 3-6. Idempotent Metrics Synchronization (좋아요/수치 정합성)
+좋아요 연타 시 데이터가 꼬이는 것을 방지하기 위해 서버와 클라이언트 모두 기술적 장치를 마련했습니다.
+- **Server-Side**: `api/like.js`에서 현재 `likedBy` 배열 상태를 사전 조회하여 물리적으로 중복 요청을 무력화하는 멱등성 로직을 적용했습니다.
+- **Client-Side**: `AsyncQueueManager`를 활용하여 연타 시 UI는 즉시 반영하되, 서버 통신은 순차적으로 처리하여 최종 의도(Final State)를 동기화합니다.
+
+### 3-8. Universal Async Queue Engine (`AsyncQueueManager`)
+고주파 인터랙션(연타 등)에 대응하기 위해 범용 비동기 큐 관리자를 도입했습니다.
+- **위치**: `src/shared/utils/asyncQueue.ts`
+- **역할**: 동일 ID에 대한 비동기 요청을 순차적으로 처리하며, 실행 중 추가 요청이 올 경우 마지막 상태만 버퍼링하여 불필요한 네트워크 비용을 절감합니다.
+- **적용 대상**: 좋아요(`syncLike`), 다운로드/공유/리믹스(`syncMetric`).
+- **Closure-Safe State Access**: 비동기 핸들러(`handleLike` 등) 내부에서 렌더링 시점의 Props(스냅샷)를 참조할 경우 발생하는 '과거 데이터 버그'를 방지하기 위해, 실행 시점에 `useStore.getState()`를 명시적으로 호출하여 **Zustand 스토어의 절대적 최신 상태**를 기반으로 연산을 수행합니다.
+
+### 3-7. User Session Sync (Initial Setup)
+
 ---
 
 ## 4. 서버 아키텍처 (Unified Server)
