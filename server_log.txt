@@ -602,3 +602,667 @@
 [HTTP] 2025-12-24T01:57:11.365Z GET /src/app/App.tsx?t=1766541431331
 [HTTP] 2025-12-24T01:57:11.367Z GET /src/styles/main.css?t=1766541431331
 [HTTP] 2025-12-24T01:57:12.301Z GET /logo_trans.png
+[2m오전 10:58:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/App.tsx, /src/styles/main.css[22m
+[HTTP] 2025-12-24T01:58:22.160Z GET /src/app/App.tsx?t=1766541502133
+[HTTP] 2025-12-24T01:58:22.162Z GET /src/styles/main.css?t=1766541502133
+[HTTP] 2025-12-24T01:58:55.363Z GET /
+[HTTP] 2025-12-24T01:58:55.497Z GET /@vite/client
+[HTTP] 2025-12-24T01:58:55.503Z GET /src/main.tsx?t=1766541502133
+[HTTP] 2025-12-24T01:58:55.530Z GET /@react-refresh
+[HTTP] 2025-12-24T01:58:55.533Z GET /node_modules/vite/dist/client/env.mjs
+[HTTP] 2025-12-24T01:58:55.543Z GET /src/app/App.tsx?t=1766541502133
+[HTTP] 2025-12-24T01:58:55.545Z GET /src/styles/main.css?t=1766541502133
+[HTTP] 2025-12-24T01:58:55.557Z GET /src/features/sketch/components/Canvas.tsx
+[HTTP] 2025-12-24T01:58:55.562Z GET /src/features/sketch/components/ControlPanel.tsx
+[HTTP] 2025-12-24T01:58:55.565Z GET /src/features/sketch/model/store.ts
+[HTTP] 2025-12-24T01:58:55.566Z GET /src/features/auth/model/store.ts
+[HTTP] 2025-12-24T01:58:55.570Z GET /src/features/auth/api/auth.ts
+[HTTP] 2025-12-24T01:58:55.571Z GET /src/features/feed/components/FeedList.tsx
+[HTTP] 2025-12-24T01:58:55.573Z GET /src/features/feed/api/feed.ts
+[HTTP] 2025-12-24T01:58:55.575Z GET /src/features/feed/model/feedStore.ts
+[HTTP] 2025-12-24T01:58:55.576Z GET /src/features/feed/components/ArtworkDetailModal.tsx
+[HTTP] 2025-12-24T01:58:55.578Z GET /src/shared/components/GlobalModal.tsx
+[HTTP] 2025-12-24T01:58:55.589Z GET /src/shared/model/uiStore.ts
+[HTTP] 2025-12-24T01:58:55.592Z GET /src/features/auth/components/LoginModal.tsx
+[HTTP] 2025-12-24T01:58:55.595Z GET /src/features/auth/model/loginModalStore.ts
+[HTTP] 2025-12-24T01:58:55.602Z GET /src/features/studio/components/PublishModal.tsx
+[HTTP] 2025-12-24T01:58:55.607Z GET /src/shared/components/Toast.tsx
+[HTTP] 2025-12-24T01:58:55.609Z GET /src/features/sketch/hooks/useSketchFlow.ts
+[HTTP] 2025-12-24T01:58:55.611Z GET /src/shared/components/ShareModal.tsx?t=1766540234522
+[HTTP] 2025-12-24T01:58:55.612Z GET /src/features/sketch/hooks/useSketchEngine.ts
+[HTTP] 2025-12-24T01:58:55.621Z GET /src/features/sketch/engine/types.ts
+[HTTP] 2025-12-24T01:58:55.625Z GET /src/features/sketch/engine/SketchEngine.ts
+[HTTP] 2025-12-24T01:58:55.626Z GET /src/shared/libs/firebase.ts
+[HTTP] 2025-12-24T01:58:55.628Z GET /src/shared/model/toastStore.ts
+[HTTP] 2025-12-24T01:58:55.630Z GET /src/features/feed/components/ArtworkCard.tsx
+[HTTP] 2025-12-24T01:58:55.631Z GET /src/shared/hooks/useResponsiveGrid.ts
+[HTTP] 2025-12-24T01:58:55.632Z GET /src/shared/model/shareStore.ts
+[HTTP] 2025-12-24T01:58:55.634Z GET /src/shared/model/modalStore.ts
+[HTTP] 2025-12-24T01:58:55.641Z GET /src/shared/model/publishModalStore.ts
+[HTTP] 2025-12-24T01:58:55.644Z GET /src/features/studio/api/publish.ts
+[HTTP] 2025-12-24T01:58:55.645Z GET /src/shared/config/constants.ts
+[HTTP] 2025-12-24T01:58:55.647Z GET /src/features/sketch/utils/ImageProcessor.ts
+[HTTP] 2025-12-24T01:58:55.765Z GET /logo.png
+[HTTP] 2025-12-24T01:58:55.822Z GET /api/feed?sort=latest&t=1766541535809
+[Server] Loading module: ./feed.js
+[Server] Calling handler for feed...
+[API] /api/feed called
+[API] /api/feed called. id: none, authorId: none, sort: latest, userId: none
+[API] Fetching Global Feed from Sanity...
+[HTTP] 2025-12-24T01:58:55.841Z GET /api/feed?sort=latest&t=1766541535813
+[Server] Loading module: ./feed.js
+[Server] Calling handler for feed...
+[API] /api/feed called
+[API] /api/feed called. id: none, authorId: none, sort: latest, userId: none
+[API] Fetching Global Feed from Sanity...
+[HTTP] 2025-12-24T01:58:55.901Z GET /logo.png
+[HTTP] 2025-12-24T01:58:56.241Z POST /api/sync-user
+[Server] Loading module: ./sync-user.js
+[Server] Calling handler for sync-user...
+[HTTP] 2025-12-24T01:58:56.260Z GET /api/feed?userId=ToMT5IhqzEXVGhuoQcJUs2MRvsm2&sort=latest&t=1766541536257
+[Server] Loading module: ./feed.js
+[Server] Calling handler for feed...
+[API] /api/feed called
+[API] /api/feed called. id: none, authorId: none, sort: latest, userId: ToMT5IhqzEXVGhuoQcJUs2MRvsm2
+[API] Fetching Global Feed from Sanity...
+[Server] Handler for feed completed.
+[Server] Handler for feed completed.
+[Server] Handler for feed completed.
+[Server] Handler for sync-user completed.
+[2m오전 10:59:47[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/App.tsx, /src/styles/main.css[22m
+[HTTP] 2025-12-24T01:59:47.390Z GET /src/app/App.tsx?t=1766541587375
+[HTTP] 2025-12-24T01:59:47.392Z GET /src/styles/main.css?t=1766541587375
+[2m오전 11:00:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/App.tsx, /src/styles/main.css[22m
+[HTTP] 2025-12-24T02:00:39.562Z GET /src/app/App.tsx?t=1766541639507
+[HTTP] 2025-12-24T02:00:39.564Z GET /src/styles/main.css?t=1766541639507
+[HTTP] 2025-12-24T02:01:29.516Z GET /.well-known/appspecific/com.chrome.devtools.json
+[2m오전 11:01:32[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/App.tsx, /src/styles/main.css[22m
+[HTTP] 2025-12-24T02:01:32.604Z GET /src/app/App.tsx?t=1766541692558
+[HTTP] 2025-12-24T02:01:32.658Z GET /src/styles/main.css?t=1766541692558
+[HTTP] 2025-12-24T02:02:03.074Z GET /.well-known/appspecific/com.chrome.devtools.json
+[2m오전 11:03:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/shared/components/ShareModal.tsx, /src/styles/main.css[22m
+[HTTP] 2025-12-24T02:03:18.477Z GET /src/shared/components/ShareModal.tsx?t=1766541798455
+[HTTP] 2025-12-24T02:03:18.478Z GET /src/styles/main.css?t=1766541798455
+[HTTP] 2025-12-24T02:03:54.563Z GET /
+[HTTP] 2025-12-24T02:03:54.674Z GET /@vite/client
+[HTTP] 2025-12-24T02:03:54.676Z GET /src/main.tsx?t=1766541798455
+[HTTP] 2025-12-24T02:03:54.704Z GET /.well-known/appspecific/com.chrome.devtools.json
+[HTTP] 2025-12-24T02:03:54.741Z GET /@react-refresh
+[HTTP] 2025-12-24T02:03:54.749Z GET /node_modules/vite/dist/client/env.mjs
+[HTTP] 2025-12-24T02:03:54.750Z GET /src/app/App.tsx?t=1766541798455
+[HTTP] 2025-12-24T02:03:54.754Z GET /src/styles/main.css?t=1766541798455
+[HTTP] 2025-12-24T02:03:54.826Z GET /src/features/sketch/components/Canvas.tsx
+[HTTP] 2025-12-24T02:03:54.829Z GET /src/features/sketch/components/ControlPanel.tsx
+[HTTP] 2025-12-24T02:03:54.835Z GET /src/features/sketch/model/store.ts
+[HTTP] 2025-12-24T02:03:54.837Z GET /src/features/auth/model/store.ts
+[HTTP] 2025-12-24T02:03:54.840Z GET /src/features/auth/api/auth.ts
+[HTTP] 2025-12-24T02:03:54.875Z GET /src/features/feed/components/FeedList.tsx
+[HTTP] 2025-12-24T02:03:54.880Z GET /src/features/feed/api/feed.ts
+[HTTP] 2025-12-24T02:03:54.882Z GET /src/features/feed/model/feedStore.ts
+[HTTP] 2025-12-24T02:03:54.883Z GET /src/features/feed/components/ArtworkDetailModal.tsx
+[HTTP] 2025-12-24T02:03:54.885Z GET /src/shared/components/GlobalModal.tsx
+[HTTP] 2025-12-24T02:03:54.888Z GET /src/shared/model/uiStore.ts
+[HTTP] 2025-12-24T02:03:54.938Z GET /src/features/auth/components/LoginModal.tsx
+[HTTP] 2025-12-24T02:03:54.939Z GET /src/features/auth/model/loginModalStore.ts
+[HTTP] 2025-12-24T02:03:54.942Z GET /src/features/studio/components/PublishModal.tsx
+[HTTP] 2025-12-24T02:03:54.943Z GET /src/shared/components/Toast.tsx
+[HTTP] 2025-12-24T02:03:54.945Z GET /src/features/sketch/hooks/useSketchFlow.ts
+[HTTP] 2025-12-24T02:03:54.947Z GET /src/shared/components/ShareModal.tsx?t=1766541798455
+[HTTP] 2025-12-24T02:03:54.998Z GET /src/features/sketch/hooks/useSketchEngine.ts
+[HTTP] 2025-12-24T02:03:55.000Z GET /src/features/sketch/engine/types.ts
+[HTTP] 2025-12-24T02:03:55.001Z GET /src/shared/libs/firebase.ts
+[HTTP] 2025-12-24T02:03:55.003Z GET /src/features/sketch/engine/SketchEngine.ts
+[HTTP] 2025-12-24T02:03:55.004Z GET /src/shared/model/toastStore.ts
+[HTTP] 2025-12-24T02:03:55.005Z GET /src/features/feed/components/ArtworkCard.tsx
+[HTTP] 2025-12-24T02:03:55.007Z GET /src/shared/hooks/useResponsiveGrid.ts
+[HTTP] 2025-12-24T02:03:55.011Z GET /src/shared/model/shareStore.ts
+[HTTP] 2025-12-24T02:03:55.014Z GET /src/shared/model/modalStore.ts
+[HTTP] 2025-12-24T02:03:55.022Z GET /src/shared/model/publishModalStore.ts
+[HTTP] 2025-12-24T02:03:55.024Z GET /src/features/studio/api/publish.ts
+[HTTP] 2025-12-24T02:03:55.052Z GET /src/shared/config/constants.ts
+[HTTP] 2025-12-24T02:03:55.057Z GET /src/features/sketch/utils/ImageProcessor.ts
+[HTTP] 2025-12-24T02:03:55.322Z GET /logo.png
+[HTTP] 2025-12-24T02:03:55.361Z GET /api/feed?sort=latest&t=1766541835350
+[Server] Loading module: ./feed.js
+[Server] Calling handler for feed...
+[API] /api/feed called
+[API] /api/feed called. id: none, authorId: none, sort: latest, userId: none
+[API] Fetching Global Feed from Sanity...
+[HTTP] 2025-12-24T02:03:55.373Z GET /api/feed?sort=latest&t=1766541835356
+[Server] Loading module: ./feed.js
+[Server] Calling handler for feed...
+[API] /api/feed called
+[API] /api/feed called. id: none, authorId: none, sort: latest, userId: none
+[API] Fetching Global Feed from Sanity...
+[HTTP] 2025-12-24T02:03:55.444Z GET /logo.png
+[Server] Handler for feed completed.
+[Server] Handler for feed completed.
+[HTTP] 2025-12-24T02:03:57.836Z POST /api/sync-user
+[Server] Loading module: ./sync-user.js
+[Server] Calling handler for sync-user...
+[HTTP] 2025-12-24T02:03:57.884Z GET /api/feed?userId=ToMT5IhqzEXVGhuoQcJUs2MRvsm2&sort=latest&t=1766541837872
+[Server] Loading module: ./feed.js
+[Server] Calling handler for feed...
+[API] /api/feed called
+[API] /api/feed called. id: none, authorId: none, sort: latest, userId: ToMT5IhqzEXVGhuoQcJUs2MRvsm2
+[API] Fetching Global Feed from Sanity...
+[Server] Handler for feed completed.
+[Server] Handler for sync-user completed.
+[HTTP] 2025-12-24T02:10:18.390Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVZpJgp
+[Server] Handler for track-metric completed.
+[2m오전 11:14:44[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/shared/components/ShareModal.tsx, /src/styles/main.css[22m
+[HTTP] 2025-12-24T02:14:44.579Z GET /src/shared/components/ShareModal.tsx?t=1766542484553
+[HTTP] 2025-12-24T02:14:44.580Z GET /src/styles/main.css?t=1766542484553
+[2m오전 11:16:11[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/shared/components/ShareModal.tsx, /src/styles/main.css[22m
+[HTTP] 2025-12-24T02:16:11.641Z GET /src/shared/components/ShareModal.tsx?t=1766542571624
+[HTTP] 2025-12-24T02:16:11.642Z GET /src/styles/main.css?t=1766542571624
+[HTTP] 2025-12-24T02:16:51.946Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVZpJgp
+[Server] Handler for track-metric completed.
+[2m오전 11:21:12[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/shared/components/ShareModal.tsx, /src/styles/main.css[22m
+[HTTP] 2025-12-24T02:21:12.721Z GET /src/shared/components/ShareModal.tsx?t=1766542872679
+[HTTP] 2025-12-24T02:21:12.722Z GET /src/styles/main.css?t=1766542872679
+[2m오전 11:21:29[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/shared/components/ShareModal.tsx, /src/styles/main.css[22m
+[HTTP] 2025-12-24T02:21:29.703Z GET /src/shared/components/ShareModal.tsx?t=1766542889679
+[HTTP] 2025-12-24T02:21:29.705Z GET /src/styles/main.css?t=1766542889679
+[2m오전 11:23:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/shared/components/ShareModal.tsx, /src/styles/main.css[22m
+[HTTP] 2025-12-24T02:23:15.921Z GET /src/shared/components/ShareModal.tsx?t=1766542995897
+[HTTP] 2025-12-24T02:23:15.923Z GET /src/styles/main.css?t=1766542995897
+오전 11:23:15 [vite] Internal server error: D:\BuyMeaCoffee\sketch_app_export\src\shared\components\ShareModal.tsx: Expected corresponding JSX closing tag for <div>. (228:16)
+
+  226 |                         </div>
+  227 |                     </div>
+> 228 |                 </motion.div>
+      |                 ^
+  229 |             </div>
+  230 |         </AnimatePresence>
+  231 |     );
+  Plugin: vite:react-babel
+  File: D:/BuyMeaCoffee/sketch_app_export/src/shared/components/ShareModal.tsx:228:16
+      at constructor (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:367:19)
+      at TypeScriptParserMixin.raise (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:6624:19)
+      at TypeScriptParserMixin.jsxParseElementAt (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:4756:16)
+      at TypeScriptParserMixin.jsxParseElementAt (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:4727:32)
+      at TypeScriptParserMixin.jsxParseElementAt (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:4727:32)
+      at TypeScriptParserMixin.jsxParseElement (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:4778:17)
+      at TypeScriptParserMixin.parseExprAtom (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:4788:19)
+      at TypeScriptParserMixin.parseExprSubscripts (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:11145:23)
+      at TypeScriptParserMixin.parseUpdate (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:11130:21)
+      at TypeScriptParserMixin.parseMaybeUnary (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:11110:23)
+      at TypeScriptParserMixin.parseMaybeUnary (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:9890:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:10963:61)
+      at TypeScriptParserMixin.parseExprOps (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:10968:23)
+      at TypeScriptParserMixin.parseMaybeConditional (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:10945:23)
+      at TypeScriptParserMixin.parseMaybeAssign (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:10895:21)
+      at D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:9828:39
+      at TypeScriptParserMixin.tryParse (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:6932:20)
+      at TypeScriptParserMixin.parseMaybeAssign (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:9828:18)
+      at D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:10864:39
+      at TypeScriptParserMixin.allowInAnd (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:12500:12)
+      at TypeScriptParserMixin.parseMaybeAssignAllowIn (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:10864:17)
+      at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:12567:17)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:11747:28)
+      at TypeScriptParserMixin.parseExprAtom (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:11395:23)
+      at TypeScriptParserMixin.parseExprAtom (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:4793:20)
+      at TypeScriptParserMixin.parseExprSubscripts (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:11145:23)
+      at TypeScriptParserMixin.parseUpdate (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:11130:21)
+      at TypeScriptParserMixin.parseMaybeUnary (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:11110:23)
+      at TypeScriptParserMixin.parseMaybeUnary (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:9890:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:10963:61)
+      at TypeScriptParserMixin.parseExprOps (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:10968:23)
+      at TypeScriptParserMixin.parseMaybeConditional (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:10945:23)
+      at TypeScriptParserMixin.parseMaybeAssign (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:10895:21)
+      at TypeScriptParserMixin.parseMaybeAssign (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:9839:20)
+      at TypeScriptParserMixin.parseExpressionBase (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:10848:23)
+      at D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:10844:39
+      at TypeScriptParserMixin.allowInAnd (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:12495:16)
+      at TypeScriptParserMixin.parseExpression (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:10844:17)
+      at TypeScriptParserMixin.parseReturnStatement (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:13218:28)
+      at TypeScriptParserMixin.parseStatementContent (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:12874:21)
+      at TypeScriptParserMixin.parseStatementContent (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:9569:18)
+      at TypeScriptParserMixin.parseStatementLike (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:12843:17)
+      at TypeScriptParserMixin.parseStatementListItem (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:12823:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:13392:61)
+      at TypeScriptParserMixin.parseBlockBody (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:13385:10)
+      at TypeScriptParserMixin.parseBlock (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:13373:10)
+      at TypeScriptParserMixin.parseFunctionBody (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:12174:24)
+      at TypeScriptParserMixin.parseArrowExpression (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:12149:10)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:11759:12)
+      at TypeScriptParserMixin.parseExprAtom (D:\BuyMeaCoffee\sketch_app_export\node_modules\@babel\parser\lib\index.js:11395:23)
+[2m오전 11:24:23[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/shared/components/ShareModal.tsx, /src/styles/main.css[22m
+[HTTP] 2025-12-24T02:24:23.580Z GET /src/shared/components/ShareModal.tsx?t=1766543063562
+[HTTP] 2025-12-24T02:24:23.582Z GET /src/styles/main.css?t=1766543063562
+[HTTP] 2025-12-24T02:24:58.878Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVZmBVG
+[Server] Handler for track-metric completed.
+[HTTP] 2025-12-24T02:25:04.711Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVZmBVG
+[Server] Handler for track-metric completed.
+[2m오전 11:26:16[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/shared/components/ShareModal.tsx, /src/styles/main.css[22m
+[HTTP] 2025-12-24T02:26:16.538Z GET /src/shared/components/ShareModal.tsx?t=1766543176514
+[HTTP] 2025-12-24T02:26:16.540Z GET /src/styles/main.css?t=1766543176514
+[HTTP] 2025-12-24T02:26:36.520Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVYU4kR
+[Server] Handler for track-metric completed.
+[HTTP] 2025-12-24T02:26:40.991Z GET /
+[HTTP] 2025-12-24T02:26:41.103Z GET /@vite/client
+[HTTP] 2025-12-24T02:26:41.106Z GET /src/main.tsx?t=1766543176514
+[HTTP] 2025-12-24T02:26:41.128Z GET /@react-refresh
+[HTTP] 2025-12-24T02:26:41.133Z GET /node_modules/vite/dist/client/env.mjs
+[HTTP] 2025-12-24T02:26:41.135Z GET /src/app/App.tsx?t=1766543176514
+[HTTP] 2025-12-24T02:26:41.138Z GET /src/styles/main.css?t=1766543176514
+[HTTP] 2025-12-24T02:26:41.160Z GET /src/features/sketch/components/Canvas.tsx
+[HTTP] 2025-12-24T02:26:41.162Z GET /src/features/sketch/components/ControlPanel.tsx
+[HTTP] 2025-12-24T02:26:41.167Z GET /src/features/sketch/model/store.ts
+[HTTP] 2025-12-24T02:26:41.170Z GET /src/features/auth/model/store.ts
+[HTTP] 2025-12-24T02:26:41.171Z GET /src/features/auth/api/auth.ts
+[HTTP] 2025-12-24T02:26:41.175Z GET /src/features/feed/components/FeedList.tsx
+[HTTP] 2025-12-24T02:26:41.192Z GET /src/features/feed/api/feed.ts
+[HTTP] 2025-12-24T02:26:41.199Z GET /src/features/feed/model/feedStore.ts
+[HTTP] 2025-12-24T02:26:41.203Z GET /src/features/feed/components/ArtworkDetailModal.tsx
+[HTTP] 2025-12-24T02:26:41.205Z GET /src/shared/components/GlobalModal.tsx
+[HTTP] 2025-12-24T02:26:41.207Z GET /src/shared/model/uiStore.ts
+[HTTP] 2025-12-24T02:26:41.212Z GET /src/features/auth/components/LoginModal.tsx
+[HTTP] 2025-12-24T02:26:41.219Z GET /src/features/studio/components/PublishModal.tsx
+[HTTP] 2025-12-24T02:26:41.222Z GET /src/shared/components/Toast.tsx
+[HTTP] 2025-12-24T02:26:41.225Z GET /src/features/sketch/hooks/useSketchFlow.ts
+[HTTP] 2025-12-24T02:26:41.228Z GET /src/features/auth/model/loginModalStore.ts
+[HTTP] 2025-12-24T02:26:41.232Z GET /src/shared/components/ShareModal.tsx?t=1766543176514
+[HTTP] 2025-12-24T02:26:41.235Z GET /src/features/sketch/hooks/useSketchEngine.ts
+[HTTP] 2025-12-24T02:26:41.238Z GET /src/features/sketch/engine/types.ts
+[HTTP] 2025-12-24T02:26:41.240Z GET /src/shared/libs/firebase.ts
+[HTTP] 2025-12-24T02:26:41.249Z GET /src/features/sketch/engine/SketchEngine.ts
+[HTTP] 2025-12-24T02:26:41.261Z GET /src/shared/model/toastStore.ts
+[HTTP] 2025-12-24T02:26:41.267Z GET /src/features/feed/components/ArtworkCard.tsx
+[HTTP] 2025-12-24T02:26:41.272Z GET /src/shared/hooks/useResponsiveGrid.ts
+[HTTP] 2025-12-24T02:26:41.275Z GET /src/shared/model/shareStore.ts
+[HTTP] 2025-12-24T02:26:41.279Z GET /src/shared/model/modalStore.ts
+[HTTP] 2025-12-24T02:26:41.281Z GET /src/shared/model/publishModalStore.ts
+[HTTP] 2025-12-24T02:26:41.283Z GET /src/features/studio/api/publish.ts
+[HTTP] 2025-12-24T02:26:41.285Z GET /src/shared/config/constants.ts
+[HTTP] 2025-12-24T02:26:41.287Z GET /src/features/sketch/utils/ImageProcessor.ts
+[HTTP] 2025-12-24T02:26:41.508Z GET /logo.png
+[HTTP] 2025-12-24T02:26:41.542Z GET /api/feed?sort=latest&t=1766543201536
+[Server] Loading module: ./feed.js
+[HTTP] 2025-12-24T02:26:41.546Z GET /api/feed?sort=latest&t=1766543201541
+[Server] Loading module: ./feed.js
+[Server] Calling handler for feed...
+[API] /api/feed called
+[API] /api/feed called. id: none, authorId: none, sort: latest, userId: none
+[API] Fetching Global Feed from Sanity...
+[Server] Calling handler for feed...
+[API] /api/feed called
+[API] /api/feed called. id: none, authorId: none, sort: latest, userId: none
+[API] Fetching Global Feed from Sanity...
+[HTTP] 2025-12-24T02:26:41.615Z GET /logo.png
+[Server] Handler for feed completed.
+[HTTP] 2025-12-24T02:26:42.015Z POST /api/sync-user
+[Server] Loading module: ./sync-user.js
+[Server] Calling handler for sync-user...
+[HTTP] 2025-12-24T02:26:42.073Z GET /api/feed?userId=ToMT5IhqzEXVGhuoQcJUs2MRvsm2&sort=latest&t=1766543202070
+[Server] Loading module: ./feed.js
+[Server] Calling handler for feed...
+[API] /api/feed called
+[API] /api/feed called. id: none, authorId: none, sort: latest, userId: ToMT5IhqzEXVGhuoQcJUs2MRvsm2
+[API] Fetching Global Feed from Sanity...
+[Server] Handler for feed completed.
+[Server] Handler for feed completed.
+[Server] Handler for sync-user completed.
+[HTTP] 2025-12-24T02:26:44.664Z GET /api/feed?id=H9Kss1lzqrzEnA7MVYU4kR&userId=ToMT5IhqzEXVGhuoQcJUs2MRvsm2&t=1766543204661
+[Server] Loading module: ./feed.js
+[Server] Calling handler for feed...
+[API] /api/feed called
+[API] /api/feed called. id: H9Kss1lzqrzEnA7MVYU4kR, authorId: none, sort: latest, userId: ToMT5IhqzEXVGhuoQcJUs2MRvsm2
+[API] Fetching Single Feed from Sanity...
+[HTTP] 2025-12-24T02:26:44.670Z GET /api/feed?id=H9Kss1lzqrzEnA7MVYU4kR&userId=ToMT5IhqzEXVGhuoQcJUs2MRvsm2&t=1766543204665
+[Server] Loading module: ./feed.js
+[Server] Calling handler for feed...
+[API] /api/feed called
+[API] /api/feed called. id: H9Kss1lzqrzEnA7MVYU4kR, authorId: none, sort: latest, userId: ToMT5IhqzEXVGhuoQcJUs2MRvsm2
+[API] Fetching Single Feed from Sanity...
+[Server] Handler for feed completed.
+[Server] Handler for feed completed.
+[HTTP] 2025-12-24T02:26:50.273Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVYU4kR
+[Server] Handler for track-metric completed.
+[HTTP] 2025-12-24T02:26:59.020Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVYU4kR
+[Server] Handler for track-metric completed.
+[HTTP] 2025-12-24T02:27:09.495Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVYU4kR
+[Server] Handler for track-metric completed.
+[HTTP] 2025-12-24T02:27:16.109Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVYU4kR
+[Server] Handler for track-metric completed.
+[2m오전 11:30:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/shared/components/ShareModal.tsx, /src/styles/main.css[22m
+[HTTP] 2025-12-24T02:30:31.206Z GET /src/shared/components/ShareModal.tsx?t=1766543431167
+[HTTP] 2025-12-24T02:30:31.245Z GET /src/styles/main.css?t=1766543431167
+[HTTP] 2025-12-24T02:31:00.350Z GET /
+[HTTP] 2025-12-24T02:31:00.439Z GET /@vite/client
+[HTTP] 2025-12-24T02:31:00.441Z GET /src/main.tsx?t=1766543431167
+[HTTP] 2025-12-24T02:31:00.461Z GET /@react-refresh
+[HTTP] 2025-12-24T02:31:00.466Z GET /node_modules/vite/dist/client/env.mjs
+[HTTP] 2025-12-24T02:31:00.467Z GET /src/app/App.tsx?t=1766543431167
+[HTTP] 2025-12-24T02:31:00.470Z GET /src/styles/main.css?t=1766543431167
+[HTTP] 2025-12-24T02:31:00.538Z GET /src/features/sketch/components/Canvas.tsx
+[HTTP] 2025-12-24T02:31:00.539Z GET /src/features/sketch/components/ControlPanel.tsx
+[HTTP] 2025-12-24T02:31:00.544Z GET /src/features/sketch/model/store.ts
+[HTTP] 2025-12-24T02:31:00.547Z GET /src/features/auth/model/store.ts
+[HTTP] 2025-12-24T02:31:00.549Z GET /src/features/auth/api/auth.ts
+[HTTP] 2025-12-24T02:31:00.550Z GET /src/features/feed/components/FeedList.tsx
+[HTTP] 2025-12-24T02:31:00.584Z GET /src/features/feed/api/feed.ts
+[HTTP] 2025-12-24T02:31:00.586Z GET /src/features/feed/model/feedStore.ts
+[HTTP] 2025-12-24T02:31:00.587Z GET /src/features/feed/components/ArtworkDetailModal.tsx
+[HTTP] 2025-12-24T02:31:00.588Z GET /src/shared/components/GlobalModal.tsx
+[HTTP] 2025-12-24T02:31:00.590Z GET /src/shared/model/uiStore.ts
+[HTTP] 2025-12-24T02:31:00.591Z GET /src/features/auth/components/LoginModal.tsx
+[HTTP] 2025-12-24T02:31:00.603Z GET /src/features/auth/model/loginModalStore.ts
+[HTTP] 2025-12-24T02:31:00.605Z GET /src/features/studio/components/PublishModal.tsx
+[HTTP] 2025-12-24T02:31:00.607Z GET /src/shared/components/Toast.tsx
+[HTTP] 2025-12-24T02:31:00.609Z GET /src/features/sketch/hooks/useSketchFlow.ts
+[HTTP] 2025-12-24T02:31:00.612Z GET /src/shared/components/ShareModal.tsx?t=1766543431167
+[HTTP] 2025-12-24T02:31:00.625Z GET /src/features/sketch/hooks/useSketchEngine.ts
+[HTTP] 2025-12-24T02:31:00.638Z GET /src/features/sketch/engine/types.ts
+[HTTP] 2025-12-24T02:31:00.642Z GET /src/shared/libs/firebase.ts
+[HTTP] 2025-12-24T02:31:00.644Z GET /src/shared/model/toastStore.ts
+[HTTP] 2025-12-24T02:31:00.645Z GET /src/features/feed/components/ArtworkCard.tsx
+[HTTP] 2025-12-24T02:31:00.647Z GET /src/shared/hooks/useResponsiveGrid.ts
+[HTTP] 2025-12-24T02:31:00.650Z GET /src/shared/model/shareStore.ts
+[HTTP] 2025-12-24T02:31:00.652Z GET /src/features/sketch/engine/SketchEngine.ts
+[HTTP] 2025-12-24T02:31:00.654Z GET /src/shared/model/modalStore.ts
+[HTTP] 2025-12-24T02:31:00.659Z GET /src/shared/model/publishModalStore.ts
+[HTTP] 2025-12-24T02:31:00.663Z GET /src/features/studio/api/publish.ts
+[HTTP] 2025-12-24T02:31:00.668Z GET /src/shared/config/constants.ts
+[HTTP] 2025-12-24T02:31:00.675Z GET /src/features/sketch/utils/ImageProcessor.ts
+[HTTP] 2025-12-24T02:31:00.818Z GET /logo.png
+[HTTP] 2025-12-24T02:31:00.850Z GET /api/feed?sort=latest&t=1766543460842
+[Server] Loading module: ./feed.js
+[HTTP] 2025-12-24T02:31:00.853Z GET /api/feed?sort=latest&t=1766543460847
+[Server] Loading module: ./feed.js
+[Server] Calling handler for feed...
+[API] /api/feed called
+[API] /api/feed called. id: none, authorId: none, sort: latest, userId: none
+[API] Fetching Global Feed from Sanity...
+[Server] Calling handler for feed...
+[API] /api/feed called
+[API] /api/feed called. id: none, authorId: none, sort: latest, userId: none
+[API] Fetching Global Feed from Sanity...
+[HTTP] 2025-12-24T02:31:00.927Z GET /logo.png
+[Server] Handler for feed completed.
+[Server] Handler for feed completed.
+[HTTP] 2025-12-24T02:31:01.871Z POST /api/sync-user
+[Server] Loading module: ./sync-user.js
+[Server] Calling handler for sync-user...
+[HTTP] 2025-12-24T02:31:01.887Z GET /api/feed?userId=ToMT5IhqzEXVGhuoQcJUs2MRvsm2&sort=latest&t=1766543461884
+[Server] Loading module: ./feed.js
+[Server] Calling handler for feed...
+[API] /api/feed called
+[API] /api/feed called. id: none, authorId: none, sort: latest, userId: ToMT5IhqzEXVGhuoQcJUs2MRvsm2
+[API] Fetching Global Feed from Sanity...
+[Server] Handler for feed completed.
+[Server] Handler for sync-user completed.
+[HTTP] 2025-12-24T02:31:04.958Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVZmBVG
+[Server] Handler for track-metric completed.
+[HTTP] 2025-12-24T02:31:11.709Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVZmBVG
+[Server] Handler for track-metric completed.
+[HTTP] 2025-12-24T02:31:17.833Z GET /api/feed?id=H9Kss1lzqrzEnA7MVZmBVG&userId=ToMT5IhqzEXVGhuoQcJUs2MRvsm2&t=1766543477830
+[Server] Loading module: ./feed.js
+[Server] Calling handler for feed...
+[API] /api/feed called
+[API] /api/feed called. id: H9Kss1lzqrzEnA7MVZmBVG, authorId: none, sort: latest, userId: ToMT5IhqzEXVGhuoQcJUs2MRvsm2
+[API] Fetching Single Feed from Sanity...
+[HTTP] 2025-12-24T02:31:17.841Z GET /api/feed?id=H9Kss1lzqrzEnA7MVZmBVG&userId=ToMT5IhqzEXVGhuoQcJUs2MRvsm2&t=1766543477834
+[Server] Loading module: ./feed.js
+[Server] Calling handler for feed...
+[API] /api/feed called
+[API] /api/feed called. id: H9Kss1lzqrzEnA7MVZmBVG, authorId: none, sort: latest, userId: ToMT5IhqzEXVGhuoQcJUs2MRvsm2
+[API] Fetching Single Feed from Sanity...
+[Server] Handler for feed completed.
+[Server] Handler for feed completed.
+[HTTP] 2025-12-24T02:31:27.195Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVZmBVG
+[Server] Handler for track-metric completed.
+[HTTP] 2025-12-24T02:31:34.971Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVZmBVG
+[Server] Handler for track-metric completed.
+[HTTP] 2025-12-24T02:31:42.978Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVZmBVG
+[Server] Handler for track-metric completed.
+[HTTP] 2025-12-24T02:32:12.805Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVZmBVG
+[Server] Handler for track-metric completed.
+[2m오전 11:32:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/shared/components/ShareModal.tsx, /src/styles/main.css[22m
+[HTTP] 2025-12-24T02:32:53.352Z GET /src/shared/components/ShareModal.tsx?t=1766543573317
+[HTTP] 2025-12-24T02:32:53.353Z GET /src/styles/main.css?t=1766543573317
+[HTTP] 2025-12-24T02:33:08.956Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVZmBVG
+[Server] Handler for track-metric completed.
+[HTTP] 2025-12-24T02:33:14.667Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVZmBVG
+[Server] Handler for track-metric completed.
+[HTTP] 2025-12-24T02:33:20.360Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVZmBVG
+[Server] Handler for track-metric completed.
+[2m오전 11:34:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/shared/components/ShareModal.tsx, /src/styles/main.css[22m
+[HTTP] 2025-12-24T02:34:52.246Z GET /src/shared/components/ShareModal.tsx?t=1766543692224
+[HTTP] 2025-12-24T02:34:52.247Z GET /src/styles/main.css?t=1766543692224
+[HTTP] 2025-12-24T02:35:06.556Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVZmBVG
+[Server] Handler for track-metric completed.
+[HTTP] 2025-12-24T02:35:20.376Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVZmBVG
+[Server] Handler for track-metric completed.
+[HTTP] 2025-12-24T02:35:27.268Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVZmBVG
+[Server] Handler for track-metric completed.
+[HTTP] 2025-12-24T02:35:32.716Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVZmBVG
+[Server] Handler for track-metric completed.
+[HTTP] 2025-12-24T02:35:40.577Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVZmBVG
+[Server] Handler for track-metric completed.
+[HTTP] 2025-12-24T02:35:46.376Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVZmBVG
+[Server] Handler for track-metric completed.
+[HTTP] 2025-12-24T02:35:52.476Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVZmBVG
+[Server] Handler for track-metric completed.
+[HTTP] 2025-12-24T02:35:59.478Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVZmBVG
+[Server] Handler for track-metric completed.
+[HTTP] 2025-12-24T02:36:08.643Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVZmBVG
+[Server] Handler for track-metric completed.
+[HTTP] 2025-12-24T02:36:25.605Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVZmBVG
+[Server] Handler for track-metric completed.
+[HTTP] 2025-12-24T02:36:33.023Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVZmBVG
+[Server] Handler for track-metric completed.
+[HTTP] 2025-12-24T02:36:40.767Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVZmBVG
+[Server] Handler for track-metric completed.
+[2m오전 11:37:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/shared/components/ShareModal.tsx, /src/styles/main.css[22m
+[HTTP] 2025-12-24T02:37:49.404Z GET /src/shared/components/ShareModal.tsx?t=1766543869380
+[HTTP] 2025-12-24T02:37:49.406Z GET /src/styles/main.css?t=1766543869380
+[2m오전 11:39:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/shared/components/ShareModal.tsx, /src/styles/main.css[22m
+[HTTP] 2025-12-24T02:39:38.563Z GET /src/shared/components/ShareModal.tsx?t=1766543978546
+[HTTP] 2025-12-24T02:39:38.601Z GET /src/styles/main.css?t=1766543978546
+[HTTP] 2025-12-24T02:39:56.684Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVZmBVG
+[Server] Handler for track-metric completed.
+[HTTP] 2025-12-24T02:40:28.026Z GET /api/feed?id=rsVgxfma5leZciCTIBUDpZ&userId=ToMT5IhqzEXVGhuoQcJUs2MRvsm2&t=1766544028022
+[Server] Loading module: ./feed.js
+[Server] Calling handler for feed...
+[API] /api/feed called
+[API] /api/feed called. id: rsVgxfma5leZciCTIBUDpZ, authorId: none, sort: latest, userId: ToMT5IhqzEXVGhuoQcJUs2MRvsm2
+[API] Fetching Single Feed from Sanity...
+[HTTP] 2025-12-24T02:40:28.033Z GET /api/feed?id=rsVgxfma5leZciCTIBUDpZ&userId=ToMT5IhqzEXVGhuoQcJUs2MRvsm2&t=1766544028025
+[Server] Loading module: ./feed.js
+[Server] Calling handler for feed...
+[API] /api/feed called
+[API] /api/feed called. id: rsVgxfma5leZciCTIBUDpZ, authorId: none, sort: latest, userId: ToMT5IhqzEXVGhuoQcJUs2MRvsm2
+[API] Fetching Single Feed from Sanity...
+[Server] Handler for feed completed.
+[Server] Handler for feed completed.
+[HTTP] 2025-12-24T02:40:32.078Z GET /
+[HTTP] 2025-12-24T02:40:32.196Z GET /src/main.tsx?t=1766543978546
+[HTTP] 2025-12-24T02:40:32.200Z GET /@vite/client
+[HTTP] 2025-12-24T02:40:32.221Z GET /src/app/App.tsx?t=1766543978546
+[HTTP] 2025-12-24T02:40:32.224Z GET /@react-refresh
+[HTTP] 2025-12-24T02:40:32.225Z GET /src/styles/main.css?t=1766543978546
+[HTTP] 2025-12-24T02:40:32.242Z GET /src/features/sketch/components/Canvas.tsx
+[HTTP] 2025-12-24T02:40:32.244Z GET /src/features/sketch/components/ControlPanel.tsx
+[HTTP] 2025-12-24T02:40:32.246Z GET /src/features/sketch/model/store.ts
+[HTTP] 2025-12-24T02:40:32.247Z GET /src/features/auth/model/store.ts
+[HTTP] 2025-12-24T02:40:32.249Z GET /src/features/auth/api/auth.ts
+[HTTP] 2025-12-24T02:40:32.250Z GET /src/features/feed/components/FeedList.tsx
+[HTTP] 2025-12-24T02:40:32.251Z GET /src/features/feed/api/feed.ts
+[HTTP] 2025-12-24T02:40:32.254Z GET /src/features/feed/model/feedStore.ts
+[HTTP] 2025-12-24T02:40:32.257Z GET /src/features/feed/components/ArtworkDetailModal.tsx
+[HTTP] 2025-12-24T02:40:32.258Z GET /src/shared/components/GlobalModal.tsx
+[HTTP] 2025-12-24T02:40:32.260Z GET /src/shared/model/uiStore.ts
+[HTTP] 2025-12-24T02:40:32.261Z GET /src/features/auth/components/LoginModal.tsx
+[HTTP] 2025-12-24T02:40:32.263Z GET /src/features/auth/model/loginModalStore.ts
+[HTTP] 2025-12-24T02:40:32.265Z GET /src/features/studio/components/PublishModal.tsx
+[HTTP] 2025-12-24T02:40:32.271Z GET /src/shared/components/Toast.tsx
+[HTTP] 2025-12-24T02:40:32.275Z GET /src/features/sketch/hooks/useSketchFlow.ts
+[HTTP] 2025-12-24T02:40:32.278Z GET /src/shared/components/ShareModal.tsx?t=1766543978546
+[HTTP] 2025-12-24T02:40:32.281Z GET /node_modules/vite/dist/client/env.mjs
+[HTTP] 2025-12-24T02:40:32.290Z GET /src/features/sketch/hooks/useSketchEngine.ts
+[HTTP] 2025-12-24T02:40:32.295Z GET /src/features/sketch/engine/types.ts
+[HTTP] 2025-12-24T02:40:32.298Z GET /src/shared/libs/firebase.ts
+[HTTP] 2025-12-24T02:40:32.300Z GET /src/shared/model/toastStore.ts
+[HTTP] 2025-12-24T02:40:32.314Z GET /src/features/feed/components/ArtworkCard.tsx
+[HTTP] 2025-12-24T02:40:32.316Z GET /src/shared/hooks/useResponsiveGrid.ts
+[HTTP] 2025-12-24T02:40:32.318Z GET /src/shared/model/shareStore.ts
+[HTTP] 2025-12-24T02:40:32.320Z GET /src/features/sketch/engine/SketchEngine.ts
+[HTTP] 2025-12-24T02:40:32.322Z GET /src/shared/model/modalStore.ts
+[HTTP] 2025-12-24T02:40:32.327Z GET /src/shared/model/publishModalStore.ts
+[HTTP] 2025-12-24T02:40:32.329Z GET /src/features/studio/api/publish.ts
+[HTTP] 2025-12-24T02:40:32.340Z GET /src/shared/config/constants.ts
+[HTTP] 2025-12-24T02:40:32.348Z GET /src/features/sketch/utils/ImageProcessor.ts
+[HTTP] 2025-12-24T02:40:32.484Z GET /logo.png
+[HTTP] 2025-12-24T02:40:32.519Z GET /api/feed?sort=latest&t=1766544032511
+[Server] Loading module: ./feed.js
+[Server] Calling handler for feed...
+[API] /api/feed called
+[API] /api/feed called. id: none, authorId: none, sort: latest, userId: none
+[API] Fetching Global Feed from Sanity...
+[HTTP] 2025-12-24T02:40:32.533Z GET /api/feed?sort=latest&t=1766544032516
+[Server] Loading module: ./feed.js
+[Server] Calling handler for feed...
+[API] /api/feed called
+[API] /api/feed called. id: none, authorId: none, sort: latest, userId: none
+[API] Fetching Global Feed from Sanity...
+[HTTP] 2025-12-24T02:40:32.576Z GET /logo.png
+[Server] Handler for feed completed.
+[Server] Handler for feed completed.
+[HTTP] 2025-12-24T02:40:33.094Z POST /api/sync-user
+[Server] Loading module: ./sync-user.js
+[Server] Calling handler for sync-user...
+[HTTP] 2025-12-24T02:40:33.117Z GET /api/feed?userId=ToMT5IhqzEXVGhuoQcJUs2MRvsm2&sort=latest&t=1766544033112
+[Server] Loading module: ./feed.js
+[Server] Calling handler for feed...
+[API] /api/feed called
+[API] /api/feed called. id: none, authorId: none, sort: latest, userId: ToMT5IhqzEXVGhuoQcJUs2MRvsm2
+[API] Fetching Global Feed from Sanity...
+[Server] Handler for feed completed.
+[HTTP] 2025-12-24T02:40:34.925Z GET /api/feed?id=H9Kss1lzqrzEnA7MVZmBVG&userId=ToMT5IhqzEXVGhuoQcJUs2MRvsm2&t=1766544034922
+[Server] Loading module: ./feed.js
+[Server] Calling handler for feed...
+[API] /api/feed called
+[API] /api/feed called. id: H9Kss1lzqrzEnA7MVZmBVG, authorId: none, sort: latest, userId: ToMT5IhqzEXVGhuoQcJUs2MRvsm2
+[API] Fetching Single Feed from Sanity...
+[HTTP] 2025-12-24T02:40:34.932Z GET /api/feed?id=H9Kss1lzqrzEnA7MVZmBVG&userId=ToMT5IhqzEXVGhuoQcJUs2MRvsm2&t=1766544034926
+[Server] Loading module: ./feed.js
+[Server] Calling handler for feed...
+[API] /api/feed called
+[API] /api/feed called. id: H9Kss1lzqrzEnA7MVZmBVG, authorId: none, sort: latest, userId: ToMT5IhqzEXVGhuoQcJUs2MRvsm2
+[API] Fetching Single Feed from Sanity...
+[Server] Handler for sync-user completed.
+[Server] Handler for feed completed.
+[Server] Handler for feed completed.
+[HTTP] 2025-12-24T02:40:37.705Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVZmBVG
+[Server] Handler for track-metric completed.
+[2m오전 11:43:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/shared/components/ShareModal.tsx, /src/styles/main.css[22m
+[HTTP] 2025-12-24T02:43:31.426Z GET /src/shared/components/ShareModal.tsx?t=1766544211312
+[HTTP] 2025-12-24T02:43:31.466Z GET /src/styles/main.css?t=1766544211312
+[HTTP] 2025-12-24T02:44:07.480Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVZmBVG
+[Server] Handler for track-metric completed.
+[HTTP] 2025-12-24T02:44:14.579Z POST /api/track-metric
+[Server] Loading module: ./track-metric.js
+[Server] Calling handler for track-metric...
+[API] Incrementing shareCount for H9Kss1lzqrzEnA7MVZmBVG
+[Server] Handler for track-metric completed.
