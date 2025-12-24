@@ -22,6 +22,7 @@ author: Antigravity
   - [x] Grid Layout 최적화: Mobile 2열(`grid-cols-2`), Desktop 4열(`grid-cols-4`) 반응형 적용.
   - [x] **Premium UI Refinement**: 썸네일 줌/그라데이션 제거 및 정밀한 메트릭 아이콘 배치 완료.
   - [x] **Interaction Standardization**: 전역 툴팁 시스템(`.tooltip-box`) 구축 및 적용 완료.
+  - [x] **Thumbnail Optimization**: 스냅샷 캡처 방식 도입으로 줌인 깜빡임 해결 및 저사양 기기 최적화 완료.
 
 ### 체크리스트 1: 필수 구현 기능 (Must Have)
 

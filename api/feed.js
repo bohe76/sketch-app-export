@@ -9,7 +9,6 @@ const getClient = () => createClient({
 
 export default async function handler(req, res) {
     const client = getClient();
-    console.log(`[API][Feed] Using Dataset: ${client.config().dataset}`);
     if (req.method !== 'GET') {
         return res.status(405).json({ message: 'Method not allowed' });
     }

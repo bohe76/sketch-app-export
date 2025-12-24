@@ -117,6 +117,23 @@ Vite 개발 서버와 Express API 서버의 충돌을 방지하기 위한 통합
 - 모바일 기기 성능 최적화를 위해 **레이아웃 변화(예: 빈티지 틴트 피커 확장) 감지 시 즉시 엔진 중지 및 캔버스 소거**를 수행합니다.
 - UI 애니메이션이 완료된 것으로 판단되는 **500ms** 후에 드로잉을 재개하여, 인터랙션의 부드러움과 결과물의 정확도를 모두 확보합니다.
 
+### 6-3. Thumbnail Snapshot Strategy (Performance Optimization)
+
+- **Scenario**: 스튜디오 모드에서 수십 개의 스타일 썸네일을 동시에 렌더링할 때 발생하는 CPU 부하 방지.
+- **Implementation**: 
+    1. 이미지가 로드되면 `renderInstant`를 통해 스타일별 스케치를 딱 1회 생성.
+    2. 생성 완료 즉시 `toDataURL`을 사용하여 Base64 이미지 스냅샷 캡처.
+    3. 이후 실시간 캔버스 대신 `<img>` 태그로 렌더링하여 브라우저 하드웨어 가속을 통한 부드러운 줌인 효과 확보.
+- **Benefit**: 캔버스의 '지우기-그리기' 주기가 제거되어 전환 시 깜빡임(Flash) 현상을 근본적으로 해결하고, 스타일 개수 증가에도 안정적인 메모리 점유율을 유지.
+
+### 6-4. ESM Environment Reliability (Hosting & Defaulting)
+
+- **Issue**: ESM 모듈 시스템의 호이스팅 특성상 `dotenv.config()` 호출 전 모듈이 먼저 로드되어 환경 변수 참조에 실패하는 현상 대응.
+- **Solution**: 
+    - `api/server.js` 최상단에 `import 'dotenv/config'`를 배치하여 절대적 우선순위 확보.
+    - API 핸들러 내에서 Sanity 클라이언트를 요청 시점마다 생성하는 팩토리 패턴(`getClient()`) 적용으로 런타임 환경 변수 정합성 보장.
+    - 서버 부팅 및 API 요청 시 현재 사용 중인 `dataset` 명칭을 로그로 명시하여 육안 감시(Visual Monitoring) 체계 구축.
+
 ---
 
 ## 7. 문제 해결 및 서버 관리 (Troubleshooting)

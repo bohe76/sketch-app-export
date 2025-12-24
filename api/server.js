@@ -6,12 +6,6 @@ import { dirname, join } from 'path';
 import fs from 'fs';
 import { fetchArtworkForSEO, injectMetadata } from './utils/seo_helper.js';
 
-console.log(`
-[Server Initialization]
-- SANITY_PROJECT_ID: ${process.env.VITE_SANITY_PROJECT_ID}
-- SANITY_DATASET: ${process.env.VITE_SANITY_DATASET || 'production'} (Default: production)
-`);
-
 const app = express();
 const PORT = 3000;
 
