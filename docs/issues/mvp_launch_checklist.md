@@ -94,6 +94,8 @@ author: Antigravity
   - [x] **Runtime Standardization**: Node.js 표준 런타임 적용으로 Sanity API 호환성 확보.
   - [x] **Publish Safety Net**: 게시 단계에서 유저 동기화 강제로 서비스 영속성 보장.
   - [x] **CORS Resolution**: 실서버 캔버스 조작을 위한 Sanity API 및 클라이언트 crossOrigin 설정 완료.
+  - [x] **Mixed Content Fix**: 모든 프로필 이미지 HTTPS 강제 전환으로 보안 경고 해결 완료.
+  - [x] **Log Optimization**: 프로덕션 빌드 방해 요소인 불필요한 디버그 로그 전수 제거 완료.
 - [x] **서버 데이터 무결성 (Integrity Check)**
   - [x] **Atomic Deletion**: 작품 삭제 시 이미지 자산까지 트랜잭션으로 묶어 고아 에셋 방지 완료.
   - [x] **Sanity DB Sync**: 딥 링크 및 모딩 모달 오픈 시 실시간 동기화 로직 검증 완료.

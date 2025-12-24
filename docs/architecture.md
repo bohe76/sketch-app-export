@@ -141,6 +141,20 @@ Vite 개발 서버와 Express API 서버의 충돌을 방지하기 위한 통합
     - `Publish` 최종 단계(`finalizePublish`) 직전에 `syncUserToSanity`를 명시적으로 호출하여, 유저 문서의 존재 여부를 런타임에 보장(Ensure)합니다.
     - 이는 '무중단 배포' 및 '데이터 정제 작업' 중에도 사용자의 핵심 액션(게시)이 중단 없이 수행되도록 하는 방어적 프로그래밍 전략입니다.
 
+### 6-6. Security & Protocol Integrity (Mixed Content Prevention)
+
+- **Principle**: 실서버(HTTPS) 환경에서 비보안 리소스(HTTP) 요청으로 인한 보안 취약점 및 브라우저 경고를 방지합니다.
+- **Implementation**: 
+    - 카카오 등 외부 Provider로부터 유입되는 프로필 이미지 주소가 `http`일 경우, 런타임 및 DB 저장 단계에서 즉시 `https`로 강제 변환합니다.
+    - 이를 통해 브라우저의 자동 업스트림 업그레이드에 의존하지 않고 명시적인 보안 통신을 유지합니다.
+
+### 6-7. Lean Development Logging
+
+- **Policy**: 프로덕션 빌드에서 불필요한 시스템 로그 노출을 최소화합니다.
+- **Implementation**: 
+    - 개발 단계의 검증용 로그(`Main.tsx 실행 확인` 등)는 배포 전 전수 제거합니다.
+    - 서버 로그(`api/server.js`)는 환경 변수와 데이터셋 식별 등 핵심 운영 정보로 한정하여 보안성과 가독성을 높입니다.
+
 ---
 
 ## 7. 문제 해결 및 서버 관리 (Troubleshooting)
