@@ -44,6 +44,12 @@ export const ArtworkDetailModal: React.FC<ArtworkDetailModalProps> = ({ artwork:
     const artwork = artworks.find(a => a._id === initialArtwork._id) || initialArtwork;
     const isSkeleton = !artwork.authorName;
 
+    // Randomize Mask Origin (Top-Left or Top-Right) on mount
+    const maskOrigin = React.useMemo(() => {
+        const origins = ['0% 0%', '100% 0%'];
+        return origins[Math.floor(Math.random() * origins.length)];
+    }, []);
+
     // Delayed Loading Strategy: Only show loading UI if image takes more than 400ms
     useEffect(() => {
         let timer: ReturnType<typeof setTimeout>;
@@ -264,11 +270,22 @@ export const ArtworkDetailModal: React.FC<ArtworkDetailModalProps> = ({ artwork:
                             </div>
                         )}
                         {artwork.imageUrl && (
-                            <img
+                            <motion.img
                                 src={artwork.imageUrl}
                                 alt={artwork.title}
                                 onLoad={() => setImgLoaded(true)}
-                                className={`max-w-full lg:max-w-[72vw] max-h-[50vh] lg:max-h-[72vh] w-auto h-auto object-contain transition-all duration-[1200ms] ease-out ${imgLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-100'} `}
+                                initial={{
+                                    opacity: 0,
+                                    WebkitMaskImage: `radial-gradient(circle at ${maskOrigin}, black 0%, transparent 0%)`,
+                                    maskImage: `radial-gradient(circle at ${maskOrigin}, black 0%, transparent 0%)`
+                                } as any}
+                                animate={imgLoaded ? {
+                                    opacity: 1,
+                                    WebkitMaskImage: `radial-gradient(circle at ${maskOrigin}, black 150%, transparent 200%)`,
+                                    maskImage: `radial-gradient(circle at ${maskOrigin}, black 150%, transparent 200%)`
+                                } as any : {}}
+                                transition={{ duration: 1.5, ease: "easeOut" }}
+                                className="max-w-full lg:max-w-[72vw] max-h-[50vh] lg:max-h-[72vh] w-auto h-auto object-contain"
                             />
                         )}
                     </div>
