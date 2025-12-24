@@ -55,6 +55,9 @@ export const logout = async () => {
 // Sync Firebase User to Sanity User Document via Serverless Function
 export const syncUserToSanity = async (user: User) => {
     try {
+        // Ensure photoURL is always HTTPS to avoid Mixed Content warnings (e.g., from Kakao)
+        const safePhotoURL = user.photoURL?.replace('http://', 'https://');
+
         await fetch('/api/sync-user', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -62,7 +65,7 @@ export const syncUserToSanity = async (user: User) => {
                 user: {
                     uid: user.uid,
                     displayName: user.displayName,
-                    photoURL: user.photoURL
+                    photoURL: safePhotoURL
                 }
             })
         });
