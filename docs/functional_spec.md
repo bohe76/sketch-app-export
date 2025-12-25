@@ -88,7 +88,12 @@
 - **Tooltips**: 모든 액션 버튼에 전역 공통 스타일이 적용된 대문자(UPPERCASE) 툴팁 적용.
 - **Dynamic SEO Preview**: 
     - **Architecture**: Vercel의 Serverless Function(`api/seo.js`)을 활용하여 루트(`/?artwork=ID`) 접속 시 실시간으로 HTML 메타 태그를 동적 주입합니다.
-    - **Metadata**: 카카오톡, 트위터 등 SNS 공유 시 작품의 **제목**과 **이미지**가 카드 형태로 완벽하게 노출되도록 Open Graph(OG) 및 Twitter Card 표준을 준수합니다.
+    - **Injection Algorithm**: 
+        1. Sanity에서 작품 ID 기반 데이터(Title, Image, Author) Fetch.
+        2. 원본 템플릿의 기존 `title` 및 모든 핵심 `meta` 태그를 정규표현식으로 정밀 타격하여 제거 (충돌 방지).
+        3. 정돈된 `SEO Metadata` 주석과 함께 최신화된 Open Graph 및 Twitter Card 태그를 `<head>` 최상단에 주입.
+        4. 데이터 조회 실패 시 `template.html` 원본을 즉시 서빙하는 Fail-safe 구조.
+    - **Metadata Strategy**: 카카오톡, 트위터 등 SNS 공유 시 작품의 **제목**과 **이미지**가 카드 형태로 완벽하게 노출되도록 Open Graph(OG) 및 Twitter Card 표준을 준수합니다.
     - **Description Strategy**: "누가 만들었는지"보다 **"작품의 제목"**을 최우선으로 노출하여 클릭률(CTR)과 사용자 흥미를 극대화합니다.
 
 ---

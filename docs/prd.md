@@ -158,4 +158,7 @@
 
 ## 9. Marketing & SEO Strategy
 
-- **Dynamic Meta Tags**: 개별 작품 상세 페이지마다 제목과 이미지를 동적으로 설정하여 SNS 공유 시 높은 클릭률(CTR)을 유도합니다.
+- **Dynamic SEO Strategy**: 
+    - **Single Page Application (SPA) SEO Optimization**: Vite 기반의 SPA 환경에서 Vercel Serverless Function(`api/seo.js`)을 활용해 개별 작품 상세 페이지마다 제목과 이미지를 동적으로 주입합니다.
+    - **Vercel Static Priority Bypass**: `index.html`을 `template.html`로 전환하고 `vercel.json` 리라이트 설정을 통해 정적 파일 서빙 우선순위를 제어함으로써 런타임 메타 데이터 주입을 보장합니다.
+    - **Social Media CTR Optimization**: 카카오톡, 트위터, 페이스북 등 주요 SNS 공유 시 작품의 실시간 썸네일과 제목이 노출되도록 Open Graph(OG) 및 Twitter Card 표준을 100% 준수합니다.

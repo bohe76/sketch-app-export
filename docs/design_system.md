@@ -90,3 +90,12 @@
 - **Layout Preservation**: `.app-container`, `.header-overlay`, `.viewport-studio` 등의 핵심 레이아웃 클래스는 절대 무시되어서는 안 되며, Tailwind 하드코딩으로 이를 대체하는 것을 금지합니다.
 - **Visual Regression Prevention**: 기술적 전환 시 AI의 자의적인 판단에 의한 UI 재해석을 금지하며, 반드시 원본 코드의 HTML/CSS 구조를 우선적으로 분석하여 계승합니다.
 - **Scrollbar Reserve**: `scrollbar-gutter: stable`을 통해 갤러리 로딩 시 레이아웃 흔들림 방지.
+
+---
+
+## 6. SEO & Social Sharing Visual Standard
+
+공유 시 첫인상을 결정하는 메타 데이터 시각화 표준입니다.
+- **Dynamic Title**: `작품제목 | Sketchrang` (브랜드명은 항상 뒤에 배치하여 가독성 확보)
+- **Description**: `"작품제목" - Discover this amazing hand-drawn art by @작성자 on Sketchrang!`
+- **Image Aspect Ratio**: Sanity에서 제공하는 원본 아트워크의 비율을 그대로 따르며, 크롤러 호환성을 위해 `VITE_SITE_URL` 기반의 절대 경로를 유지합니다.

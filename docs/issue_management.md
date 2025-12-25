@@ -30,3 +30,10 @@
     1. Vercel 대시보드의 `Environment Variables`에서 최신 키 값을 복구합니다.
     2. 로컬 이미지 폴더 유실 시 휴지통 또는 외부 백업을 확인합니다.
     3. 복구 후 반드시 `node api/server.js`로 통합 서버를 재가동하여 서비스 정상 여부를 검증합니다.
+
+### 3. SEO 데이터 주입 실패 및 OG 이미지 미출력
+- **증상**: 링크 공유 시 기본 미리보기만 나오거나, 페이지 소스 보기에서 `title`이 바뀌지 않은 경우.
+- **대응**: 
+    1. Vercel 대시보드에서 `VITE_SANITY_PROJECT_ID` 및 `VITE_SITE_URL` 변수가 **[Preview]** 와 **[Production]** 모두에 등록되어 있는지 확인합니다.
+    2. `api/seo.js` 핸들러가 `dist/template.html`을 찾지 못하는 경우 `npm run build`를 다시 실행하고 재배포(Redeploy)합니다.
+    3. `https://domain.com/?artwork=ID` 경로에서 소스 보기를 실행하여 HTML 헤더에 동적 데이터가 주입되었는지 런타임 검증을 수행합니다.

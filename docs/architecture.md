@@ -102,9 +102,14 @@ Vite 개발 서버와 Express API 서버의 충돌을 방지하기 위한 통합
 - **Unified Entry**: `api/server.js`에서 Express를 실행하고, Vite를 미들웨어로 주입합니다.
 - **Single Port**: 모든 요청(API, Static, Frontend)은 단일 포트(3000)에서 처리되어 CORS 설정을 단순화합니다.
 - **API Handling**: `/api/*` 요청은 로컬 Express 핸들러(`api/*.js`)가 처리하고, 그 외 요청은 Vite가 SPA로 서빙합니다.
-- **Dynamic SEO Injection (Serverless)**: 
-    - **Local**: `api/server.js` 미들웨어가 SEO 태그를 주입.
-    - **Production (Vercel)**: `vercel.json`의 Rewrites 설정을 통해 루트(`/`) 요청을 `api/seo.js` 서버리스 함수로 라우팅하여, 정적 호스팅 환경에서도 동적 메타 태그(OGP)를 완벽하게 지원합니다.
+- **Dynamic SEO Injection (Golden Standard)**: 
+    - **Issue**: Vercel은 정적 파일(`index.html`) 서빙을 Edge Middleware나 Rewrites보다 우선시하여 SPA의 동적 메타 태그 주입을 차단합니다.
+    - **Solution**: 
+        1. `index.html`을 `template.html`로 명칭 변경하여 자동 서빙 비활성화.
+        2. `vite.config.ts` 빌드 옵션을 수정하여 `dist/template.html` 생성 보장.
+        3. `vercel.json`에서 정교한 정규표현식(`(?!.*\\.)`)을 사용해 에셋(JS/CSS/Image)을 제외한 모든 루트 및 경로 요청을 `api/seo.js` 서버리스 함수로 강제 라우팅.
+    - **Local**: `api/server.js` 미들웨어가 실시간으로 SEO 태그를 주입하여 개발 환경 정합성 유지.
+    - **Production**: `api/seo.js`가 Sanity 데이터를 fetch하고 원본 템플릿에 주입하여 완벽한 동적 HTML 반환.
 - **Environment Aware**: 모든 API 엔드포인트는 `VITE_SANITY_DATASET` 환경 변수를 참조하여 `development`와 `production` 환경 간의 데이터 정합성을 유지합니다.
 
 ---
