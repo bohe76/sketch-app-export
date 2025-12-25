@@ -15,15 +15,11 @@
             "destination": "/assets/$1"
         },
         {
-            "source": "/favicon.png",
-            "destination": "/favicon.png"
+            "source": "/((?!.*\\.).*)",
+            "destination": "/api/seo"
         },
         {
-            "source": "/og-image.png",
-            "destination": "/og-image.png"
-        },
-        {
-            "source": "/(.*)",
+            "source": "/",
             "destination": "/api/seo"
         }
     ]

@@ -1,4 +1,4 @@
-import { join } from 'path';
+import { join, resolve } from 'path';
 import fs from 'fs';
 import { fetchArtworkForSEO, injectMetadata } from './utils/seo_helper.js';
 
@@ -6,51 +6,50 @@ export default async function handler(req, res) {
     const { artwork: artworkId } = req.query;
 
     try {
-        let templatePath = join(process.cwd(), 'dist', 'template.html');
+        // Use path.resolve for solid serverless path resolution
+        let templatePath = resolve(process.cwd(), 'dist', 'template.html');
+
+        // Fallback for local development if dist doesn't exist yet
         if (!fs.existsSync(templatePath)) {
-            templatePath = join(process.cwd(), 'template.html');
+            templatePath = resolve(process.cwd(), 'template.html');
         }
 
-        console.log(`[SEO] Reading template from: ${templatePath}`);
+        console.log(`[SEO] Active Template Path: ${templatePath}`);
         let html = fs.readFileSync(templatePath, 'utf-8');
 
-        // Log all user agents to help identify bots
+        // Identify Requester
         const userAgent = req.headers['user-agent'] || '';
-        console.log(`[SEO] Request from User-Agent: ${userAgent}`);
+        console.log(`[SEO] Request: ID=${artworkId || 'none'}, UA=${userAgent}`);
 
-        let debugInfo = `\n<!-- [SEO Debug] Request Params: ${JSON.stringify(req.query)} -->`;
-        debugInfo += `\n<!-- [SEO Debug] UA: ${userAgent} -->`;
+        let debugInfo = `\n<!-- [SEO Debug] Request: ${JSON.stringify(req.query)} -->`;
 
-        // Determine if we should attempt metadata injection
-        // Even if no artworkId, we continue so we can see the debug info in the browser
-        if (!artworkId) {
-            debugInfo += `\n<!-- [SEO Debug] No artworkId provided, serving base UI. -->`;
-            return res.status(200).set({ 'Content-Type': 'text/html' }).end(html + debugInfo);
-        }
-
-        console.log(`[SEO] Searching for artworkId: ${artworkId}`);
-        const artwork = await fetchArtworkForSEO(artworkId);
-
-        if (artwork) {
-            html = injectMetadata(html, artwork);
-            debugInfo += `\n<!-- [SEO Debug] SUCCESS: Injected metadata for ${artwork.title} -->`;
-        } else {
-            debugInfo += `\n<!-- [SEO Debug] FAILED: Artwork not found in Sanity. -->`;
+        if (artworkId) {
+            const artwork = await fetchArtworkForSEO(artworkId);
+            if (artwork) {
+                html = injectMetadata(html, artwork);
+                debugInfo += `\n<!-- [SEO Debug] Injection: SUCCESS for ${artwork.title} -->`;
+            } else {
+                debugInfo += `\n<!-- [SEO Debug] Injection: FAILED (Artwork not found) -->`;
+            }
         }
 
         return res
             .status(200)
             .set({
-                'Content-Type': 'text/html',
-                'Cache-Control': 'no-cache, no-store, must-revalidate' // Prevent cache while debugging
+                'Content-Type': 'text/html; charset=utf-8',
+                'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400' // Edge Caching
             })
             .end(html + debugInfo);
 
     } catch (error) {
-        console.error('[SEO Handler Error]:', error);
-        // Serve basic index.html with error info
-        const templatePath = join(process.cwd(), 'index.html');
-        const html = fs.readFileSync(templatePath, 'utf-8');
-        return res.status(200).set({ 'Content-Type': 'text/html' }).end(html + `\n<!-- [SEO ERROR] ${error.message} -->`);
+        console.error('[SEO Fatal Error]:', error);
+        // Emergency Fallback to raw template if everything fails
+        try {
+            const fallbackPath = resolve(process.cwd(), 'template.html');
+            const html = fs.readFileSync(fallbackPath, 'utf-8');
+            return res.status(200).set({ 'Content-Type': 'text/html' }).end(html + `\n<!-- [SEO ERROR] ${error.message} -->`);
+        } catch (e) {
+            return res.status(500).send('Internal Server Error: ' + e.message);
+        }
     }
 }

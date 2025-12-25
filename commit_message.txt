@@ -1,7 +1,8 @@
-feat: VERCEL 정적 파일 우선순위 우회를 위한 구조적 SEO 개편
+feat: Vercel SEO "Golden Standard" 구조 적용 (최종)
 
-- index.html을 template.html로 변경하여 Vercel의 Static Shadowing 방지
-- Vite 빌드 설정을 수정하여 dist/template.html을 생성하도록 구성
-- vercel.json에서 모든 루트 요청을 api/seo 핸들러로 강제 라우팅
-- api/seo 핸들러가 빌드된 template.html을 읽어 동적으로 메타 데이터를 주입하도록 개선
-- middleware.ts 제거 (더 이상 필요하지 않음)
+- vercel.json: includeFiles 설정으로 서버리스 함수 내 dist/template.html 가시성 확보
+- vercel.json: (?!.*\\.) 정규식을 사용하여 에셋 제외 및 페이지만 SEO 핸들러 라우팅
+- api/seo.js: path.resolve와 process.cwd()를 사용한 견고한 경로 처리
+- api/seo.js: Edge Caching(Cache-Control) 적용으로 성능 최적화
+- vite.config.ts: 빌드 시 template.html을 엔트리로 유지하도록 빌드 옵션 고정
+- 린트 및 로컬 빌드 검증 완료
