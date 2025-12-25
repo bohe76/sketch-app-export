@@ -89,8 +89,8 @@ export const ArtworkDetailModal: React.FC<ArtworkDetailModalProps> = ({ artwork:
     };
 
     const handleDownload = async () => {
-        // High-performance background sync
-        await syncMetric(initialArtwork._id, 'download');
+        // High-performance background sync (No await)
+        syncMetric(initialArtwork._id, 'download');
 
         try {
             const response = await fetch(artwork.imageUrl);
@@ -112,10 +112,10 @@ export const ArtworkDetailModal: React.FC<ArtworkDetailModalProps> = ({ artwork:
     const { openShareModal } = useShareStore();
 
     const handleShare = async () => {
-        // High-performance background sync
-        await syncMetric(initialArtwork._id, 'share');
+        // High-performance background sync (No await)
+        syncMetric(initialArtwork._id, 'share');
 
-        // Open our beautiful custom Share Sheet
+        // Open our beautiful custom Share Sheet Instantly
         openShareModal(artwork);
     };
 
@@ -152,8 +152,8 @@ export const ArtworkDetailModal: React.FC<ArtworkDetailModalProps> = ({ artwork:
     };
 
     const handleRemixClick = async () => {
-        // High-performance background sync
-        await syncMetric(initialArtwork._id, 'remix');
+        // High-performance background sync (No await)
+        syncMetric(initialArtwork._id, 'remix');
         onRemix(artwork);
     };
 
