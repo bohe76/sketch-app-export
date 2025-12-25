@@ -31,9 +31,10 @@
     2. 로컬 이미지 폴더 유실 시 휴지통 또는 외부 백업을 확인합니다.
     3. 복구 후 반드시 `node api/server.js`로 통합 서버를 재가동하여 서비스 정상 여부를 검증합니다.
 
-### 3. SEO 데이터 주입 실패 및 OG 이미지 미출력
-- **증상**: 링크 공유 시 기본 미리보기만 나오거나, 페이지 소스 보기에서 `title`이 바뀌지 않은 경우.
-- **대응**: 
-    1. Vercel 대시보드에서 `VITE_SANITY_PROJECT_ID` 및 `VITE_SITE_URL` 변수가 **[Preview]** 와 **[Production]** 모두에 등록되어 있는지 확인합니다.
-    2. `api/seo.js` 핸들러가 `dist/template.html`을 찾지 못하는 경우 `npm run build`를 다시 실행하고 재배포(Redeploy)합니다.
-    3. `https://domain.com/?artwork=ID` 경로에서 소스 보기를 실행하여 HTML 헤더에 동적 데이터가 주입되었는지 런타임 검증을 수행합니다.
+### 4. 분석 데이터 누락 및 추적 실패
+- **증상**: GA 대시보드에 특정 이벤트(예: 공유, 게시) 수치가 비정상적으로 낮거나 수집되지 않는 경우.
+- **대응**:
+    1. 브라우저 콘솔을 열고 `[Analytics]` 로그가 출력되는지 확인하여 `Analytics Manager` 가동 여부를 점검합니다.
+    2. `template.html`에 삽입된 GA 측정 ID(`G-48JCX4VZXD`)를 확인합니다.
+    3. 로컬 빌드 후 `dist/template.html`에 스크립트가 유지되고 있는지 검증합니다.
+    4. 네트워크 탭에서 `google-analytics.com/collect` 요청의 상태 코드가 `200`인지 확인합니다.

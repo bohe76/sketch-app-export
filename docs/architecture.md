@@ -40,6 +40,11 @@
 - **Config**: 상수(`constants.ts`)를 중앙화하여 유지보수성을 확보합니다.
 - **Types**: 전역 타입(`types.ts`)을 정의하여 컴포넌트 간 타입 일관성을 보장합니다.
 - **Custom Hooks**: 비즈니스 로직(예: `useSketchFlow`, `useResponsiveGrid`)을 훅으로 분리하여 뷰와 로직을 철저히 격리합니다.
+- **Analytics Manager (`src/shared/libs/analytics.ts`)**:
+    - **Type-Safe Event Hub**: 모든 GA 이벤트를 중앙에서 관리하여 하드코딩을 방지하고 코드 재사용성을 극대화합니다.
+    - **Unified Initialization**: 앱 진입 시점(`init`)에서 URL 파라미터를 분석하여 유입 경로(공유 링크 vs 직접 진입)를 자동으로 분류 및 기록합니다.
+    - **Helper-based Tracking**: `trackLike`, `trackShare`, `trackPublish` 등 도메인 특화 헬퍼 함수를 통해 일관된 데이터 스키마를 보장합니다.
+    - **Non-blocking Execution**: 메인 로직의 성능에 영향을 주지 않도록 설계되었습니다.
 
 ---
 

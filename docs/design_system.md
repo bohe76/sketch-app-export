@@ -93,9 +93,9 @@
 
 ---
 
-## 6. SEO & Social Sharing Visual Standard
+## 7. Data-Driven Design & Performance Analysis
 
-공유 시 첫인상을 결정하는 메타 데이터 시각화 표준입니다.
-- **Dynamic Title**: `작품제목 | Sketchrang` (브랜드명은 항상 뒤에 배치하여 가독성 확보)
-- **Description**: `"작품제목" - Discover this amazing hand-drawn art by @작성자 on Sketchrang!`
-- **Image Aspect Ratio**: Sanity에서 제공하는 원본 아트워크의 비율을 그대로 따르며, 크롤러 호환성을 위해 `VITE_SITE_URL` 기반의 절대 경로를 유지합니다.
+- **Interaction Measurement**: 모든 핵심 인터랙션 요소를 분석 시스템과 연동하여 사용자의 시각적/기능적 선호도를 정량적으로 측정합니다.
+- **Non-blocking Tracking**: 추적 로직은 UI 프레임 드랍을 방지하기 위해 렌더링 주기에 영향을 주지 않도록 구현하며, 필요 시 `requestIdleCallback` 또는 비동기 처리를 지향합니다.
+- **Visual Feedback vs Data**: 좋아요, 리믹스 등 수치 변화가 시각적으로 즉시 반영됨과 동시에 백그라운드에서 추적 데이터가 전송되도록 조화시켜 '빠른 반응성'과 '정확한 수집'을 동시에 만족시킵니다.
+- **Analytics Integrity**: UI 레이아웃 변경 시 이벤트 추적 노드가 누락되지 않도록 `Analytics Manager`를 필수적으로 참조하여 일관성을 유지합니다.

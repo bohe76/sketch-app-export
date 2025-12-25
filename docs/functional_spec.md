@@ -127,7 +127,23 @@
 
 ---
 
-## 6. 레이아웃 및 성능
+## 7. 분석 및 트래킹 (Analytics & Tracking)
+
+### 7-1. 유입 및 여정 분석 (User Journey)
+- **App Entry**: 앱 로드 시 `?artwork=ID` 파라미터 존재 여부에 따라 `shared_link` 또는 `direct_search`로 구분하여 유입 경로를 추적합니다.
+- **Style Preference**: 스튜디오 모드에서 스타일 변경(`Classic`, `Vintage`, `Vivid`) 시 선택된 스타일 ID를 기록하여 선호도를 분석합니다.
+
+### 7-2. 게시 및 소셜 인터랙션 (Conversion & Social)
+- **Publish Success**: 작품 게시 완료 시 제목과 사용된 스타일 정보를 포함하여 `studio_publish` 이벤트를 기록합니다.
+- **Engagement Metrics**:
+    - **Like**: 작품 상세에서 '좋아요' 활성화 시 기록.
+    - **Download/Remix**: 각 기능 버튼 클릭 시 기록.
+- **Share Platform Insight**:
+    - 공유 상세 메뉴에서 카카오톡, X, 페이스북, 쓰레드, 링크 복사 중 사용자가 최종 선택한 플랫폼을 구분하여 추적합니다.
+
+### 7-3. 데이터 정합성 (Data Integrity)
+- **Centralized Management**: `Analytics Manager`를 통해 일관된 이벤트 명명 규칙(Snake Case)을 적용합니다.
+- **Environment Awareness**: 개발 환경(`VITE_DEV`)에서는 상세 로그를 출력하여 추적 여부를 실시간 검증합니다.
 
 ### 5-0. Responsive Grid (Masonry)
 

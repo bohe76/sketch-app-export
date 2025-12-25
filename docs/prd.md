@@ -162,3 +162,7 @@
     - **Single Page Application (SPA) SEO Optimization**: Vite 기반의 SPA 환경에서 Vercel Serverless Function(`api/seo.js`)을 활용해 개별 작품 상세 페이지마다 제목과 이미지를 동적으로 주입합니다.
     - **Vercel Static Priority Bypass**: `index.html`을 `template.html`로 전환하고 `vercel.json` 리라이트 설정을 통해 정적 파일 서빙 우선순위를 제어함으로써 런타임 메타 데이터 주입을 보장합니다.
     - **Social Media CTR Optimization**: 카카오톡, 트위터, 페이스북 등 주요 SNS 공유 시 작품의 실시간 썸네일과 제목이 노출되도록 Open Graph(OG) 및 Twitter Card 표준을 100% 준수합니다.
+- **Google Analytics Integration & Data Strategy**:
+    - **User Behavior Funnel Analysis**: 진입 경로(`app_entry`)부터 창작(`studio_style_change`), 게시(`studio_publish`), 확산(`interaction_share`)에 이르는 사용자 여정을 데이터로 정밀 추적.
+    - **Social Viral Measurement**: 카카오톡, X, 페이스북, 쓰레드 등 구체적인 채널별 공유 선호도를 분석하여 바이럴 성과를 측정하고 마케팅 예산 및 리소스 배분의 근거로 활용.
+    - **Feature Popularity Insights**: 스타일 모드별 선택 비중 및 인터랙션(좋아요, 리믹스) 수치를 분석하여 사용자 취향에 맞춘 알고리즘 고도화 및 신규 스타일 개발 방향 설정.
