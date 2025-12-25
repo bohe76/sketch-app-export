@@ -3,13 +3,10 @@
     "rewrites": [
         {
             "source": "/",
-            "has": [
-                {
-                    "type": "header",
-                    "key": "user-agent",
-                    "value": ".*(facebookexternalhit|twitterbot|kakaotalk-scrap|kakaobot|slackbot|whatsapp|googlebot|bingbot).*"
-                }
-            ],
+            "destination": "/api/seo"
+        },
+        {
+            "source": "/index.html",
             "destination": "/api/seo"
         },
         {

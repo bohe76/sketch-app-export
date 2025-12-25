@@ -1,6 +1,6 @@
-feat: 소셜 미디어 크롤러(User-Agent) 기반 동적 SEO 라우팅 적용
+debug: SEO 핸들러 강제 실행 및 상세 디버깅 주석 추가
 
-- vercel.json 내 rewrites 설정을 User-Agent 기반으로 수정
-- 카카오톡, 트위터, 페이스북, 구글봇 등 주요 크롤러 감지 시 api/seo 핸들러 실행
-- 일반 사용자는 정적 index.html을 즉시 서빙받도록 우선순위 최적화
-- 기존의 비정상적인 쿼리 파라미터 기반 라우팅 제거
+- vercel.json 내 모든 루트 요청(/, /index.html)을 api/seo로 강제 라우팅하여 정적 파일 우선순위 우회 시도
+- 모든 접속자에 대해 HTML 소스 하단에 [SEO Debug] 주석 노출 (디버깅용)
+- Cache-Control을 no-cache로 설정하여 실시간 디버깅 보장
+- User-Agent 로그 강화

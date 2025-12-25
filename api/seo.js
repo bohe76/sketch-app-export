@@ -8,46 +8,44 @@ export default async function handler(req, res) {
     try {
         const templatePath = join(process.cwd(), 'index.html');
         let html = fs.readFileSync(templatePath, 'utf-8');
-        let debugInfo = `\n<!-- [SEO Debug] Request: ${JSON.stringify(req.query)} -->`;
 
-        // 2. If no artworkId, just serve the plain index.html with debug info
+        // Log all user agents to help identify bots
+        const userAgent = req.headers['user-agent'] || '';
+        console.log(`[SEO] Request from User-Agent: ${userAgent}`);
+
+        let debugInfo = `\n<!-- [SEO Debug] Request Params: ${JSON.stringify(req.query)} -->`;
+        debugInfo += `\n<!-- [SEO Debug] UA: ${userAgent} -->`;
+
+        // Determine if we should attempt metadata injection
+        // Even if no artworkId, we continue so we can see the debug info in the browser
         if (!artworkId) {
-            return res.status(200).set({ 'Content-Type': 'text/html' }).end(html + debugInfo + `\n<!-- [SEO Debug] No artworkId provided. -->`);
+            debugInfo += `\n<!-- [SEO Debug] No artworkId provided, serving base UI. -->`;
+            return res.status(200).set({ 'Content-Type': 'text/html' }).end(html + debugInfo);
         }
 
-        console.log(`[SEO] Debugging request for artwork: ${artworkId}`);
-        debugInfo += `\n<!-- [SEO Debug] Searching for artworkId: ${artworkId} -->`;
-
-        // 3. Fetch artwork data
+        console.log(`[SEO] Searching for artworkId: ${artworkId}`);
         const artwork = await fetchArtworkForSEO(artworkId);
-        debugInfo += `\n<!-- [SEO Debug] Fetch Result: ${artwork ? 'FOUND: ' + artwork.title : 'NOT FOUND'} -->`;
 
         if (artwork) {
-            // 4. Inject metadata using our helper
             html = injectMetadata(html, artwork);
-            debugInfo += `\n<!-- [SEO Debug] Injection successful for: ${artwork.title} -->`;
+            debugInfo += `\n<!-- [SEO Debug] SUCCESS: Injected metadata for ${artwork.title} -->`;
         } else {
-            debugInfo += `\n<!-- [SEO Debug] Serving default HTML because artwork was null. Check Sanity ID and Env Vars. -->`;
+            debugInfo += `\n<!-- [SEO Debug] FAILED: Artwork not found in Sanity. -->`;
         }
 
-        // 5. Serve the modified HTML with prepended debug info
         return res
             .status(200)
             .set({
                 'Content-Type': 'text/html',
-                'Cache-Control': 'public, s-maxage=10, stale-while-revalidate=59' // Reduced cache for debugging
+                'Cache-Control': 'no-cache, no-store, must-revalidate' // Prevent cache while debugging
             })
             .end(html + debugInfo);
 
     } catch (error) {
         console.error('[SEO Handler Error]:', error);
-        try {
-            const templatePath = join(process.cwd(), 'index.html');
-            const html = fs.readFileSync(templatePath, 'utf-8');
-            const errorInfo = `\n<!-- [SEO ERROR] Message: ${error.message} -->\n<!-- [SEO ERROR] Stack: ${error.stack} -->`;
-            return res.status(200).set({ 'Content-Type': 'text/html' }).end(html + errorInfo);
-        } catch (e) {
-            return res.status(500).send('Internal Server Error: ' + e.message);
-        }
+        // Serve basic index.html with error info
+        const templatePath = join(process.cwd(), 'index.html');
+        const html = fs.readFileSync(templatePath, 'utf-8');
+        return res.status(200).set({ 'Content-Type': 'text/html' }).end(html + `\n<!-- [SEO ERROR] ${error.message} -->`);
     }
 }
