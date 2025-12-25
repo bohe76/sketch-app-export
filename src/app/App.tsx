@@ -56,9 +56,7 @@ const App = () => {
 
     // Track Entry
     useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        const artworkId = params.get('artwork');
-        analytics.trackEntry(artworkId);
+        analytics.init();
     }, []);
 
     // Initialize Kakao SDK globally

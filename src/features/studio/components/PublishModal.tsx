@@ -4,6 +4,7 @@ import { usePublish } from '@/features/studio/api/publish';
 import { useSketchStore } from '@/features/sketch/model/store';
 import { useToastStore } from '@/shared/model/toastStore';
 import { useUIStore } from '@/shared/model/uiStore';
+import { analytics } from '@/shared/libs/analytics';
 
 export const PublishModal: React.FC = () => {
     const { isOpen, canvas, uploadPromise, closePublishModal } = usePublishModalStore();
@@ -70,6 +71,9 @@ export const PublishModal: React.FC = () => {
 
             // 3. Final Lean Publish (Document creation only)
             await finalizePublish(sketchId, sourceId, title.trim(), options);
+
+            // Track GA
+            analytics.trackPublish(title.trim(), options.mode);
 
             hideToast();
             closePublishModal();

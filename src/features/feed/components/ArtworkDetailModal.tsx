@@ -17,6 +17,7 @@ import { useToastStore } from '@/shared/model/toastStore';
 import { useModalStore } from '@/shared/model/modalStore';
 import { useShareStore } from '@/shared/model/shareStore';
 import { useAuthStore } from '@/features/auth/model/store';
+import { analytics } from '@/shared/libs/analytics';
 
 interface ArtworkDetailModalProps {
     artwork: Artwork;
@@ -86,11 +87,19 @@ export const ArtworkDetailModal: React.FC<ArtworkDetailModalProps> = ({ artwork:
 
         // High-performance background sync
         await syncLike(initialArtwork._id, currentUserId);
+
+        // Track GA (Only if it's becoming liked, to avoid double counting unlikes as interaction or label clearly)
+        if (!artwork.isLiked) {
+            analytics.trackLike(initialArtwork._id);
+        }
     };
 
     const handleDownload = async () => {
         // High-performance background sync (No await)
         syncMetric(initialArtwork._id, 'download');
+
+        // Track GA
+        analytics.trackDownload(initialArtwork._id);
 
         try {
             const response = await fetch(artwork.imageUrl);
@@ -156,6 +165,10 @@ export const ArtworkDetailModal: React.FC<ArtworkDetailModalProps> = ({ artwork:
     const handleRemixClick = async () => {
         // High-performance background sync (No await)
         syncMetric(initialArtwork._id, 'remix');
+
+        // Track GA
+        analytics.trackRemix(initialArtwork._id);
+
         onRemix(artwork);
     };
 
