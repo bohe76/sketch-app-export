@@ -1,3 +1,11 @@
+---
+title: Vercel 동적 SEO 구현 및 스타일 파라미터 표준화
+date: 2025-12-25
+status: resolved
+priority: high
+author: Antigravity
+---
+
 # Issue Resolved: SEO & Style Synchronization
 
 ## 1. Issue Definition
