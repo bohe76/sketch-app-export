@@ -1,5 +1,5 @@
-fix: middleware.ts에서 Next.js 의존성 제거 및 표준 웹 API 적용
+feat: artwork 파라미터 존재 시 모든 요청(사람 포함)을 SEO 핸들러로 라우팅
 
-- 'next/server' 의존성 제거 (Vite 프로젝트 배포 오류 해결)
-- 표준 Request/Response API 및 Vercel 전용 헤더(x-middleware-rewrite) 사용
-- 린트 및 로컬 빌드 검증 완료
+- 미들웨어에서 봇 감지 조건을 제거하여 브라우저 직접 접속 시에도 동적 HTML 소스 제공
+- 불필요한 상수 정리 및 코드 최적화
+- 린트 및 빌드 검증 완료

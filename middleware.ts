@@ -16,27 +16,15 @@ export const config = {
     ],
 };
 
-const BOT_USER_AGENTS = [
-    'facebookexternalhit',
-    'twitterbot',
-    'kakaotalk-scrap',
-    'kakaobot',
-    'slackbot',
-    'whatsapp',
-    'googlebot',
-    'bingbot',
-];
 
 export function middleware(req: Request) {
     const url = new URL(req.url);
     const userAgent = req.headers.get('user-agent')?.toLowerCase() || '';
     const artworkId = url.searchParams.get('artwork');
 
-    // If it's a social bot AND there's an artwork parameter, route to our SEO handler
-    const isBot = BOT_USER_AGENTS.some((bot) => userAgent.includes(bot));
-
-    if (isBot && artworkId) {
-        console.log(`[Middleware] Bot detected: ${userAgent}. Rewriting to SEO handler for artwork: ${artworkId}`);
+    // Route any request with an artwork parameter to our SEO handler for dynamic HTML
+    if (artworkId) {
+        console.log(`[Middleware] Artwork detected: ${artworkId}. Rewriting for UA: ${userAgent}`);
 
         // Rewrite logic for Vercel Edge Middleware without Next.js
         const rewriteUrl = new URL(url.toString());
@@ -49,7 +37,7 @@ export function middleware(req: Request) {
         });
     }
 
-    // Regular user or no artwork parameter: Continue to static index.html or next handler
+    // Regular user without artwork parameter: Continue to static index.html or next handler
     return new Response(null, {
         headers: {
             'x-middleware-next': '1',
