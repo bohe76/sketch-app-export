@@ -2,14 +2,6 @@
     "version": 2,
     "rewrites": [
         {
-            "source": "/",
-            "destination": "/api/seo"
-        },
-        {
-            "source": "/index.html",
-            "destination": "/api/seo"
-        },
-        {
             "source": "/api/(.*)",
             "destination": "/api/$1"
         },
