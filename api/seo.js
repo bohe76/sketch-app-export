@@ -17,19 +17,28 @@ export default async function handler(req, res) {
         console.log(`[SEO] Active Template Path: ${templatePath}`);
         let html = fs.readFileSync(templatePath, 'utf-8');
 
-        // Identify Requester
+        // Identify Requester and Environment
         const userAgent = req.headers['user-agent'] || '';
+        const projectId = process.env.VITE_SANITY_PROJECT_ID;
+        const envName = process.env.VITE_SANITY_DATASET || 'production';
+
         console.log(`[SEO] Request: ID=${artworkId || 'none'}, UA=${userAgent}`);
 
         let debugInfo = `\n<!-- [SEO Debug] Request: ${JSON.stringify(req.query)} -->`;
+        debugInfo += `\n<!-- [SEO Debug] Env Check: ProjectID=${projectId ? projectId.substring(0, 4) + '...' : 'MISSING'}, Dataset=${envName} -->`;
 
         if (artworkId) {
-            const artwork = await fetchArtworkForSEO(artworkId);
-            if (artwork) {
-                html = injectMetadata(html, artwork);
-                debugInfo += `\n<!-- [SEO Debug] Injection: SUCCESS for ${artwork.title} -->`;
-            } else {
-                debugInfo += `\n<!-- [SEO Debug] Injection: FAILED (Artwork not found) -->`;
+            try {
+                const artwork = await fetchArtworkForSEO(artworkId);
+                if (artwork) {
+                    html = injectMetadata(html, artwork);
+                    debugInfo += `\n<!-- [SEO Debug] Injection: SUCCESS for "${artwork.title}" -->`;
+                } else {
+                    debugInfo += `\n<!-- [SEO Debug] Injection: FAILED (Sanity returned null for ID: ${artworkId}) -->`;
+                }
+            } catch (fetchError) {
+                debugInfo += `\n<!-- [SEO Debug] Fetch Error: ${fetchError.message} -->`;
+                console.error('[SEO Fetch Error]:', fetchError);
             }
         }
 
