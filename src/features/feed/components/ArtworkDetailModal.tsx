@@ -111,12 +111,14 @@ export const ArtworkDetailModal: React.FC<ArtworkDetailModalProps> = ({ artwork:
 
     const { openShareModal } = useShareStore();
 
-    const handleShare = async () => {
-        // High-performance background sync (No await)
-        syncMetric(initialArtwork._id, 'share');
-
-        // Open our beautiful custom Share Sheet Instantly
+    const handleShare = () => {
+        // 1. Open Modal INSTANTLY (Highest Priority)
         openShareModal(artwork);
+
+        // 2. Defer heavy state updates (metric sync) to next tick to avoid blocking UI
+        setTimeout(() => {
+            syncMetric(initialArtwork._id, 'share');
+        }, 0);
     };
 
     const handleDelete = async () => {

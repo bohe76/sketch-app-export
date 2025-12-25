@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { XMarkIcon, ClipboardDocumentIcon } from '@heroicons/react/24/outline';
 import { useShareStore } from '../model/shareStore';
@@ -63,25 +63,6 @@ export const ShareModal: React.FC = () => {
     const { isOpen, artwork, closeShareModal } = useShareStore();
     const showToast = useToastStore(state => state.showToast);
     const updateArtwork = useFeedStore(state => state.updateArtwork);
-
-    // Initialize Kakao SDK
-    useEffect(() => {
-        const kakaoKey = import.meta.env.VITE_KAKAO_JS_KEY;
-        if (!kakaoKey) return;
-
-        if (!window.Kakao) {
-            const script = document.createElement('script');
-            script.src = 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.0/kakao.min.js';
-            script.onload = () => {
-                if (!window.Kakao.isInitialized()) {
-                    window.Kakao.init(kakaoKey);
-                }
-            };
-            document.head.appendChild(script);
-        } else if (!window.Kakao.isInitialized()) {
-            window.Kakao.init(kakaoKey);
-        }
-    }, []);
 
     if (!isOpen || !artwork) return null;
 

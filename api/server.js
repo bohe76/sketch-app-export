@@ -9,6 +9,9 @@ import { fetchArtworkForSEO, injectMetadata } from './utils/seo_helper.js';
 const app = express();
 const PORT = 3000;
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 app.use(cors()); // Enable CORS for all routes (or restrict if needed)
 app.use((req, res, next) => {
     console.log(`[HTTP] ${new Date().toISOString()} ${req.method} ${req.url}`);
@@ -34,8 +37,13 @@ app.get('/', async (req, res, next) => {
                 // Inject metadata
                 html = injectMetadata(html, artwork);
 
+                // Add debug comment to verify execution
+                html += `\n<!-- SEO Handler Executed: Injected Metadata for ${artwork.title} (Local) -->`;
+
                 console.log(`[SEO] Serving dynamic HTML for: ${artwork.title}`);
                 return res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
+            } else {
+                console.log(`[SEO] Artwork not found for ID: ${artworkId}`);
             }
         } catch (error) {
             console.error('[SEO Error]:', error);

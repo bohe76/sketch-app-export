@@ -21,6 +21,12 @@ import { useSketchFlow } from '@/features/sketch/hooks/useSketchFlow';
 
 import { ShareModal } from '@/shared/components/ShareModal';
 
+declare global {
+    interface Window {
+        Kakao: any;
+    }
+}
+
 const App = () => {
     const { sourceImage, options } = useSketchStore();
     const { user, isLoading: isAuthLoading } = useAuthStore();
@@ -45,6 +51,25 @@ const App = () => {
     useEffect(() => {
         const unsubscribe = initAuth();
         return () => unsubscribe();
+    }, []);
+
+    // Initialize Kakao SDK globally
+    useEffect(() => {
+        const kakaoKey = import.meta.env.VITE_KAKAO_JS_KEY;
+        if (!kakaoKey) return;
+
+        if (!window.Kakao) {
+            const script = document.createElement('script');
+            script.src = 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.0/kakao.min.js';
+            script.onload = () => {
+                if (!window.Kakao.isInitialized()) {
+                    window.Kakao.init(kakaoKey);
+                }
+            };
+            document.head.appendChild(script);
+        } else if (!window.Kakao.isInitialized()) {
+            window.Kakao.init(kakaoKey);
+        }
     }, []);
 
     // Handle Deep Links (?artwork=ID)

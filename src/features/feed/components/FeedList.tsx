@@ -88,14 +88,16 @@ export const FeedList: React.FC<FeedListProps> = ({ filterAuthorId, sort = 'late
         }
     };
 
-    const handleShare = async (e: React.MouseEvent, art: Artwork) => {
+    const handleShare = (e: React.MouseEvent, art: Artwork) => {
         e.stopPropagation();
 
-        // Instant response using store sync
-        await syncMetric(art._id, 'share');
-
-        // Open our beautiful custom Share Sheet
+        // 1. Open Modal INSTANTLY
         openShareModal(art);
+
+        // 2. Background sync (No await)
+        setTimeout(() => {
+            syncMetric(art._id, 'share');
+        }, 0);
     };
 
     const validArtworks = artworks.filter(art => art && art._id);

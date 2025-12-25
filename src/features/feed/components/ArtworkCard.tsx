@@ -168,7 +168,12 @@ export const ArtworkCard: React.FC<ArtworkCardProps> = ({
                             <ArrowDownTrayIcon className="w-5 h-5" />
                         </button>
                         <button
-                            onClick={(e) => onShare(e, art)}
+                            onClick={(e) => {
+                                // Option 2: Force mouse-out effect immediately to stop heavy engine
+                                setIsHovered(false);
+                                stopSketching();
+                                onShare(e, art);
+                            }}
                             className="bg-white/80 backdrop-blur-md w-8 h-8 flex items-center justify-center rounded-full shadow-soft text-zinc-600 hover:text-zinc-900 transition-all active:scale-90"
                         >
                             <ShareIcon className="w-5 h-5" />
