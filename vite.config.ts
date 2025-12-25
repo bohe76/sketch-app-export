@@ -20,6 +20,13 @@ export default defineConfig({
             ],
         },
     },
+    build: {
+        rollupOptions: {
+            input: {
+                main: path.resolve(__dirname, 'template.html'),
+            },
+        },
+    },
     server: {
         port: 5173,
         proxy: {

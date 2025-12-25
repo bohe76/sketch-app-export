@@ -1,6 +1,7 @@
-feat: Vercel Middleware에서 API fetch를 통한 직접 HTML 서빙 적용
+feat: VERCEL 정적 파일 우선순위 우회를 위한 구조적 SEO 개편
 
-- Rewrite 방식의 정적 파일 우선순위 문제를 해결하기 위해 직접 fetch 방식 도입
-- artwork 파라미터 존재 시 /api/seo 핸들러의 결과물을 미들웨어에서 직접 응답으로 반환
-- 브라우저 소스 보기 및 봇 크롤링에서 100% 동적 메타 데이터 보장
-- 린트 및 빌드 검증 완료
+- index.html을 template.html로 변경하여 Vercel의 Static Shadowing 방지
+- Vite 빌드 설정을 수정하여 dist/template.html을 생성하도록 구성
+- vercel.json에서 모든 루트 요청을 api/seo 핸들러로 강제 라우팅
+- api/seo 핸들러가 빌드된 template.html을 읽어 동적으로 메타 데이터를 주입하도록 개선
+- middleware.ts 제거 (더 이상 필요하지 않음)

@@ -6,7 +6,12 @@ export default async function handler(req, res) {
     const { artwork: artworkId } = req.query;
 
     try {
-        const templatePath = join(process.cwd(), 'index.html');
+        let templatePath = join(process.cwd(), 'dist', 'template.html');
+        if (!fs.existsSync(templatePath)) {
+            templatePath = join(process.cwd(), 'template.html');
+        }
+
+        console.log(`[SEO] Reading template from: ${templatePath}`);
         let html = fs.readFileSync(templatePath, 'utf-8');
 
         // Log all user agents to help identify bots

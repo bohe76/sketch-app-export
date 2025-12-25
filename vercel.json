@@ -1,13 +1,30 @@
 {
     "version": 2,
+    "functions": {
+        "api/seo.js": {
+            "includeFiles": "dist/template.html"
+        }
+    },
     "rewrites": [
         {
             "source": "/api/(.*)",
             "destination": "/api/$1"
         },
         {
+            "source": "/assets/(.*)",
+            "destination": "/assets/$1"
+        },
+        {
+            "source": "/favicon.png",
+            "destination": "/favicon.png"
+        },
+        {
+            "source": "/og-image.png",
+            "destination": "/og-image.png"
+        },
+        {
             "source": "/(.*)",
-            "destination": "/index.html"
+            "destination": "/api/seo"
         }
     ]
 }
