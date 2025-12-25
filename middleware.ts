@@ -1,20 +1,17 @@
-import { NextRequest, NextResponse } from 'next/server';
-
 /**
  * Vercel Edge Middleware: Intercepts social bot requests and rewrites to SEO handler.
- * This runs before static file serving, allowing us to bypass the index.html priority for bots.
+ * This version uses standard Web APIs to avoid Next.js dependencies.
  */
 export const config = {
     matcher: [
         /*
          * Match all request paths except for the ones starting with:
          * - api (API routes)
-         * - _next/static (static files)
-         * - _next/image (image optimization files)
          * - favicon.ico (favicon file)
          * - assets (Vite assets)
+         * - Static files with extensions
          */
-        '/((?!api|_next/static|_next/image|favicon.ico|assets|.*\\..*).*)',
+        '/((?!api|favicon.ico|assets|.*\\..*).*)',
         '/',
     ],
 };
@@ -30,8 +27,8 @@ const BOT_USER_AGENTS = [
     'bingbot',
 ];
 
-export function middleware(req: NextRequest) {
-    const url = req.nextUrl;
+export function middleware(req: Request) {
+    const url = new URL(req.url);
     const userAgent = req.headers.get('user-agent')?.toLowerCase() || '';
     const artworkId = url.searchParams.get('artwork');
 
@@ -41,11 +38,21 @@ export function middleware(req: NextRequest) {
     if (isBot && artworkId) {
         console.log(`[Middleware] Bot detected: ${userAgent}. Rewriting to SEO handler for artwork: ${artworkId}`);
 
-        // Redirect to the API handler but keep the original URL in the address bar
-        url.pathname = '/api/seo';
-        return NextResponse.rewrite(url);
+        // Rewrite logic for Vercel Edge Middleware without Next.js
+        const rewriteUrl = new URL(url.toString());
+        rewriteUrl.pathname = '/api/seo';
+
+        return new Response(null, {
+            headers: {
+                'x-middleware-rewrite': rewriteUrl.toString(),
+            },
+        });
     }
 
     // Regular user or no artwork parameter: Continue to static index.html or next handler
-    return NextResponse.next();
+    return new Response(null, {
+        headers: {
+            'x-middleware-next': '1',
+        },
+    });
 }

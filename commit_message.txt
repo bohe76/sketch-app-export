@@ -1,6 +1,5 @@
-feat: Vercel Edge Middleware를 이용한 동적 SEO(OG) 주입 솔루션 적용
+fix: middleware.ts에서 Next.js 의존성 제거 및 표준 웹 API 적용
 
-- 정적 index.html 우선순위 문제를 해결하기 위해 Vercel Middleware 도입
-- 소셜 미디어 크롤러(Bot) 감지 시 /api/seo 핸들러로 리라이트 로직 구현
-- vercel.json 설정을 표준 SPA 규격으로 단순화 및 정돈
-- 린트 검사(Error 0) 및 로컬 빌드 검증 완료
+- 'next/server' 의존성 제거 (Vite 프로젝트 배포 오류 해결)
+- 표준 Request/Response API 및 Vercel 전용 헤더(x-middleware-rewrite) 사용
+- 린트 및 로컬 빌드 검증 완료
