@@ -11,6 +11,7 @@ import {
     SparklesIcon
 } from '@heroicons/react/24/outline';
 import { HexColorPicker } from 'react-colorful';
+import { analytics } from '@/shared/libs/analytics';
 
 interface ControlPanelProps {
     isOpen?: boolean;
@@ -123,6 +124,9 @@ export const ControlPanel: React.FC<ControlPanelProps> = () => {
 
         // Immediate UI Update (for smooth CSS transitions)
         setActiveStyle(styleId);
+
+        // Track GA
+        analytics.trackStyleChange(styleId);
 
         if (!style) return;
 

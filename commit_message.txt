@@ -1,8 +1,7 @@
-feat: Vercel SEO "Golden Standard" 구조 적용 (최종)
+feat: Google Analytics 통합 (태그 추가, 진입 경로, 공유 플랫폼 및 스타일 모드 추적)
 
-- vercel.json: includeFiles 설정으로 서버리스 함수 내 dist/template.html 가시성 확보
-- vercel.json: (?!.*\\.) 정규식을 사용하여 에셋 제외 및 페이지만 SEO 핸들러 라우팅
-- api/seo.js: path.resolve와 process.cwd()를 사용한 견고한 경로 처리
-- api/seo.js: Edge Caching(Cache-Control) 적용으로 성능 최적화
-- vite.config.ts: 빌드 시 template.html을 엔트리로 유지하도록 빌드 옵션 고정
-- 린트 및 로컬 빌드 검증 완료
+- template.html에 G-48JCX4VZXD 태그 삽입
+- 분석 이벤트를 중앙 관리하는 src/shared/libs/analytics.ts 생성
+- App.tsx에서 앱 진입 경로(공유 링크 vs 직접 진입) 추적 적용
+- ShareModal.tsx에서 공유 플랫폼별(SNS 4종, 링크복사) 추적 적용
+- ControlPanel.tsx에서 스타일 모드(Classic, Vintage, Vivid) 변경 추적 적용

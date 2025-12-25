@@ -18,6 +18,7 @@ import { useLoginModalStore } from '@/features/auth/model/loginModalStore';
 import { PublishModal } from '@/features/studio/components/PublishModal';
 import { Toast } from '@/shared/components/Toast';
 import { useSketchFlow } from '@/features/sketch/hooks/useSketchFlow';
+import { analytics } from '@/shared/libs/analytics';
 
 import { ShareModal } from '@/shared/components/ShareModal';
 
@@ -51,6 +52,13 @@ const App = () => {
     useEffect(() => {
         const unsubscribe = initAuth();
         return () => unsubscribe();
+    }, []);
+
+    // Track Entry
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const artworkId = params.get('artwork');
+        analytics.trackEntry(artworkId);
     }, []);
 
     // Initialize Kakao SDK globally

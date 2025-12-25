@@ -5,6 +5,7 @@ import { useShareStore } from '../model/shareStore';
 import { useToastStore } from '@/shared/model/toastStore';
 import { trackMetric } from '@/features/feed/api/feed';
 import { useFeedStore } from '@/features/feed/model/feedStore';
+import { analytics, ANALYTICS_VALUES } from '../libs/analytics';
 
 const SOCIAL_PLATFORMS = [
     {
@@ -74,6 +75,9 @@ export const ShareModal: React.FC = () => {
             await navigator.clipboard.writeText(shareUrl);
             showToast("Link copied to clipboard", "success");
 
+            // Track GA
+            analytics.trackShare(ANALYTICS_VALUES.SHARE_PLATFORM.LINK_COPY, artwork._id);
+
             // Track metric
             const result = await trackMetric(artwork._id, 'share');
             if (result.success) {
@@ -86,6 +90,9 @@ export const ShareModal: React.FC = () => {
     };
 
     const handlePlatformShare = async (platform: typeof SOCIAL_PLATFORMS[0]) => {
+        // Track GA
+        analytics.trackShare(platform.id, artwork._id);
+
         // Track metric
         try {
             const result = await trackMetric(artwork._id, 'share');
