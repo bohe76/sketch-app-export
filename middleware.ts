@@ -17,24 +17,42 @@ export const config = {
 };
 
 
-export function middleware(req: Request) {
+export async function middleware(req: Request) {
     const url = new URL(req.url);
     const userAgent = req.headers.get('user-agent')?.toLowerCase() || '';
     const artworkId = url.searchParams.get('artwork');
 
     // Route any request with an artwork parameter to our SEO handler for dynamic HTML
     if (artworkId) {
-        console.log(`[Middleware] Artwork detected: ${artworkId}. Rewriting for UA: ${userAgent}`);
+        console.log(`[Middleware] Artwork detected: ${artworkId}. Fetching from SEO handler...`);
 
-        // Rewrite logic for Vercel Edge Middleware without Next.js
-        const rewriteUrl = new URL(url.toString());
-        rewriteUrl.pathname = '/api/seo';
+        // Create the internal URL for the SEO handler
+        const apiTarget = new URL('/api/seo', url.origin);
+        apiTarget.searchParams.set('artwork', artworkId);
 
-        return new Response(null, {
-            headers: {
-                'x-middleware-rewrite': rewriteUrl.toString(),
-            },
-        });
+        try {
+            // Directly fetch the rendered HTML from the SEO handler
+            const response = await fetch(apiTarget.toString(), {
+                headers: {
+                    'user-agent': userAgent,
+                    'accept': 'text/html'
+                }
+            });
+
+            if (response.ok) {
+                const html = await response.text();
+                // Return the dynamically generated HTML directly to the browser
+                return new Response(html, {
+                    status: 200,
+                    headers: {
+                        'content-type': 'text/html; charset=utf-8',
+                        'x-seo-status': 'fetched-from-api'
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('[Middleware Fetch Error]:', error);
+        }
     }
 
     // Regular user without artwork parameter: Continue to static index.html or next handler
