@@ -100,7 +100,9 @@ Vite 개발 서버와 Express API 서버의 충돌을 방지하기 위한 통합
 - **Unified Entry**: `api/server.js`에서 Express를 실행하고, Vite를 미들웨어로 주입합니다.
 - **Single Port**: 모든 요청(API, Static, Frontend)은 단일 포트(3000)에서 처리되어 CORS 설정을 단순화합니다.
 - **API Handling**: `/api/*` 요청은 로컬 Express 핸들러(`api/*.js`)가 처리하고, 그 외 요청은 Vite가 SPA로 서빙합니다.
-- **Dynamic SEO Injection**: 소셜 봇 대응을 위해 루트 경로(`/`) 요청 시 `?artwork=ID` 파라미터를 감지하면, 서버 단에서 Sanity 데이터를 조회하여 `index.html`의 메타 태그(OG, Twitter)를 실시간으로 교체하여 응답합니다.
+- **Dynamic SEO Injection (Serverless)**: 
+    - **Local**: `api/server.js` 미들웨어가 SEO 태그를 주입.
+    - **Production (Vercel)**: `vercel.json`의 Rewrites 설정을 통해 루트(`/`) 요청을 `api/seo.js` 서버리스 함수로 라우팅하여, 정적 호스팅 환경에서도 동적 메타 태그(OGP)를 완벽하게 지원합니다.
 - **Environment Aware**: 모든 API 엔드포인트는 `VITE_SANITY_DATASET` 환경 변수를 참조하여 `development`와 `production` 환경 간의 데이터 정합성을 유지합니다.
 
 ---

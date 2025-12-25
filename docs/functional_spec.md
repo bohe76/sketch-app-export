@@ -63,6 +63,7 @@
   - **가로 썸네일 뷰**: 하단 가로 스크롤 및 상단 텍스트 정보 배치를 통해 캔버스 가림 현상 해결.
   - **Zero Delay**: 스타일 변경 시 엔진을 즉시 업데이트하여 빠릿한 반응성 제공 (인위적 딜레이 제거).
   - **Smart Overlay**: `Vintage` 선택 시 틴트 피커가 독립 패널로 오버레이되며, `Classic` 및 `Vivid` 선택 시 패널이 자동 닫힘.
+  - **Style Synchronization (Vintage)**: `Vintage` 모드는 `Momentum`과 `Alpha` 등 드로잉 질감 파라미터를 `Classic`과 동일하게 동기화하여 일관된 펜 터치를 제공하되, 독자적인 `Tint Color` 기능을 통해 감성적인 차별화를 둡니다.
 
 ### 2-3. 수정 및 리믹스 (Edit/Remix)
 
@@ -85,7 +86,10 @@
 
 - **Deep Linking**: `?artwork=ID` 파라미터 감지 시 모달 즉시 실행.
 - **Tooltips**: 모든 액션 버튼에 전역 공통 스타일이 적용된 대문자(UPPERCASE) 툴팁 적용.
-- **Dynamic SEO Preview**: 특정 작품 공유 시 (`/?artwork=ID`) 소셜 봇에게 해당 작품의 제목과 썸네일이 포함된 동적 메타 태그를 제공하여 풍부한 미리보기(Rich Preview)를 구현합니다.
+- **Dynamic SEO Preview**: 
+    - **Architecture**: Vercel의 Serverless Function(`api/seo.js`)을 활용하여 루트(`/?artwork=ID`) 접속 시 실시간으로 HTML 메타 태그를 동적 주입합니다.
+    - **Metadata**: 카카오톡, 트위터 등 SNS 공유 시 작품의 **제목**과 **이미지**가 카드 형태로 완벽하게 노출되도록 Open Graph(OG) 및 Twitter Card 표준을 준수합니다.
+    - **Description Strategy**: "누가 만들었는지"보다 **"작품의 제목"**을 최우선으로 노출하여 클릭률(CTR)과 사용자 흥미를 극대화합니다.
 
 ---
 

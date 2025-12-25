@@ -86,7 +86,7 @@ export const ShareModal: React.FC = () => {
     if (!isOpen || !artwork) return null;
 
     const shareUrl = `${window.location.origin}/?artwork=${artwork._id}`;
-    const shareText = `Check out this artwork by @${artwork.authorName} on Sketchrang!`;
+    const shareText = `"${artwork.title}" - Discover this amazing hand-drawn art by @${artwork.authorName} on Sketchrang!`;
 
     const handleCopyLink = async () => {
         try {

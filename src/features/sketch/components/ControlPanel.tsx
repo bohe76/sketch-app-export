@@ -19,7 +19,7 @@ interface ControlPanelProps {
 
 const STYLES = [
     { id: 'classic', name: 'Classic', mode: 'bw', alpha: 0.1, momentum: 0.5, desc: 'Graphite Fine Art' },
-    { id: 'vintage', name: 'Vintage', mode: 'sepia', alpha: 0.2, momentum: 0.3, desc: 'Nostalgic Film' },
+    { id: 'vintage', name: 'Vintage', mode: 'sepia', alpha: 0.1, momentum: 0.5, desc: 'Nostalgic Film' },
     { id: 'vivid', name: 'Vivid', mode: 'color', alpha: 0.3, momentum: 0.7, desc: 'Vibrant Ink' }
 ] as const;
 

@@ -63,6 +63,24 @@ author: Antigravity
 - **Standard Look**: `momentum`: 0.5 / `alpha`: 0.1 / `lineWidth`: 0.5 / `threshold`: 640
 - **Life Cycle**: `minLife`: 100 / `maxLife`: 300
 
+### 5.3 Style Specific Golden Values
+각 스타일 모드는 고유한 감성을 유지하기 위해 다음의 불변 파라미터 조합을 준수해야 합니다.
+
+**1. Classic (Standard)**
+- `momentum`: 0.5 (표준 텍스처)
+- `alpha`: 0.1 (표준 펜 농도)
+- `mode`: 'bw'
+
+**2. Vintage (Nostalgic Film)**
+- `momentum`: 0.5 (**Classic과 동일해야 함**)
+- `alpha`: 0.1 (**Classic과 동일해야 함**)
+- `mode`: 'sepia' (Tint 기능 활성)
+
+**3. Vivid (Vibrant Ink)**
+- `momentum`: 0.7 (더 직선적이고 거친 텍스처)
+- `alpha`: 0.3 (더 진하고 선명한 잉크)
+- `mode`: 'color'
+
 ---
 
 ## 6. Safe Analysis Policy (안정성 수칙)
