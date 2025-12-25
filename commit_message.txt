@@ -1,4 +1,6 @@
-fix: Vercel 라우팅 우선순위 조정 (artwork 파라미터 시 SEO 핸들러 강제 실행)
+feat: 소셜 미디어 크롤러(User-Agent) 기반 동적 SEO 라우팅 적용
 
-- vercel.json 내 rewrites 설정에 'has: query: artwork' 조건을 추가하여 정적 파일보다 api/seo 함수가 우선 실행되도록 수정
-- index.html 직접 요청 시에도 파라미터가 있으면 SEO 핸들러로 라우팅
+- vercel.json 내 rewrites 설정을 User-Agent 기반으로 수정
+- 카카오톡, 트위터, 페이스북, 구글봇 등 주요 크롤러 감지 시 api/seo 핸들러 실행
+- 일반 사용자는 정적 index.html을 즉시 서빙받도록 우선순위 최적화
+- 기존의 비정상적인 쿼리 파라미터 기반 라우팅 제거

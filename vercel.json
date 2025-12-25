@@ -2,11 +2,12 @@
     "version": 2,
     "rewrites": [
         {
-            "source": "/(index\\.html)?",
+            "source": "/",
             "has": [
                 {
-                    "type": "query",
-                    "key": "artwork"
+                    "type": "header",
+                    "key": "user-agent",
+                    "value": ".*(facebookexternalhit|twitterbot|kakaotalk-scrap|kakaobot|slackbot|whatsapp|googlebot|bingbot).*"
                 }
             ],
             "destination": "/api/seo"
