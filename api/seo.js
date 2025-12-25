@@ -33,7 +33,13 @@ export default async function handler(req, res) {
         }
 
         // 5. Serve the modified HTML
-        return res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
+        return res
+            .status(200)
+            .set({
+                'Content-Type': 'text/html',
+                'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600'
+            })
+            .end(html);
 
     } catch (error) {
         console.error('[SEO Handler Error]:', error);

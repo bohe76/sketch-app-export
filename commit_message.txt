@@ -1,6 +1,6 @@
-docs: 핵심 가이드라인 문서 보강 및 다국어 지원 이슈 추가
+fix: SNS 공유 시 동적 메타 데이터(OG) 노출 버그 수정
 
-- PRD, 아키텍처, 디자인 시스템 등에 프로젝트 안정성 및 AI 작업 원칙(레이아웃 보존, 통합 서버 운영 등) 보강
-- 다국어 지원(i18n) 기능을 위한 새로운 기능 이슈(001-multi-language-support.md) 추가
-- 이슈 관리 문서 내 환경 변수 유실 및 마이그레이션 실패 시의 복구 절차 명문화
-- 중복된 이슈 번호 정리 (011 -> 012)
+- fetchArtworkForSEO 쿼리에 _id 필드 추가 (og:url 생성 오류 해결)
+- injectMetadata의 HTML 태그 주입 로직을 정규식 매칭 방식에서 전체 삭제 후 재삽입 방식으로 개선 (줄바꿈/공백 이슈 대응)
+- api/seo.js에 Cache-Control 헤더 추가 (크롤러 최신 정보 반영 유도)
+- Twitter Card(summary_large_image) 태그 명시적 추가
