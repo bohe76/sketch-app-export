@@ -1,5 +1,4 @@
-debug: SNS 공유 메타데이터 노출 분석을 위한 디버깅 코드 추가
+fix: Vercel 라우팅 우선순위 조정 (artwork 파라미터 시 SEO 핸들러 강제 실행)
 
-- Vercel 프로덕션 환경에서 메타데이터 주입 실패 원인을 파악하기 위해 HTML 주석으로 런타임 정보 주입
-- Sanity 클라이언트 초기화 상태 확인을 위한 서버 로그 강화
-- 쿼리 및 태그 교체 로직 정교화
+- vercel.json 내 rewrites 설정에 'has: query: artwork' 조건을 추가하여 정적 파일보다 api/seo 함수가 우선 실행되도록 수정
+- index.html 직접 요청 시에도 파라미터가 있으면 SEO 핸들러로 라우팅

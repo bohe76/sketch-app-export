@@ -2,12 +2,18 @@
     "version": 2,
     "rewrites": [
         {
-            "source": "/api/(.*)",
-            "destination": "/api/$1"
+            "source": "/(index\\.html)?",
+            "has": [
+                {
+                    "type": "query",
+                    "key": "artwork"
+                }
+            ],
+            "destination": "/api/seo"
         },
         {
-            "source": "/",
-            "destination": "/api/seo"
+            "source": "/api/(.*)",
+            "destination": "/api/$1"
         },
         {
             "source": "/(.*)",
