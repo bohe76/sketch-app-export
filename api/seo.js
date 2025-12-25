@@ -33,13 +33,10 @@ export default async function handler(req, res) {
             }
         }
 
-        return res
-            .status(200)
-            .set({
-                'Content-Type': 'text/html; charset=utf-8',
-                'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400' // Edge Caching
-            })
-            .end(html + debugInfo);
+        res.status(200);
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
+        return res.end(html + debugInfo);
 
     } catch (error) {
         console.error('[SEO Fatal Error]:', error);
@@ -47,7 +44,9 @@ export default async function handler(req, res) {
         try {
             const fallbackPath = resolve(process.cwd(), 'template.html');
             const html = fs.readFileSync(fallbackPath, 'utf-8');
-            return res.status(200).set({ 'Content-Type': 'text/html' }).end(html + `\n<!-- [SEO ERROR] ${error.message} -->`);
+            res.status(200);
+            res.setHeader('Content-Type', 'text/html; charset=utf-8');
+            return res.end(html + `\n<!-- [SEO ERROR] ${error.message} -->`);
         } catch (e) {
             return res.status(500).send('Internal Server Error: ' + e.message);
         }
