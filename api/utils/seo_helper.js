@@ -49,15 +49,15 @@ export function injectMetadata(html, artwork) {
     const artworkUrl = `${siteUrl}/?artwork=${artwork._id || ''}`;
 
     return html
-        .replace(/<title>[\s\S]*?<\/title>/g, `<title>${title}</title>`)
-        .replace(/<meta name="title" content="[\s\S]*?" \/>/g, `<meta name="title" content="${title}" />`)
-        .replace(/<meta name="description" content="[\s\S]*?" \/>/g, `<meta name="description" content="${description}" />`)
-        .replace(/<meta property="og:title" content="[\s\S]*?" \/>/g, `<meta property="og:title" content="${title}" />`)
-        .replace(/<meta property="og:description" content="[\s\S]*?" \/>/g, `<meta property="og:description" content="${description}" />`)
-        .replace(/<meta property="og:image" content="[\s\S]*?" \/>/g, `<meta property="og:image" content="${imageUrl}" />`)
-        .replace(/<meta property="og:url" content="[\s\S]*?" \/>/g, `<meta property="og:url" content="${artworkUrl}" />`)
-        .replace(/<meta property="twitter:title" content="[\s\S]*?" \/>/g, `<meta property="twitter:title" content="${title}" />`)
-        .replace(/<meta property="twitter:description" content="[\s\S]*?" \/>/g, `<meta property="twitter:description" content="${description}" />`)
-        .replace(/<meta property="twitter:image" content="[\s\S]*?" \/>/g, `<meta property="twitter:image" content="${imageUrl}" />`)
-        .replace(/<meta property="twitter:url" content="[\s\S]*?" \/>/g, `<meta property="twitter:url" content="${artworkUrl}" />`);
+        .replace(/<title>[\s\S]*?<\/title>/gi, `<title>${title}</title>`)
+        .replace(/<meta\s+name=["']title["']\s+content=["'][\s\S]*?["']\s*\/?>/gi, `<meta name="title" content="${title}" />`)
+        .replace(/<meta\s+name=["']description["']\s+content=["'][\s\S]*?["']\s*\/?>/gi, `<meta name="description" content="${description}" />`)
+        .replace(/<meta\s+property=["']og:title["']\s+content=["'][\s\S]*?["']\s*\/?>/gi, `<meta property="og:title" content="${title}" />`)
+        .replace(/<meta\s+property=["']og:description["']\s+content=["'][\s\S]*?["']\s*\/?>/gi, `<meta property="og:description" content="${description}" />`)
+        .replace(/<meta\s+property=["']og:image["']\s+content=["'][\s\S]*?["']\s*\/?>/gi, `<meta property="og:image" content="${imageUrl}" />`)
+        .replace(/<meta\s+property=["']og:url["']\s+content=["'][\s\S]*?["']\s*\/?>/gi, `<meta property="og:url" content="${artworkUrl}" />`)
+        .replace(/<meta\s+property=["']twitter:title["']\s+content=["'][\s\S]*?["']\s*\/?>/gi, `<meta property="twitter:title" content="${title}" />`)
+        .replace(/<meta\s+property=["']twitter:description["']\s+content=["'][\s\S]*?["']\s*\/?>/gi, `<meta property="twitter:description" content="${description}" />`)
+        .replace(/<meta\s+property=["']twitter:image["']\s+content=["'][\s\S]*?["']\s*\/?>/gi, `<meta property="twitter:image" content="${imageUrl}" />`)
+        .replace(/<meta\s+property=["']twitter:url["']\s+content=["'][\s\S]*?["']\s*\/?>/gi, `<meta property="twitter:url" content="${artworkUrl}" />`);
 }
