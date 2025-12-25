@@ -49,9 +49,8 @@ export function injectMetadata(html, artwork) {
     const artworkId = artwork._id || '';
     const artworkUrl = `${siteUrl}/?artwork=${artworkId}`;
 
-    // Create the new metadata block with professional labels
+    // Create the new metadata block
     const newTags = `
-  <!-- SEO Metadata Start -->
   <title>${title}</title>
   <meta name="title" content="${title}" />
   <meta name="description" content="${description}" />
@@ -64,8 +63,7 @@ export function injectMetadata(html, artwork) {
   <meta property="twitter:title" content="${title}" />
   <meta property="twitter:description" content="${description}" />
   <meta property="twitter:image" content="${imageUrl}" />
-  <meta property="twitter:url" content="${artworkUrl}" />
-  <!-- SEO Metadata End -->`;
+  <meta property="twitter:url" content="${artworkUrl}" />`;
 
     // 1. Remove existing competing tags and their comments aggressively
     let processedHtml = html.replace(/<title>[\s\S]*?<\/title>/gi, '');
