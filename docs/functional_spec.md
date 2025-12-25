@@ -131,7 +131,16 @@
 
 ### 5-1. 포트 관리 (Port 3000)
 
-- 모든 API 요청 및 프론트엔드 서빙은 `localhost:3000`을 기준으로 동작하며, Sanity CORS 설정도 이에 맞춰 관리됩니다.
+- 모든 API 요청 및 프론트엔드 서빙은 `localhost:3000`을 기준으로 동작하며, 이는 통합 서버(`api/server.js`)에 의해 보장됩니다.
+
+### 5-2. 헤더 내비게이션 명세 (Standardized Header)
+
+- **Logo**: 'Sketchrang' (클릭 시 스튜디오 모드 이동)
+- **Nav Buttons**:
+    - **Sketch**: 캔버스 작업 영역으로 이동 (`setViewMode('studio')`)
+    - **Gallery**: 소셜 피드 영역으로 이동 (`setViewMode('feed')`)
+- **Action Button**:
+    - **Change Image**: 로컬 파일 선택기 실행 (이미지 업로드용)
 
 ### 5-2. 로딩 애니메이션
 

@@ -87,4 +87,6 @@
 ## 5. CSS Architecture
 
 - **Modular Inheritance**: 모든 툴팁과 버튼은 `layout.css` 등에 정의된 공용 베이스 클래스를 상속받아 사용하며, 인라인 스타일링을 지양합니다.
+- **Layout Preservation**: `.app-container`, `.header-overlay`, `.viewport-studio` 등의 핵심 레이아웃 클래스는 절대 무시되어서는 안 되며, Tailwind 하드코딩으로 이를 대체하는 것을 금지합니다.
+- **Visual Regression Prevention**: 기술적 전환 시 AI의 자의적인 판단에 의한 UI 재해석을 금지하며, 반드시 원본 코드의 HTML/CSS 구조를 우선적으로 분석하여 계승합니다.
 - **Scrollbar Reserve**: `scrollbar-gutter: stable`을 통해 갤러리 로딩 시 레이아웃 흔들림 방지.

@@ -9,6 +9,8 @@
 - **Test First**: 기능 구현 전 실패하는 테스트 작성을 지향합니다.
 - **Fail Fast**: 치명적인 오류나 인증 실패 시 예외를 즉각 발생시켜 디버깅을 용이하게 합니다.
 - **Single Source of Truth (SSOT)**: Zustand를 활용해 모든 상태의 출처를 단일화합니다.
+- **Unified Server Execution**: 로컬 개발 및 테스트 시 반드시 `node api/server.js`를 통해 3000번 포트로 통합 실행해야 합니다. `npx vite`나 `npm run dev` 단독 실행은 API 동작 불능을 초래합니다.
+- **Environment & Asset Protection**: `git clean -fdx` 등 파괴적 명령어 사용 전 반드시 `.env`, `.env.local` 및 로컬 이미지 폴더를 백업해야 합니다. 사고 발생 시 즉시 `git reset --hard origin/main`으로 원복합니다.
 
 ---
 
